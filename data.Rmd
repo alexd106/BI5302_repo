@@ -17,3 +17,15 @@ suppressPackageStartupMessages(library(dplyr))
 
 \  
 
+Click on the links below to download data files used during the course.
+
+\  
+
+```{r, results='asis'}
+dir <- "data/"
+list.files(dir) %>%
+  sort %>% 
+  grep("\\.html$ | *.zip", ., value=TRUE, invert=TRUE) %>% 
+  paste0("    + [", ., "](", paste0(dir, .), ")") %>% 
+  cat(sep="\n")
+```
