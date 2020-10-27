@@ -76,6 +76,8 @@ Some interesting background information on squid morphology can be found [here](
 
 \  
 
+\  
+
 Once you're happy with marking up your text, save your R markdown document and then knit your R markdown document to a HTML file. Open this file in your web browser by clicking on the squid_analysis.html file in the 'Files' pane in RStudio and select the Open in browser option. Check the formatting is correct. You could also try knitting to a pdf document. 
 
 \  
@@ -87,7 +89,11 @@ You can find the solution below (click on the 'code' button on the right)
 ```{r, class.source='fold.hide',  eval=FALSE}
 
 ## Sampling and data description
-These data were originally collected as part of a study published in Aquatic Living Resources (Smith *et al*., 2005). The aim of the study was to investigate the seasonal patterns of investment in somatic and reproductive tissues in the long finned squid *Loligo forbesi* caught in Scottish waters. Squid were caught monthly from December 1989 - July 1991 (**month** and **year variables**). After capture, each squid was given a unique specimen code (**specimen variable**) and the following variables measured: 
+These data were originally collected as part of a study published in Aquatic Living Resources (Smith *et al*.,
+2005). The aim of the study was to investigate the seasonal patterns of investment in somatic and 
+reproductive tissues in the long finned squid *Loligo forbesi* caught in Scottish waters. Squid 
+were caught monthly from December 1989 - July 1991 (**month** and **year variables**). After capture, 
+each squid was given a unique specimen code (**specimen variable**) and the following variables measured: 
 
 - **weight variable** - body weight (g)
 - **sex variable** - sex (only female squid are included here)
