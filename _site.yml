@@ -1,21 +1,12 @@
-name: "BI5009"
+name: "BI5302"
 output_dir: "."
 navbar:
-  title: "BI5009"
+  title: "BI5302"
   icon: fa-home
   left:
     - text: "Home"
       icon: fa-home
       href: index.html
-    - text: "Setup"
-      icon: fa-cog
-      href: setup.html
-    - text: "Learn"
-      icon: fa-desktop
-      menu:
-        - text: "How-to"
-          icon: fa-tv
-          href: howto.html
     - text: "R Book"
       icon: fa-book
       menu:
@@ -43,7 +34,7 @@ navbar:
           href: "resources.html"
         - text: "Source code"
           icon: fa-github fa-lg
-          href: https://github.com/alexd106/BI5009
+          href: https://github.com/alexd106/BI5302
         - text: "Twitter"
           icon: fa-twitter fa-lg
           href: https://twitter.com/Scedacity

@@ -9,7 +9,6 @@ output:
 library(htmltools)
 suppressPackageStartupMessages(library(htmltools))
 source('utils.R')
-source('reveal.R')
 ```
 
 \  
