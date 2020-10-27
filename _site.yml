@@ -34,7 +34,7 @@ navbar:
           href: "resources.html"
         - text: "Source code"
           icon: fa-github fa-lg
-          href: https://github.com/alexd106/BI5302
+          href: https://github.com/alexd106/BI5302_repo
         - text: "Twitter"
           icon: fa-twitter fa-lg
           href: https://twitter.com/Scedacity
