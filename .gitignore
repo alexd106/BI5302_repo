@@ -2,3 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# knitr caches and files.
+*_cache/
+# OSX Stuff
+.gitconfig.local
+.DS_Store*
+.Trashes
+.DS_Store
+# R markdown stuff
+*.log
