@@ -21,6 +21,8 @@ suppressPackageStartupMessages(library(stringr))
 
 #### Reproducible reports using R markdown
 
+\  
+
 - [R markdown exercise 1](Rmarkdown_ex1.html)
 
 - [R markdown exercise 2](Rmarkdown_ex2.html)
@@ -29,11 +31,15 @@ suppressPackageStartupMessages(library(stringr))
 
 #### Dealing with Variance heterogeneity 
 
+\  
+
 Exercise to follow
 
 \  
 
 #### Dealing with temporal non-independence
+
+\  
 
 Exercise to follow
 
