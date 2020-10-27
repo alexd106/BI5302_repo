@@ -15,7 +15,7 @@ knitr::opts_chunk$set(message=FALSE, tidy.opts=list(width.cutoff=60))
 
 In this exercise you will practice marking up some plain text using R markdown syntax.
 
-Create a new RStudio project called 'BI5302' in RStudio. Now create a new R markdown document and save it with an appropriate file name on your computer (perhaps `squid_analysis.Rmd`). Make sure you fill out the 'Title' and 'Author' information and set the output option to HTML when you create your document. Next, copy and paste the text below into your R markdown document.
+Create a new RStudio project called 'BI5302' in RStudio. Now create a new R markdown document and save it with an appropriate file name on your computer (perhaps `squid_analysis.Rmd`). Make sure you fill out the 'Title' and 'Author' information and set the output option to HTML when you create your document. Next, copy and paste the text in the box below into your R markdown document.
 
 \  
 
