@@ -17,7 +17,7 @@ suppressPackageStartupMessages(library(dplyr))
 
 \  
 
-Click on the links below to download data files used during the course.
+Data files used during the course can be downloaded below. To download a file, right click on the link and then select the 'Save link as...' option. I suggest you create a new directory in your RStudio Project folder called `data` and save your data files in this directory.
 
 \  
 
