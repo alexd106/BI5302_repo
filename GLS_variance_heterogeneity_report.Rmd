@@ -545,7 +545,7 @@ ggplot(w, aes(x = fbiomass, y = yhat, group = fnutrient, colour = fnutrient)) +
 ###Session Information
 
 ```{r, session-info}
-xfun::session_info()
+sessionInfo()
 ```
 
 
