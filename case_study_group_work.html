@@ -9,21 +9,38 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="" />
 
 
-<title>Exercises</title>
+<title>BI5302 case study group work</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
 
 
 
@@ -88,33 +105,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 60px;
+  padding-top: 51px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .dropdown-submenu {
   position: relative;
@@ -348,51 +365,59 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Exercises</h1>
+<h1 class="title toc-ignore">BI5302 case study group work</h1>
+<h4 class="date">28 October, 2020</h4>
 
 </div>
 
 
 <p> </p>
-<div id="exercises" class="section level3">
-<h3>Exercises</h3>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
 <p> </p>
-<div id="reproducible-reports-using-r-markdown" class="section level4">
-<h4>Reproducible reports using R markdown</h4>
+<p>For this exercise you will work in small (3 - 5 people) groups to analyse data from two case studies (see below for details). The overall aim of this exercise is to challenge you with data typically obtained from biological and ecological studies, use R to fit suitable linear models to test specific research questions and then validate these models. As you might have guessed, data from both of these case studies contain a number of issues and as a result the standard linear modelling approach is unsuitable.</p>
 <p> </p>
+<p>So, for each case study you will need to:</p>
+<ol style="list-style-type: decimal">
+<li>Identify the specific hypothesis / research question.</li>
+<li>Import the appropriate data file and perform graphical data exploration.</li>
+<li>Fit a suitable linear model with appropriate explanatory variables and interaction terms.</li>
+<li>Validate the linear model using appropriate residuals plots to identify violations of linear modelling assumptions (hint: there will be problems!).</li>
+<li>Again using appropriate plots of the residuals, try to determine why the assumptions have been violated.</li>
+</ol>
+<p> </p>
+<p>For all of the steps above, please document your workflow in an R markdown document in order to create a report detailing your approach and highlighting the issues.</p>
+<p> </p>
+<div id="benthic-biodiversity-experiment" class="section level4">
+<h4>Benthic Biodiversity experiment</h4>
+<p>These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (<em>Nereis diversicolor</em>) biomass on sediment nutrient release (NH<sub>4</sub>, NO<sub>3</sub> and PO<sub>3</sub>). At the start of the experiment replicate (n = 3) mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH<sub>4</sub>, NO<sub>3</sub> or PO<sub>3</sub> was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the type of nutrient.</p>
+<p> </p>
+<p><img src="images/meso.jpg" width="60%" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Data for this case study is saved in a tab delimited file called <code>Nereis2.txt</code> which you can download from the <strong><a href="data.html"><i class="fa fa-download"></i> Data</a></strong> link. Save this data file in your <code>data</code> directory in your RStudio project.</p>
+<p>The data file contains the following variables:</p>
 <ul>
-<li><p><a href="Rmarkdown_ex1.html">R markdown exercise 1</a></p></li>
-<li><p><a href="Rmarkdown_ex2.html">R markdown exercise 2</a></p></li>
+<li><code>concentration</code> : the nutrient concentration</li>
+<li><code>biomass</code> : the polychaete biomass level</li>
+<li><code>fnutrient</code> : the nutrient measured</li>
 </ul>
 <p> </p>
 </div>
-<div id="case-study-group-work" class="section level4">
-<h4>Case study group work</h4>
+<div id="environmental-impacts-on-hawaiian-black-necked-stilt-himantopus-mexicanus-knudseni-abundance" class="section level4">
+<h4>Environmental impacts on Hawaiian black-necked stilt (<em>Himantopus mexicanus knudseni</em>) abundance</h4>
+<p>These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.</p>
 <p> </p>
+<p><img src="images/stilt.jpg" width="50%" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Data for this case study is saved in a tab delimited file called <code>hawaii2.txt</code> which you can download from the <strong><a href="data.html"><i class="fa fa-download"></i> Data</a></strong> link. Save this data file in your <code>data</code> directory in your RStudio project.</p>
+<p>The data file contains the following variables:</p>
 <ul>
-<li><a href="case_study_group_work.html">Case study group work exercise</a></li>
+<li><code>abund</code> : the abundance of stilts</li>
+<li><code>rainfall</code> : the amount of annual rainfall</li>
+<li><code>location</code> : the name of the island</li>
+<li><code>year</code> : the year the data was collected</li>
 </ul>
 <p> </p>
-</div>
-<div id="dealing-with-variance-heterogeneity" class="section level4">
-<h4>Dealing with Variance heterogeneity</h4>
-<p> </p>
-<ul>
-<li><a href="GLS_variance_heterogeneity_exercise.html">Dealing with variance heterogeneity exercise</a></li>
-</ul>
-<p> </p>
-<p>If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.</p>
-<ul>
-<li><p><a href="GLS_variance_heterogeneity_report.Rmd">Dealing with variance heterogeneity R markdown file</a></p></li>
-<li><p><a href="GLS_variance_heterogeneity_report.html">Dealing with variance heterogeneity final rendered html file</a></p></li>
-<li><p><a href="GLS_variance_heterogeneity_report.pdf">Dealing with variance heterogeneity final rendered pdf file</a></p></li>
-</ul>
-<p> </p>
-</div>
-<div id="dealing-with-temporal-non-independence" class="section level4">
-<h4>Dealing with temporal non-independence</h4>
-<p> </p>
-<p>Exercise to follow</p>
 </div>
 </div>
 

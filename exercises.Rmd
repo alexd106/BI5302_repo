@@ -33,7 +33,7 @@ suppressPackageStartupMessages(library(stringr))
 
 \ 
 
-Exercise to follow
+- [Case study group work exercise](case_study_group_work.html)
 
 \  
 
