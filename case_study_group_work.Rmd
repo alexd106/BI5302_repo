@@ -30,23 +30,24 @@ So, for each case study you will need to:
 
 \  
 
-For all of the steps above, it would be great to document your workflow using an R markdown document in order to create a report detailing your approach and highlighting the issues (either pdf or html format is ok). We can then share our reports on MyAberdeen and learn from each other! Also, as the course progresses and you learn how to extend the linear model to deal with these issues we will return to these two datasets to analyse them correctly!  
+For all of the steps above, it would be great to document your workflow using an R markdown document in order to create a report detailing your approach and highlighting the issues (either pdf or html format is ok). We can then share our reports on MyAberdeen and learn from each other! Also, as the course progresses and you learn how to extend the linear model to deal with these issues we will return to these two datasets to analyse them correctly!
 
+If you would prefer to work from the pdf version of this document you can find this [here](case_study_group_work.pdf).
 \  
 
 ### Benthic Biodiversity experiment
 
-These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (*Nereis diversicolor*) biomass on sediment nutrient release (NH~4~, NO~3~ and PO~3~). At the start of the experiment replicate (n = 3) mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH~4~, NO~3~ or PO~3~ was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the type of nutrient.
+These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (*Hediste diversicolor*) biomass on sediment nutrient release (NH~4~, NO~3~ and PO~3~). At the start of the experiment replicate (n = 3) mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH~4~, NO~3~ or PO~3~ was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the type of nutrient.
 
 \  
 
-```{r, nereis, echo=FALSE, fig.align='center', out.width='60%'}
-knitr::include_graphics("images/meso.jpg")
+```{r, nereis, echo=FALSE, fig.align='center', out.width='60%', fig.cap = "https://en.wikipedia.org/wiki/Hediste_diversicolor"}
+knitr::include_graphics("images/hediste.jpg")
 ```
 
 \  
 
-Data for this case study is saved in a tab delimited file called `Nereis2.txt` which you can download from the **[<i class="fa fa-download"></i> Data](data.html)** link. Save this data file in your `data` directory in your RStudio project.
+Data for this case study is saved in a tab delimited file called `Hediste.txt` which you can download from the **[<i class="fa fa-download"></i> Data](data.html)** link. Save this data file in your `data` directory in your RStudio project.
 
 The data file contains the following variables:
 
@@ -64,7 +65,7 @@ These data were collected from bird surveys conducted on two Hawaiian islands (M
 
 \  
 
-```{r, stilt, echo=FALSE, fig.align='center', out.width='50%'}
+```{r, stilt, echo=FALSE, fig.align='center', out.width='50%', fig.cap = "https://en.wikipedia.org/wiki/Hawaiian_stilt"}
 knitr::include_graphics("images/stilt.jpg")
 ```
 

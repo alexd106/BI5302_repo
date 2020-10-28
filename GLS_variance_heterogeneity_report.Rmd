@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
 
 ### Benthic Biodiversity experiment
 
-These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (*Nereis diversicolor*) biomass on sediment nutrient release (NH~4~, NO~3~ and PO~3~). At the start of the experiment replicate mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH~4~, NO~3~ or PO~3~ was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the nutrient.
+These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (*Hediste diversicolor*) biomass on sediment nutrient release (NH~4~, NO~3~ and PO~3~). At the start of the experiment replicate mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH~4~, NO~3~ or PO~3~ was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the nutrient.
 
 \   
 
@@ -41,12 +41,12 @@ library(ggplot2) # this is optional
 
 \   
 
-2\. Import the `Nereis2.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the `biomass` variable to a factors and store it as a new variable in your dataframe.
+2\. Import the `Hediste.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the `biomass` variable to a factors and store it as a new variable in your dataframe.
 
 \   
 
 ```{r, q2, collapse=TRUE}
-nereis <- read.table("data/Nereis2.txt", header = TRUE)
+nereis <- read.table("data/Hediste.txt", header = TRUE)
 nereis$fbiomass <- factor(nereis$biomass)
 str(nereis)
 ```
