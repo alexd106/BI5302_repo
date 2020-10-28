@@ -29,11 +29,29 @@ suppressPackageStartupMessages(library(stringr))
 
 \  
 
+#### Case study group work 
+
+\ 
+
+Exercise to follow
+
+\  
+
 #### Dealing with Variance heterogeneity 
 
 \  
 
-Exercise to follow
+- [Dealing with variance heterogeneity exercise](GLS_variance_heterogeneity_exercise.html)
+
+\  
+
+If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
+
+- [Dealing with variance heterogeneity R markdown file](GLS_variance_heterogeneity_report.Rmd)
+
+- [Dealing with variance heterogeneity final rendered html file](GLS_variance_heterogeneity_report.html)
+
+- [Dealing with variance heterogeneity final rendered pdf file](GLS_variance_heterogeneity_report.pdf)
 
 \  
 

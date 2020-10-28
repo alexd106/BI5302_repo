@@ -1,0 +1,549 @@
+---
+title: "BI5302 Variance Heterogeneity Practical"
+author: "Alex Douglas"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: default
+  html_document: default
+fontsize: 11pt
+---
+
+Setup global options for knitr package. Normally I wouldn't display these but I'll leave them here for your information. The arguments ```width.cutoff``` and ```tidy = TRUE``` keeps the displayed code within the code boxes (see what happens if you omit this).
+
+\  
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
+```
+
+### Benthic Biodiversity experiment
+
+These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (*Nereis diversicolor*) biomass on sediment nutrient release (NH~4~, NO~3~ and PO~3~). At the start of the experiment replicate mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH~4~, NO~3~ or PO~3~ was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the nutrient.
+
+\   
+
+1\. Create a new R markdown document in your BI5302 RStudio project and save using a suitable file name. I suggest you specify the default output format as pdf but feel free to experiment with html (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
+
+\  
+
+Import all the packages required for this exercise:
+
+\    
+
+```{r,q1, message=FALSE}
+library(nlme)
+library(effects)
+library(ggplot2) # this is optional
+```
+
+\   
+
+2\. Import the `Nereis2.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the `biomass` variable to a factors and store it as a new variable in your dataframe.
+
+\   
+
+```{r, q2, collapse=TRUE}
+nereis <- read.table("data/Nereis2.txt", header = TRUE)
+nereis$fbiomass <- factor(nereis$biomass)
+str(nereis)
+```
+
+\  
+
+3\. How many replicates are there for each biomass and nutrient combination?
+
+\ 
+
+```{r, q3, collapse=TRUE}
+xtabs(~ fbiomass + fnutrient, data = nereis)
+```
+
+\   
+
+There are `r unique(xtabs(~ fbiomass + fnutrient, data = nereis))` replicates per `fbiomass` and `fnutrient` combination.
+
+\  
+
+4\. Explore these data graphically. Are there any obvious outliers in the `concentration` variable for each of the `biomass` or `nutrient` variable levels (perhaps the `dotchart()` function with the `group` argument might help)? Use an appropriate plot to examine whether there are any biomass and/or nutrient effects on concentration (perhaps a boxplot?). Do you notice a potential issue regarding the between group variances?
+
+\  
+
+```{r, q4a, fig.height=4, fig.width=4.5, fig.align="center"}
+dotchart(nereis$concentration, groups = nereis$fnutrient, 
+         col = as.numeric(nereis$fnutrient), 
+         xlab = "Concentration", ylab = "Order of observations")
+```
+
+\  
+
+```{r, q4b, fig.height=4, fig.width=4.5, fig.align="center"}
+dotchart(nereis$concentration,
+	groups = nereis$fbiomass,
+	col = as.numeric(nereis$fbiomass),
+	xlab = "Concentration", ylab = "Order of observations")
+```
+
+\  
+
+There doesn't appear to be any obvious outliers in the `concentration` variable for the `fbiomass` and `fnutrient` groups.
+   
+Are there any differences in concentration between the biomass treatment? Are these differences dependent on the type of nutrient? Let's use a boxplot to explore this further (see the end of this document for an alternative approach to creating this boxplot using the `ggplot()` function).
+
+\newpage
+
+```{r, q4c, fig.height=5, fig.width=6, fig.align="center"}
+boxplot(concentration ~ fbiomass * fnutrient,
+    xlab = "biomass (g)",   	
+    main = "", ylab = "concentration (mg/l)", 
+    data = nereis, cex.axis = 0.8, 
+    col = rep(c("deepskyblue", "yellowgreen", "deeppink3"), each = 5),
+    names = rep(c(0, 0.5, 1, 1.5, 2), 3))
+    
+legend("topright", col = c("deepskyblue", "yellowgreen", "deeppink3"), 
+       legend = c("NH4", "NO3", "PO3"), pch = 16)
+```
+
+\  
+
+There does appear to be a difference in the nutrient concentration between biomass treatments and this seems to be dependent on the nutrient type. Overall, NO~3~ has the highest nutrient concentration compared to NH~4~ and PO~3~. Nutrient concentration appears to be consistently low for PO~3~ regardless of polychaete biomass whereas for NH~4~ the concentration increases with biomass and for NO~3~ the concentration decreases with an increase in biomass. This suggests that there is an interaction between biomass and nutrient type.
+
+\  
+
+5\. With reference to the study aims stated above, fit an appropriate linear model to these data using the `lm()` function.
+
+\  
+
+```{r, q5}
+nereis.lm <- lm(concentration ~ fbiomass * fnutrient, data = nereis)
+```
+
+\  
+
+The code above fits a linear model using the `lm()` function with `concentration` as the response variable and `fbiomass` and `fnutrient` as explanatory variables. It also includes an interaction between `fbiomass` and `fnutrient`.
+
+\  
+
+6\. Use appropriate residual plots to identify whether the modelling assumptions are met. Don't forget to also plot the residuals from this model against all explanatory variables. Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.
+
+\  
+
+First let's create the usual residual plots using the `plot()` function on the `lm` model object `nereis.lm`. Don't forget to split the plotting device into 2 rows and 2 columns so we can visualise all the plots together.
+
+\  
+
+```{r, q6, fig.height=5.5, fig.width=5.5, fig.align="center"}
+par(mfrow = c(2,2))
+plot(nereis.lm)
+```
+
+\  
+
+From the Residual vs Fitted and Scale-Location plots (left-hand side) you can clearly see that the residual variance is different for each of the treatment groups. Larger fitted values have a wider spread and small fitted values a narrower spread. This is a clear violation of the homogeneity of variance assumption!
+
+\  
+
+Let's try to find which of the explanatory variable(s) is responsible for these differences in residual variance. First we plot the residuals from our linear model against the `fbiomass` variable. 
+
+\  
+
+```{r, fig.height=3.8, fig.width=3.8, fig.align="center"}
+plot(resid(nereis.lm) ~ nereis$fbiomass,xlab = "Biomass",
+     ylab = "Residuals")
+abline(h = 0, lty =2, col = 2)
+```
+
+\  
+
+There are clear differences in the residual variance between each of the biomass levels. The zero biomass treatment has very little residual variance (as we might expect - why?) whereas the highest biomass group (2 g) has a very large within group variance. There are also differences between the other biomass groups but these are less pronounced.
+  
+We should also plot the residuals from our model against the `fnutrient` explanatory variable.
+
+\   
+
+```{r, fig.height=3.8, fig.width=3.8, fig.align="center"}
+plot(resid(nereis.lm) ~ nereis$fnutrient,xlab = "Nutrient",
+     ylab = "Residuals")
+abline(h = 0, lty =2, col = 2)
+```
+
+\  
+
+Again, the residual variance between the three nutrient types is different. The PO~3~ nutrient appears to have the smallest variance whereas the NO~3~ nutrient has the largest variance. Both of these plots suggest that the cause of our heterogeneity of variance is both the `fbiomass` and `fnutrient` variables. Therefore we need fit a model that allows for different variances in each of our  `fbiomass` and `fnutrient` variables. To do this we will fit a Generalised Least Squares model using the `gls()` function from the `nlme` package. 
+
+\  
+
+7\. Import the `nlme` package into R.
+
+\  
+
+You will see that I have already done this at the top of this Rmarkdown document using the `library()` function. It's good practice to import all the packages required for a particular analysis near the start of your script.
+
+\  
+
+8\. Use the `gls()` function from the `nlme` package without any variance covariates to refit your linear model specified above (the model you fitted using the `lm()` function). This GLS model with no variance structure is equivalent to a standard linear model. You will use this GLS model to compare with models you subsequently fit. If you are not convinced that these two models are equivalent then compare the output from both models (and replot the residuals if you're still not convinced!). Why do you need to refit this model using the `gls()` function? (Hint: take a look at the AICs from both models).
+
+\   
+
+```{r, q8a}
+nereis.gls1 <- gls(concentration ~ fbiomass * fnutrient, 
+                   data = nereis)
+```
+
+\  
+
+Comparing the AICs from the model fitted with the `lm()` function and the model fitted using the `gls()` function.
+
+\  
+
+```{r, q8b, collapse=TRUE }
+AIC(nereis.lm)
+AIC(nereis.gls1)
+```
+
+\  
+
+As you can see  the AICs are different between these two equivalent models. Don't be fooled though, this is because the AICs are calculated slightly differently for `lm` and `gls` class objects so you cannot use them to compare `lm` models with `gls` models (that's why we need to refit our linear model using the `gls()` function).
+
+\   
+
+9\. With reference to the residual plots you created above, fit models with different variance covariate structures to account for the heterogeneity of variance you identified previously. You will first need to decide which variance structure to use (and which R function to use). I suggest that you start with a simple variance structure and then build up to a more complicated structure. Remember to use the `weights =` argument with the `gls()` function to specify your variance structure. Use the `AIC()` function to compare each of your models with different variance structures. Identify the model with the most appropriate variance covariate structure. Describe and justify your process in your Rmarkdown document.
+   
+Let's first use the `fbiomass` variable as our variance covariate as our residual plots suggested substantial residual heterogeneity between biomass levels. First we will specify the variance structure using the `varIdent()` function (as our variance covariate is a categorical variable) and then include this in our `gls` model using the `weights =` argument. 
+
+\  
+
+```{r, q9a}
+vf1 <- varIdent(form = ~ 1|fbiomass)
+nereis.gls2 <- gls(concentration ~ fbiomass * fnutrient, weights = vf1, 
+                   data = nereis)
+```
+
+\  
+
+Alternatively you can include the variance structure directly when using the `gls()` function.
+
+\  
+
+```{r, q9b}
+nereis.gls2 <- gls(concentration ~ fbiomass * fnutrient, 
+                   weights = varIdent(form = ~1|fbiomass), 
+                   data = nereis)
+```
+
+\  
+
+These two are equivalent but I prefer the first method.
+   
+Now we can compare our linear model fitted with the `gls()` function (`nereis.gls1`) with our model allowing for different variances per biomass level (`nereis.gls2`).
+
+\  
+
+```{r, q9c, collapse=TRUE}
+AIC(nereis.gls1, nereis.gls2)
+```
+
+\  
+
+That's strange, the model estimating different variances per biomass level has a higher AIC value compared to our linear model indicating a poorer fit. Why might this be? We get a clue by looking at the degrees of freedom (df) column in the output of the `AIC()` function. You can see that we are estimating 4 more parameters for our `nereis.gls2` model (df = 20) compared to our linear model `nereis.gls1` (df = 16). As AIC is a measure of goodness of fit which is penalised by the number of parameters estimated this suggests that the improvement in goodness of fit for our `nereis.gls2` model is not large enough to compensate for the higher number of parameters estimated. 
+   
+OK, let try to fit another model but this time allow for the variances to differ between `fnutrient` levels.
+
+\  
+
+```{r, q9d}
+vf2 <- varIdent(form = ~ 1|fnutrient)
+nereis.gls3 <- gls(concentration ~ fbiomass * fnutrient, weights = vf2, 
+                   data = nereis)
+```
+
+\  
+
+And once again compare all models using AIC.
+
+\  
+
+```{r, q9e, collapse=TRUE}
+AIC(nereis.gls1, nereis.gls2, nereis.gls3)
+```
+
+\  
+
+So, the model allowing for different variances per `fnutrient` level appears to be our best model so far.
+  
+Now let's fit a final model which estimates a separate variance for each `fbiomass` and `fnutrient` combination (note: this is quite a lot of parameters given the level of replication in our dataset!).
+
+\  
+
+```{r, q9f}
+vf3 <- varIdent(form = ~ 1|fnutrient * fbiomass)
+nereis.gls4 <- gls(concentration ~ fbiomass*fnutrient, weights = vf3, 
+                   data = nereis)
+```
+
+\  
+
+And again compare all models with AIC.
+
+\  
+
+```{r, q9g, collapse=TRUE}
+AIC(nereis.gls1, nereis.gls2, nereis.gls3, nereis.gls4)
+```
+
+\  
+
+This suggests that the model with both `fbiomass` and `fnutrient` as variance covariates (`nereis.gls4`) is by far the best model (lots of parameters estimated though). 
+
+\  
+
+10\. Now that your model has the optimal variance covariate structure it's time to perform model selection to identify the optimal fixed effects structure. To do this you will have to refit your optimal model (in terms of variance structure) using maximum likelihood estimation (ML) rather than the default restricted maximum likelihood estimation (REML). To do this use the argument `method = "ML"` with the `gls()` function.
+
+\  
+
+OK, now we have our model with the optimal variance covariate structure, we need to identify the model with the best fixed effects structure. We will use our `nereis.gls4` model as a starting point but first we need to refit our model using maximum likelihood (ML) rather than restricted maximum likelihood (REML) before we perform model selection on our fixed effects. 
+
+\  
+
+```{r, q10}
+nereis.gls4.ml <- gls(concentration ~ fbiomass * fnutrient, weights = vf3, 
+                      method = "ML", data = nereis)
+```
+
+\  
+
+11\. Perform model selection using AIC to compare model fit. Select the model with the most appropriate fixed effects structure. Describe this process in your R markdown document. If you are feeling adventurous (this is optional!) you can also perform model selection by comparing nested models using likelihood ratio tests (using the `anova()` function). Does this result in the same final model?
+
+\  
+
+First we will fit a model without the interaction term `fbiomass:fnutrient` 
+
+\  
+
+```{r, q11a}
+nereis.gls5.ml <- gls(concentration ~ fbiomass + fnutrient, weights = vf3, 
+                      method = "ML", data = nereis)
+```
+
+\  
+
+And compare this model (`nereis.gls5.ml`) with the model including the interaction term (`nereis.gls4.ml`) using AIC.
+
+\  
+
+```{r, q11b, collapse=TRUE}
+AIC(nereis.gls4.ml, nereis.gls5.ml)
+```
+
+\  
+
+A difference in AIC of `r round(AIC(nereis.gls4.ml, nereis.gls5.ml)[,2][2] - AIC(nereis.gls4.ml, nereis.gls5.ml)[,2][1], digits = 2)` suggests that the model including the interaction term between `fbiomass` and `fnutrient` is our optimal model (`nereis.gls4.ml`). In other words, when we remove the interaction term from the model the AIC increases from  `r round(AIC(nereis.gls4.ml, nereis.gls5.ml)[,2][1], digits = 2)` to `r round(AIC(nereis.gls4.ml, nereis.gls5.ml)[,2][2], digits = 2)` and therefore we prefer the model including the interaction term. The good news is that no more model selection is required!!
+
+\  
+
+As the `nereis.gls5.ml` is nested within the `nereis.gls4.ml` model we can (as an optional extra!) compare these models using a likelihood ratio test using the `anova()` function.
+
+\  
+
+```{r, q11c, collapse=TRUE}
+anova(nereis.gls4.ml, nereis.gls5.ml)
+```
+
+\  
+
+A *p-value* of `r  round(anova(nereis.gls4.ml, nereis.gls5.ml)[2,9], digits = 3)` suggests that the interaction term should not be dropped. Therefore, the model selection based on AIC and the model selection based on a likelihood ratio test results in the same final model (this might not always be the case!).
+
+\  
+
+12\. Once you have your model with optimal variance covariate and fixed effects structures refit this model using REML. This is your final model.
+
+\  
+
+```{r, q12}
+nereis.gls.final <- gls(concentration ~ fbiomass * fnutrient, weights = vf3, 
+                        method = "REML", data = nereis)
+```
+
+\  
+
+Note: For clarity, I have included the `method = "REML"` argument when using the `gls()` function this time although this is not strictly necessary as REML is the default value for this argument (see the help file for the `gls()` function for additional information). 
+
+\  
+
+13\. Extract the normalised  (variance scaled) residuals and fitted values from your final model. Plot the normalised residuals against the fitted values. Can you assume homogeneity of residual variance now? Also plot your normalised residuals against each of your explanatory variables? Comment on the model assumptions and contrast these with the naive linear model.
+
+\  
+
+First lets extract the normalised residuals from our final model using the `resid()` function including the argument `type = normalized` and the fitted values using the `fitted()` function. 
+
+\  
+
+```{r, q13a}
+nereis.res1 <- resid(nereis.gls.final, type = "normalized")
+nereis.fit1 <- fitted(nereis.gls.final)
+```
+
+\  
+
+And now create the plot
+
+\  
+
+```{r, q13b, fig.height=4, fig.width=4, fig.align="center"}
+plot(nereis.fit1, nereis.res1, ylab = "normalised residuals",
+     xlab = "fitted values")
+abline(h = 0, lty = 2, col = 2)
+```
+
+\  
+
+This looks a lot better than the equivalent plot from the first linear model we fitted (go back and take a look). It appears that the assumption of homogeneity of residual variance is now satisfied. An easier (but perhaps less transparent) way to create this plot (not shown) is :
+
+\  
+
+```{r, fig.show="hide"}
+plot(nereis.gls.final, resid(., type = "n") ~ fitted(.))
+```
+
+\  
+
+We should also plot our normalised residual against each of our explanatory variables.
+
+\  
+
+```{r, fig.height=5, fig.width=7, fig.align="center"}
+par(mfrow = c(1,2))
+plot(nereis$fbiomass, nereis.res1)
+abline(h = 0, lty = 2, col = 2)
+plot(nereis$fnutrient, nereis.res1)
+abline(h = 0, lty = 2, col = 2)
+```
+
+\  
+
+Again, these look much better than for our naive linear model.
+  
+As before, we can use a short cut to obtain similar plots (not shown):
+
+\  
+
+```{r, fig.show="hide", collapse=TRUE}
+plot(nereis.gls.final, fnutrient ~ resid(., type = "n"))
+plot(nereis.gls.final, fbiomass ~ resid(., type = "n"))
+```
+
+\  
+
+14\. Now (and only now!) you can go ahead and interpret the the output from your final model (use the `anova()` and `summary()` functions). Summarise your interpretation in your R markdown document.
+
+\  
+
+Display the ANOVA table using the `anova()` function. This highlights the significant interaction term between `fbiomass` and `fnutrient` variables. In fact, notice the interaction term  *p-value* is the same (within rounding error) as the one obtained using the likelihood ratio test above.
+
+
+```{r, q14a, collapse=TRUE}
+anova(nereis.gls.final)
+```
+
+\  
+
+To display the parameter estimates we use the `summary()` function. Prepare for voluminous output! Take note of the `Variance function:` section which displays the multiplication factors for each of our treatment group (`fbiomass` and `fnutrient`) combinations. We can use these multiplication factors to multiply the residual standard error from the model, (`r round(nereis.gls.final$sigma, digits = 4)`), to give us our group standard deviations and then square these values to give us our group level variance estimates (i.e. for the NH4`*`0.5 group: (30.48 x `r round(nereis.gls.final$sigma, digits = 4)`)^2^ = `r round((30.48 * round(nereis.gls.final$sigma, digits = 4))^2, digits = 3)`). The parameter estimates are provided in the form of treatment contrasts (remember those!) which will take you quite a while to work through. 
+
+\  
+
+```{r, q14b, collapse=TRUE}
+summary(nereis.gls.final)
+
+# if you want less output you can use the slightly hacky code to return the variance inflation factors
+# summary(nereis.gls.final)$modelStruct$varStruct
+
+# and the summary table of parameter estimates
+# summary(nereis.gls.final)$tTable
+```
+
+\  
+
+As with most things in life, things are often clearer if we draw a picture. Let's create a graph of our predicted values along with 95 % confidence intervals. There are many ways to do this (including using the `predict()` function) but perhaps an easier way is to use the `allEffects()` function from the `effects` package (install this if required). See  `?allEffects` for more details of this function.
+
+\  
+
+```{r, q14c,fig.height=5, fig.width=5, fig.align="center"}
+effs <- allEffects(nereis.gls.final, se = list(level = 0.95))
+
+plot(effs, lines = list(multiline = TRUE, lwd = 0.8), 
+     symbols = list(pch = 1), confint = list(style = "bars"),
+     lattice = list(key.args=list(border = FALSE, title = "Nutrient")),
+     main = "",
+     xlab = "polychaete biomass (g)",
+     ylab = "nutrient concentration mg/l")
+```
+
+\  
+
+I prefer the following plot as I find it clearer.
+
+\  
+
+```{r, q14d, fig.height=7, fig.width=4, fig.align="center"}
+plot(effs, lines = list(lwd = 0.8),
+     symbols = list(pch = 1),
+     confint = list(style="bars"),
+     main = "",
+     xlab = "polychaete biomass (g)",
+     ylab = "nutrient concentration mg/l", layout = c(1,3))
+```
+
+\  
+
+These plots confirm our intuition. The nutrient concentration does change with polychaete biomass but this change appears to be dependent on the type of nutrient measured. For PO~3~ the nutrient concentration remains at a relatively low concentration regardless of polychaete biomass. For NO~3~ the concentration reduces as polychaete biomass increases whereas for NH~4~ the concentration increases with an increase in biomass. 
+
+\  
+
+That's more or less it. Well done and congratulations! 
+\newpage
+
+####Bonus code!
+
+\  
+
+An alternative method to create a boxplot using the `ggplot()` function from the `ggplot2` package. We haven't introduced you to `ggplot2` but if you are interested see [Chapter 5](https://intro2r.com/graphics-r.html) of our 'Introduction to R' book. 
+
+\  
+
+```{r, bonus1}
+ggplot(nereis, aes(x = fbiomass, y = concentration, fill = fnutrient)) + 
+  geom_boxplot() + labs(x = "polychaete biomass (g)", 
+  y = "concentration (mg/l)", fill = "Biomass") + 
+  scale_fill_brewer(palette = "RdBu")
+```
+
+\  
+
+An alternative way to calculate and plot the predicted mean concentration for each group and associated 95% confidence intervals. This method requires you to install the `rms` package, use the `Gls()` function (note the capital G) to fit your model and the `Predict()` function (notice the capital P) to estimate the group means and approximate confidence intervals. Finally `ggplot()` is used to plot these values.
+
+\  
+
+```{r, bonus2, message=FALSE}
+library(rms)
+f <- Gls(concentration ~ fbiomass * fnutrient, weights = vf3, data = nereis)
+w <- as.data.frame(Predict(f, fbiomass =c("0", "0.5", "1", "1.5", "2"), 
+                           fnutrient=c("NH4","NO3","PO3")))
+
+ggplot(w, aes(x = fbiomass, y = yhat, group = fnutrient, colour = fnutrient)) +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = .1) +
+  geom_line() +
+  geom_point() +
+  labs(x = "polychaete biomass (g)" , 
+       y = "concentration (mg/l)") +
+  scale_colour_brewer(name = "nutrient type", palette="Dark2")
+```
+
+\  
+
+###Session Information
+
+```{r, session-info}
+xfun::session_info()
+```
+
+
+
