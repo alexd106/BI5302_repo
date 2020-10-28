@@ -379,7 +379,7 @@ $(document).ready(function () {
 <h3>Benthic Biodiversity experiment</h3>
 <p>These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (<em>Nereis diversicolor</em>) biomass on sediment nutrient release (NH<sub>4</sub>, NO<sub>3</sub> and PO<sub>3</sub>). At the start of the experiment replicate mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH<sub>4</sub>, NO<sub>3</sub> or PO<sub>3</sub> was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the nutrient.</p>
 <p> </p>
-<p>1. Create a new R markdown document in your BI5302 RStudio project and save using a suitable file name. I suggest you specify the default output format as pdf but feel free to experiment with html (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
+<p>1. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
 <p> </p>
 <p>Import all the packages required for this exercise:</p>
 <p> </p>
@@ -713,7 +713,8 @@ plot(effs, lines = list(multiline = TRUE, lwd = 0.8), symbols = list(pch = 1),
 <p>These plots confirm our intuition. The nutrient concentration does change with polychaete biomass but this change appears to be dependent on the type of nutrient measured. For PO<sub>3</sub> the nutrient concentration remains at a relatively low concentration regardless of polychaete biomass. For NO<sub>3</sub> the concentration reduces as polychaete biomass increases whereas for NH<sub>4</sub> the concentration increases with an increase in biomass.</p>
 <p> </p>
 <p>That’s more or less it. Well done and congratulations! </p>
-<p>####Bonus code!</p>
+<div id="bonus-code" class="section level4">
+<h4>Bonus code!</h4>
 <p> </p>
 <p>An alternative method to create a boxplot using the <code>ggplot()</code> function from the <code>ggplot2</code> package. We haven’t introduced you to <code>ggplot2</code> but if you are interested see <a href="https://intro2r.com/graphics-r.html">Chapter 5</a> of our ‘Introduction to R’ book.</p>
 <p> </p>
@@ -780,6 +781,7 @@ ggplot(w, aes(x = fbiomass, y = yhat, group = fnutrient,
 ##   utf8_1.1.4                utils_3.6.3               vctrs_0.3.2               viridis_0.5.1            
 ##   viridisLite_0.3.0         webshot_0.5.2             withr_2.2.0               xfun_0.16                
 ##   xml2_1.3.2                yaml_2.2.1                zoo_1.8-8</code></pre>
+</div>
 </div>
 
 

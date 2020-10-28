@@ -14,13 +14,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## BI5302 Variance Heterogeneity Practical
 
+\  
+
 ### Benthic Biodiversity experiment
+
+\  
 
 These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (*Nereis diversicolor*) biomass on sediment nutrient (NH~4~, NO~3~ and PO~3~) release. At the start of the experiment replicate mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). Mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH~4~, NO~3~ or PO~3~ was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the nutrient type.
 
 \  
 
-1\. Create a new R markdown document in your BI5302 RStudio project and save using a suitable file name. I suggest you specify the default output format as pdf but feel free to experiment with html (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
+1\. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
 
 \  
 
