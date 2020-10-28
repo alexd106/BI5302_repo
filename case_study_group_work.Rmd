@@ -3,10 +3,10 @@ title: "BI5302 case study group work"
 author: ""
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
+  pdf_document: default
   html_document:
     css: custom.css
     toc: no
-  pdf_document: default
 fontsize: 11pt
 ---
 
@@ -41,7 +41,7 @@ These data were obtained from a mesocosm experiment which aimed to examine the e
 
 \  
 
-```{r, nereis, echo=FALSE, fig.align='center', out.width='60%', fig.cap = "https://en.wikipedia.org/wiki/Hediste_diversicolor"}
+```{r, nereis, echo=FALSE, fig.align='center', out.width='60%'}
 knitr::include_graphics("images/hediste.jpg")
 ```
 
@@ -65,7 +65,7 @@ These data were collected from bird surveys conducted on two Hawaiian islands (M
 
 \  
 
-```{r, stilt, echo=FALSE, fig.align='center', out.width='50%', fig.cap = "https://en.wikipedia.org/wiki/Hawaiian_stilt"}
+```{r, stilt, echo=FALSE, fig.align='center', out.width='50%'}
 knitr::include_graphics("images/stilt.jpg")
 ```
 
