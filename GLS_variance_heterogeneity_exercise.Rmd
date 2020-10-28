@@ -6,6 +6,7 @@ output:
   pdf_document: default
   html_document:
     css: custom.css
+    toc: no
 fontsize: 12pt
 ---
 

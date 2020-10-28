@@ -5,6 +5,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     css: custom.css
+    toc: no
   pdf_document: default
 fontsize: 11pt
 ---
