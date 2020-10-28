@@ -4,9 +4,12 @@ author: "Alex Douglas"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   pdf_document: default
-  html_document: default
+  html_document:
+    css: custom.css
 fontsize: 11pt
 ---
+
+\  
 
 Setup global options for knitr package. Normally I wouldn't display these but I'll leave them here for your information. The arguments ```width.cutoff``` and ```tidy = TRUE``` keeps the displayed code within the code boxes (see what happens if you omit this).
 
