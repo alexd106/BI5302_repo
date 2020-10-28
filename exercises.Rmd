@@ -15,11 +15,7 @@ suppressPackageStartupMessages(library(stringr))
 
 \  
 
-### Exercises
-
-\  
-
-#### Reproducible reports using R markdown
+### Reproducible reports using R markdown
 
 \  
 
@@ -29,7 +25,7 @@ suppressPackageStartupMessages(library(stringr))
 
 \  
 
-#### Case study group work 
+### Case study group work 
 
 \ 
 
@@ -37,7 +33,7 @@ suppressPackageStartupMessages(library(stringr))
 
 \  
 
-#### Dealing with Variance heterogeneity 
+### Dealing with Variance heterogeneity 
 
 \  
 
@@ -55,7 +51,7 @@ If you want to work alongside my solutions you can find the relevant files below
 
 \  
 
-#### Dealing with temporal non-independence
+### Dealing with temporal non-independence
 
 \  
 

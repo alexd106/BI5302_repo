@@ -28,7 +28,7 @@ So, for each case study you will need to:
 
 \  
 
-For all of the steps above, please document your workflow in an R markdown document in order to create a report detailing your approach and highlighting the issues.
+For all of the steps above, it would be great to document your workflow using an R markdown document in order to create a report detailing your approach and highlighting the issues (either pdf or html format is ok). We can then share our reports on MyAberdeen and learn from each other! Also, as the course progresses and you learn how to extend the linear model to deal with these issues we will return to these two datasets to anlyse them correctly!  
 
 \  
 
@@ -51,7 +51,9 @@ The data file contains the following variables:
   - `concentration` : the nutrient concentration
   - `biomass` : the polychaete biomass level
   - `fnutrient` : the nutrient measured
-  
+
+As a hint, you should be looking out for violations of the homogeneity of variance assumption for this dataset.
+
 \  
 
 #### Environmental impacts on Hawaiian black-necked stilt (*Himantopus mexicanus knudseni*) abundance 
@@ -74,5 +76,7 @@ The data file contains the following variables:
   - `rainfall` : the amount of annual rainfall
   - `location` : the name of the island
   - `year` : the year the data was collected
-  
+
+As a hint, you should be looking out for violations of both the homogeneity of variance assumption and independence of residuals assumption for this dataset.
+
 \ 
