@@ -1,0 +1,63 @@
+---
+title: "BI5302 Dealing with temporal non-independence Practical"
+author: "Alex Douglas"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: default
+  html_document:
+    css: custom.css
+fontsize: 11pt
+---
+
+\  
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
+```
+
+### Environmental impacts on Hawaiian black-necked stilt abundance 
+
+These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts (*Himantopus mexicanus knudseni*) was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.
+
+\   
+
+1\. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
+
+\  
+
+Import all the packages required for this exercise:
+
+\    
+
+```{r,q1, message=FALSE}
+library(nlme)
+library(lattice)
+library(effects)
+library(ggplot2) # this is optional
+```
+
+\   
+
+2\. Import the `hawaii2.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe using the `str()` function.
+
+\   
+
+```{r, q2, collapse=TRUE}
+birds <- read.table('data/hawaii2.txt', header = TRUE)
+str(birds)
+```
+
+\  
+
+3\. 
+
+\  
+
+###Session Information
+
+```{r, session-info}
+sessionInfo()
+```
+
+
+

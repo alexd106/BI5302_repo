@@ -11,7 +11,7 @@ output:
 
 \  
 
-Hello and welcome to BI5302. This website compliments the BI5302 MyAberdeen course site and is mainly used to host exercises and associated exercise solutions, data files. You can find all other material for BI5302 on the [MyAberdeen course website](https://abdn.blackboard.com/ultra/).   
+Hello and welcome to BI5302. This website compliments the BI5302 MyAberdeen course site and is mainly used to host exercises, associated exercise solutions and data files. You can find all other material for BI5302 on the [MyAberdeen course website](https://abdn.blackboard.com/ultra/).   
 
 \  
 

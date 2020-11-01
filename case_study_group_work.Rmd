@@ -33,6 +33,7 @@ So, for each case study you will need to:
 For all of the steps above, it would be great to document your workflow using an R markdown document in order to create a report detailing your approach and highlighting the issues (either pdf or html format is ok). We can then share our reports on MyAberdeen and learn from each other! Also, as the course progresses and you learn how to extend the linear model to deal with these issues we will return to these two datasets to analyse them correctly!
 
 If you would prefer to work from the pdf version of this document you can find this [here](case_study_group_work.pdf).
+
 \  
 
 ### Benthic Biodiversity experiment
@@ -59,9 +60,9 @@ As a hint, you should be looking out for violations of the homogeneity of varian
 
 \  
 
-### Environmental impacts on Hawaiian black-necked stilt (*Himantopus mexicanus knudseni*) abundance 
+### Environmental impacts on Hawaiian black-necked stilt abundance 
 
-These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.
+These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts (*Himantopus mexicanus knudseni*) was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.
 
 \  
 
