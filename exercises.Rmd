@@ -45,6 +45,10 @@ If you want to work alongside my solutions you can find the relevant files below
 
 - [Hawaiian bird case study R markdown file](case_study_hawaiian_birds.Rmd)
 
+- [Hawaiian bird case study final rendered html file](case_study_hawaiian_birds.html)
+
+- [Hawaiian bird case study final rendered pdf file](case_study_hawaiian_birds.pdf)
+
 \   
 
 ### Dealing with Variance heterogeneity 

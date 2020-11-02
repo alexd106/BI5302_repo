@@ -30,10 +30,11 @@ So, for each case study you will need to:
 
 \  
 
-For all of the steps above, it would be great to document your workflow using an R markdown document in order to create a report detailing your approach and highlighting the issues (either pdf or html format is ok). We can then share our reports on MyAberdeen and learn from each other! Also, as the course progresses and you learn how to extend the linear model to deal with these issues we will return to these two datasets to analyse them correctly!
+For all of the steps above, it would be great to document your workflow using an R markdown document in order to create a report detailing your approach and highlighting the issues (either pdf or html format is ok). We can then share our reports on MyAberdeen and learn from each other! Also, as the course progresses and you learn how to extend the linear model to deal with these issues we will return to these two datasets (and R markdown documents) to analyse them correctly!
 
 If you would prefer to work from the pdf version of this document you can find this [here](case_study_group_work.pdf).
 
+If you want to work alongside my R markdown document you can find a link at the end of each case study section.
 \  
 
 ### Benthic Biodiversity experiment
@@ -155,8 +156,6 @@ If you want to work alongside my solutions you can find the relevant files below
 
 - [Hawaiian bird case study R markdown file](case_study_hawaiian_birds.Rmd)
 
-<!---
-- [Hediste case study final rendered html file](case_study_hediste.html)
+- [Hawaiian bird case study final rendered html file](case_study_hawaiian_birds.html)
 
-- [Hediste case study final rendered pdf file](case_study_hediste.pdf)
---->
+- [Hawaiian bird case study final rendered pdf file](case_study_hawaiian_birds.pdf)
