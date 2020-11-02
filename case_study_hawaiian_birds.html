@@ -12,7 +12,7 @@
 <meta name="author" content="Alex Douglas" />
 
 
-<title>BI5302 Dealing with temporal non-independence Practical</title>
+<title>BI5302 Hawaiian birds case study practical</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -365,7 +365,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">BI5302 Dealing with temporal non-independence Practical</h1>
+<h1 class="title toc-ignore">BI5302 Hawaiian birds case study practical</h1>
 <h4 class="author">Alex Douglas</h4>
 <h4 class="date">02 November, 2020</h4>
 
@@ -373,70 +373,103 @@ $(document).ready(function () {
 
 
 <p> </p>
-<div id="environmental-impacts-on-hawaiian-black-necked-stilt-abundance" class="section level3">
-<h3>Environmental impacts on Hawaiian black-necked stilt abundance</h3>
+<p>Setup global options for knitr package. Normally I wouldn’t display these but I’ll leave them here for your information. The arguments <code>width.cutoff</code> and <code>tidy = TRUE</code> keeps the displayed code within the code boxes (see what happens if you omit this).</p>
+<p> </p>
+<pre class="r"><code>knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)</code></pre>
+<p> </p>
 <p>These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts (<em>Himantopus mexicanus knudseni</em>) was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.</p>
 <p> </p>
 <p>1. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
 <p> </p>
 <p>Import all the packages required for this exercise:</p>
 <p> </p>
-<pre class="r"><code>library(nlme)
-library(lattice)
-library(effects)
-library(ggplot2)  # this is optional</code></pre>
+<pre class="r"><code>library(lattice)
+library(car)
+library(nlme)
+library(effects)</code></pre>
 <p> </p>
-<p>2. Import the <code>hawaii2.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe using the <code>str()</code> function.</p>
+<p>2. Import the <code>hawaii3.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.</p>
 <p> </p>
-<pre class="r"><code>birds &lt;- read.table(&quot;data/hawaii3.txt&quot;, header = TRUE)
-str(birds)
+<pre class="r"><code>dataf &lt;- read.table(&quot;data/hawaii3.txt&quot;, header = TRUE)
+str(dataf)
 ## &#39;data.frame&#39;:    96 obs. of  4 variables:
 ##  $ abund   : int  220 151 183 161 264 192 117 239 263 128 ...
 ##  $ rainfall: num  33.1 12.5 22.2 11.8 41.6 15.6 4.5 40.1 42.1 7.6 ...
 ##  $ year    : int  1956 1957 1958 1959 1960 1961 1962 1963 1964 1965 ...
 ##  $ location: Factor w/ 2 levels &quot;Maui&quot;,&quot;Oahu&quot;: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
 <p> </p>
-<p>3.</p>
+<p>3. How many observations are there for each island?</p>
 <p> </p>
-<p>###Session Information</p>
-<pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre class="r"><code>table(dataf$location)
 ## 
-## Matrix products: default
-## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## other attached packages:
-##  [1] car_3.0-9        kableExtra_1.1.0 pander_0.6.3     htmltools_0.5.0  stringr_1.4.0    dplyr_1.0.1      knitr_1.29      
-##  [8] rms_6.0-1        SparseM_1.78     Hmisc_4.4-1      Formula_1.2-3    survival_3.2-3   lattice_0.20-41  ggplot2_3.3.2   
-## [15] effects_4.2-0    carData_3.0-4    nlme_3.1-148    
-## 
-## loaded via a namespace (and not attached):
-##  [1] matrixStats_0.56.0  insight_0.9.0       webshot_0.5.2       RColorBrewer_1.1-2  httr_1.4.2          tools_3.6.3        
-##  [7] backports_1.1.8     R6_2.4.1            rpart_4.1-15        DBI_1.1.0           colorspace_1.4-1    nnet_7.3-14        
-## [13] withr_2.2.0         tidyselect_1.1.0    gridExtra_2.3       curl_4.3            compiler_3.6.3      rvest_0.3.6        
-## [19] quantreg_5.61       formatR_1.7         htmlTable_2.0.1     xml2_1.3.2          sandwich_2.5-1      labeling_0.3       
-## [25] scales_1.1.1        checkmate_2.0.0     polspline_1.1.19    mvtnorm_1.1-1       readr_1.3.1         digest_0.6.25      
-## [31] foreign_0.8-76      minqa_1.2.4         rmarkdown_2.3       rio_0.5.16          base64enc_0.1-3     jpeg_0.1-8.1       
-## [37] pkgconfig_2.0.3     lme4_1.1-23         highr_0.8           readxl_1.3.1        htmlwidgets_1.5.1   rlang_0.4.7        
-## [43] rstudioapi_0.11     farver_2.0.3        generics_0.0.2      zoo_1.8-8           zip_2.1.0           magrittr_1.5       
-## [49] Matrix_1.2-18       Rcpp_1.0.5          munsell_0.5.0       abind_1.4-5         lifecycle_0.2.0     stringi_1.4.6      
-## [55] multcomp_1.4-13     yaml_2.2.1          MASS_7.3-51.6       grid_3.6.3          forcats_0.5.0       crayon_1.3.4       
-## [61] haven_2.3.1         splines_3.6.3       hms_0.5.3           pillar_1.4.6        boot_1.3-25         estimability_1.3   
-## [67] codetools_0.2-16    glue_1.4.1          packrat_0.5.0       evaluate_0.14       mitools_2.4         latticeExtra_0.6-29
-## [73] data.table_1.12.8   png_0.1-7           vctrs_0.3.2         nloptr_1.2.2.2      cellranger_1.1.0    MatrixModels_0.4-1 
-## [79] gtable_0.3.0        purrr_0.3.4         openxlsx_4.1.5      xfun_0.16           survey_4.0          rsconnect_0.8.16   
-## [85] viridisLite_0.3.0   tibble_3.0.3        conquer_1.0.1       tinytex_0.25        cluster_2.1.0       statmod_1.4.34     
-## [91] TH.data_1.0-10      ellipsis_0.3.1</code></pre>
-</div>
+## Maui Oahu 
+##   48   48</code></pre>
+<p> </p>
+<p>4. Explore these data graphically. Are there any obvious outliers in the <code>abund</code> variable for each of the <code>locations</code> variable levels (perhaps the <code>dotchart()</code> function with the <code>group</code> argument might help)? Next, use an <code>xyplot</code> (from the <code>lattice</code> package) or a <code>coplot</code> to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (<code>year</code>) for each of the two islands.</p>
+<p> </p>
+<pre class="r"><code>dotchart(dataf$abund, groups = dataf$location, col = as.numeric(dataf$location), 
+    xlab = &quot;Bird abundance&quot;, ylab = &quot;Order of observations&quot;)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q4a-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There doesn’t appear to be any obvious outliers in the <code>abund</code> variable for each island. However this plot does indicate that the ‘spread’ of bird abundance values is much greater for Oahu than for Maui. Hopefully, our linear model will be anle to account for this.</p>
+<p> </p>
+<pre class="r"><code>xyplot(abund ~ rainfall | location, data = dataf, ylab = &quot;bird abundance&quot;)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q4b-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There appears to be a positive relationship between bird abundance and rainfall. The relationship seems to be more apparent for Maui compared to Oahu.</p>
+<p>Now let’s take a look at the change in bird abundance over time on each island.</p>
+<p> </p>
+<pre class="r"><code>xyplot(abund ~ year | location, data = dataf, ylim = c(0, 
+    800), ylab = &quot;bird abundance&quot;)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q4c-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Looks like there may be a small decrease in bird abundance for birds sampled on Maui. The decrease on Oahu looks to be more apparent although there seems to be quite a lot of between year variability.</p>
+<p> </p>
+<p>5. With reference to the study aims stated above, fit an appropriate linear model to these data using the <code>lm()</code> function.</p>
+<p> </p>
+<p>So lets fit a linear model to explain the variability in bird abundance by rainfall and location. We’ll also include the interaction term between rainfall and location to see if any relationship is different between the two islands. I have also included the <code>year</code> variable as an additive effect as I want to try to account for the fact that these observations are potentially non-independent.</p>
+<p> </p>
+<pre class="r"><code>birds_lm &lt;- lm(abund ~ rainfall + location + year + rainfall:location, 
+    data = dataf)</code></pre>
+<p> </p>
+<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables (including <code>year</code>). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.</p>
+<p> </p>
+<p>Let’s plot the usual model validation plots by plotting the model object.</p>
+<p> </p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(birds_lm)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q6a-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p>From the Residual vs Fitted and Scale-Location plots (left-hand side) there doesn’t seem to be any issues with heterogeneity of variance. The QQ-plot suggests that the residuals are also approximately normally distributed. The residuals vs leverage plot indicates that non of our residuals are unusual or influential. Looks good so far!</p>
+<p>However, let’s be really thorough and plot our residuals against each explanatory variable. First we can plot the residuals from our linear model against the <code>location</code> variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(birds_lm) ~ dataf$location, xlab = &quot;location&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q6b-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There are clear differences in the residual variance between each of the islands. Oahu has a much wider spread in residuals compared to Maui indicating a heterogeneity of variance associated with location.</p>
+<p>We should also plot the residuals from our model against the <code>rainfall</code> explanatory variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(birds_lm) ~ dataf$rainfall, xlab = &quot;rainfall&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q6c-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Not a huge amount to worry about here. There doesn’t seem to be any heterogeneity of variance associated with the <code>rainfall</code> variable. Let’s be extra cautious though and plot the residuals from our model against the <code>rainfall</code> variable again but separately for each island.</p>
+<p> </p>
+<pre class="r"><code>xyplot(resid(birds_lm) ~ rainfall | location, data = dataf, 
+    xlab = &quot;rainfall&quot;, ylab = &quot;Residuals&quot;)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q6d-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>So the residuals look OK. We can still see that there is a different spread of our residuals between location which we picked up in our previous diagnostic plot.</p>
+<p> </p>
+<p>Also, don’t forget we need to check the independence of residuals assumptions as these data were collected from both islands each year from 1956 - 2003. The best way to do this is to plot the residuals against the <code>year</code> variable for each island (<code>location</code>).</p>
+<pre class="r"><code>xyplot(resid(birds_lm) ~ year | location, data = dataf, 
+    xlab = &quot;year&quot;, ylab = &quot;Residuals&quot;)</code></pre>
+<p><img src="case_study_hawaiian_birds_files/figure-html/q6e-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p>Oh dear, there are clear patterns in our residuals over time indicating issues with non-independence. The pattern is perhaps strongest for Maui but there also appears to be a downward trend in our residuals for Oahu.</p>
+<p> </p>
+<p>So for this dataset and our simple linear model, we cannot assume that our residuals have equal variance, probably due to differences between Oahu and Maui, and that our residuals are not independent. In other words, we need to go and fit a model that takes both of these factors into account. We’ll fit this type of model during week 3 of the course.</p>
 
 
 

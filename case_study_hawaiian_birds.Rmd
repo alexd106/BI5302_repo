@@ -1,0 +1,188 @@
+---
+title: "BI5302 Hawaiian birds case study practical"
+author: "Alex Douglas"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: default
+  html_document: default
+fontsize: 11pt
+---
+
+\  
+
+Setup global options for knitr package. Normally I wouldn't display these but I'll leave them here for your information. The arguments ```width.cutoff``` and ```tidy = TRUE``` keeps the displayed code within the code boxes (see what happens if you omit this).
+
+\  
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
+```
+
+\ 
+
+These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts (*Himantopus mexicanus knudseni*) was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.
+
+\  
+
+1\. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
+
+\  
+
+Import all the packages required for this exercise:
+
+\    
+
+```{r,q1, message=FALSE}
+library(lattice)
+library(car)
+library(nlme)
+library(effects)
+```
+
+\   
+
+2\. Import the `hawaii3.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.
+
+\   
+
+```{r, q2, collapse=TRUE}
+dataf <- read.table("data/hawaii3.txt", header = TRUE)
+str(dataf)
+```
+
+\  
+
+3\. How many observations are there for each island?
+
+\ 
+
+```{r, q3, collapse=TRUE}
+table(dataf$location)
+```
+
+\  
+
+4\. Explore these data graphically. Are there any obvious outliers in the `abund` variable for each of the `locations`  variable levels (perhaps the `dotchart()` function with the `group` argument might help)? Next, use an `xyplot` (from the `lattice` package) or a `coplot` to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (`year`) for each of the two islands. 
+
+\  
+
+```{r, q4a, fig.height=4, fig.width=4.5, fig.align="center"}
+dotchart(dataf$abund, groups = dataf$location, 
+         col = as.numeric(dataf$location), 
+         xlab = "Bird abundance", ylab = "Order of observations")
+```
+
+\  
+
+There doesn't appear to be any obvious outliers in the `abund` variable for each island. However this plot does indicate that the 'spread' of bird abundance values is much greater for Oahu than for Maui. Hopefully, our linear model will be anle to account for this.  
+
+\  
+
+```{r, q4b, fig.height=4, fig.width=4.5, fig.align="center"}
+xyplot(abund ~ rainfall | location, data = dataf, 
+       ylab = "bird abundance")
+```
+
+\  
+
+There appears to be a positive relationship between bird abundance and rainfall. The relationship seems to be more apparent for Maui compared to Oahu.
+
+Now let's take a look at the change in bird abundance over time on each island.
+
+\  
+
+```{r, q4c, fig.height=4, fig.width=4.5, fig.align="center"}
+xyplot(abund ~ year | location, data = dataf, ylim = c(0,800),
+       ylab = "bird abundance")
+```
+
+\  
+
+Looks like there may be a small decrease in bird abundance for birds sampled on Maui. The decrease on Oahu looks to be more apparent although there seems to be quite a lot of between year variability.
+
+\  
+
+5\. With reference to the study aims stated above, fit an appropriate linear model to these data using the `lm()` function.
+
+\  
+
+So lets fit a linear model to explain the variability in bird abundance by rainfall and location. We'll also include the interaction term between rainfall and location to see if any relationship is different between the two islands. I have also included the `year` variable as an additive effect as I want to try to account for the fact that these observations are potentially non-independent.
+
+\  
+
+```{r, q5}
+birds_lm <- lm(abund ~ rainfall + location + year + rainfall:location, data = dataf)
+```
+
+\ 
+
+6\. Use appropriate residual plots to identify whether the modelling assumptions are met. Don't forget to also plot the residuals from this model against all explanatory variables (including `year`). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.
+
+\  
+
+Let's plot the usual model validation plots by plotting the model object. 
+
+\  
+
+```{r, q6a, fig.height=5.5, fig.width=5.5, fig.align="center"}
+par(mfrow = c(2,2))
+plot(birds_lm)
+```
+
+From the Residual vs Fitted and Scale-Location plots (left-hand side) there doesn't seem to be any issues with heterogeneity of variance. The QQ-plot suggests that the residuals are also approximately normally distributed. The residuals vs leverage plot indicates that non of our residuals are unusual or influential. Looks good so far!
+
+However, let's be really thorough and plot our residuals against each explanatory variable. First we can plot the residuals from our linear model against the `location` variable. 
+
+\  
+
+```{r, q6b, fig.height=3.8, fig.width=3.8, fig.align="center"}
+plot(resid(birds_lm) ~ dataf$location, xlab = "location",
+     ylab = "Residuals")
+abline(h = 0, lty =2, col = 2)
+```
+
+\  
+
+There are clear differences in the residual variance between each of the islands. Oahu has a much wider spread in residuals compared to Maui indicating a heterogeneity of variance associated with location.
+
+We should also plot the residuals from our model against the `rainfall` explanatory variable.
+
+\  
+
+```{r, q6c, fig.height=3.8, fig.width=3.8, fig.align="center"}
+plot(resid(birds_lm) ~ dataf$rainfall, xlab = "rainfall",
+     ylab = "Residuals")
+abline(h = 0, lty =2, col = 2)
+```
+
+\  
+
+Not a huge amount to worry about here. There doesn't seem to be any heterogeneity of variance associated with the `rainfall` variable. Let's be extra cautious though and plot the residuals from our model against the `rainfall` variable again but separately for each island.
+
+\  
+
+```{r, q6d, fig.height=3.8, fig.width=3.8, fig.align="center"}
+xyplot(resid(birds_lm) ~ rainfall | location, data = dataf,
+       xlab = "rainfall",
+       ylab = "Residuals")
+```
+
+\  
+
+So the residuals look OK. We can still see that there is a different spread of our residuals between location which we picked up in our previous diagnostic plot.
+
+\  
+
+Also, don't forget we need to check the independence of residuals assumptions as these data were collected from both islands each year from 1956 - 2003. The best way to do this is to plot the residuals against the `year` variable for each island (`location`).
+
+```{r, q6e, fig.height=3.8, fig.width=3.8, fig.align="center"}
+xyplot(resid(birds_lm) ~ year | location, data = dataf,
+       xlab = "year",
+       ylab = "Residuals")
+```
+
+Oh dear, there are clear patterns in our residuals over time indicating issues with non-independence. The pattern is perhaps strongest for Maui but there also appears to be a downward trend in our residuals for Oahu. 
+
+\  
+
+So for this dataset and our simple linear model, we cannot assume that our residuals have equal variance, probably due to differences between Oahu and Maui, and that our residuals are not independent. In other words, we need to go and fit a model that takes both of these factors into account. We'll fit this type of model during week 3 of the course.

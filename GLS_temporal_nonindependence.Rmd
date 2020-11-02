@@ -42,7 +42,7 @@ library(ggplot2) # this is optional
 \   
 
 ```{r, q2, collapse=TRUE}
-birds <- read.table('data/hawaii2.txt', header = TRUE)
+birds <- read.table('data/hawaii3.txt', header = TRUE)
 str(birds)
 ```
 

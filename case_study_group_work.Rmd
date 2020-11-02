@@ -114,15 +114,49 @@ knitr::include_graphics("images/stilt.jpg")
 
 \  
 
-Data for this case study is saved in a tab delimited file called `hawaii2.txt` which you can download from the **[<i class="fa fa-download"></i> Data](data.html)** link. Save this data file in your `data` directory in your RStudio project. 
+Data for this case study is saved in a tab delimited file called `hawaii3.txt` which you can download from the **[<i class="fa fa-download"></i> Data](data.html)** link. Save this data file in your `data` directory in your RStudio project. 
 
 The data file contains the following variables:
 
   - `abund` : the abundance of stilts
   - `rainfall` : the amount of annual rainfall
   - `location` : the name of the island
-  - `year` : the year the data was collected
+  - `year` : the year the data was collected at each site.
 
 As a hint, you should be looking out for violations of both the homogeneity of variance assumption and independence of residuals assumption for this dataset.
 
 \ 
+
+1\. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
+
+\  
+
+2\. Import the `hawaii2.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.
+
+\  
+
+3\. How many observations are there for each island?
+
+\  
+
+4\. Explore these data graphically. Are there any obvious outliers in the `abund` variable for each of the `locations`  variable levels (perhaps the `dotchart()` function with the `group` argument might help)? Next, use an `xyplot` (from the `lattice` package) or a `coplot` to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (`year`) for each of the two islands. 
+
+\  
+
+5\. With reference to the study aims stated above, fit an appropriate linear model to these data using the `lm()` function.
+
+\  
+
+6\. Use appropriate residual plots to identify whether the modelling assumptions are met. Don't forget to also plot the residuals from this model against all explanatory variables (including `year`). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.
+
+\  
+
+If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
+
+- [Hawaiian bird case study R markdown file](case_study_hawaiian_birds.Rmd)
+
+<!---
+- [Hediste case study final rendered html file](case_study_hediste.html)
+
+- [Hediste case study final rendered pdf file](case_study_hediste.pdf)
+--->

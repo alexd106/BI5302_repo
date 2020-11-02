@@ -420,16 +420,37 @@ $(document).ready(function () {
 <p> </p>
 <p><img src="images/stilt.jpg" width="50%" style="display: block; margin: auto;" /></p>
 <p> </p>
-<p>Data for this case study is saved in a tab delimited file called <code>hawaii2.txt</code> which you can download from the <strong><a href="data.html"><i class="fa fa-download"></i> Data</a></strong> link. Save this data file in your <code>data</code> directory in your RStudio project.</p>
+<p>Data for this case study is saved in a tab delimited file called <code>hawaii3.txt</code> which you can download from the <strong><a href="data.html"><i class="fa fa-download"></i> Data</a></strong> link. Save this data file in your <code>data</code> directory in your RStudio project.</p>
 <p>The data file contains the following variables:</p>
 <ul>
 <li><code>abund</code> : the abundance of stilts</li>
 <li><code>rainfall</code> : the amount of annual rainfall</li>
 <li><code>location</code> : the name of the island</li>
-<li><code>year</code> : the year the data was collected</li>
+<li><code>year</code> : the year the data was collected at each site.</li>
 </ul>
 <p>As a hint, you should be looking out for violations of both the homogeneity of variance assumption and independence of residuals assumption for this dataset.</p>
 <p> </p>
+<p>1. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
+<p> </p>
+<p>2. Import the <code>hawaii2.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.</p>
+<p> </p>
+<p>3. How many observations are there for each island?</p>
+<p> </p>
+<p>4. Explore these data graphically. Are there any obvious outliers in the <code>abund</code> variable for each of the <code>locations</code> variable levels (perhaps the <code>dotchart()</code> function with the <code>group</code> argument might help)? Next, use an <code>xyplot</code> (from the <code>lattice</code> package) or a <code>coplot</code> to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (<code>year</code>) for each of the two islands.</p>
+<p> </p>
+<p>5. With reference to the study aims stated above, fit an appropriate linear model to these data using the <code>lm()</code> function.</p>
+<p> </p>
+<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables (including <code>year</code>). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.</p>
+<p> </p>
+<p>If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.</p>
+<ul>
+<li><a href="case_study_hawaiian_birds.Rmd">Hawaiian bird case study R markdown file</a></li>
+</ul>
+<!---
+- [Hediste case study final rendered html file](case_study_hediste.html)
+
+- [Hediste case study final rendered pdf file](case_study_hediste.pdf)
+--->
 </div>
 
 

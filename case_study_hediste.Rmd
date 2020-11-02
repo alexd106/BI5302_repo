@@ -151,7 +151,7 @@ Let's try to find which of the explanatory variable(s) is responsible for these 
 \  
 
 ```{r, fig.height=3.8, fig.width=3.8, fig.align="center"}
-plot(resid(nereis.lm) ~ nereis$fbiomass,xlab = "Biomass",
+plot(resid(nereis.lm) ~ nereis$fbiomass, xlab = "Biomass",
      ylab = "Residuals")
 abline(h = 0, lty =2, col = 2)
 ```
