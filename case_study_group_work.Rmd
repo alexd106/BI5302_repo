@@ -133,7 +133,7 @@ As a hint, you should be looking out for violations of both the homogeneity of v
 
 \  
 
-2\. Import the `hawaii2.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.
+2\. Import the `hawaii3.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.
 
 \  
 

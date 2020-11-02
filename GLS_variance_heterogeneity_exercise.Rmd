@@ -32,7 +32,7 @@ These data were obtained from a mesocosm experiment which aimed to examine the e
 
 \  
 
-2\. Import the `Nereis2.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the `biomass` variable to a factors and store it as a new variable in your dataframe.
+2\. Import the `Hediste.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the `biomass` variable to a factors and store it as a new variable in your dataframe.
 
 \  
 
