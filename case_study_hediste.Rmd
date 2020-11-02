@@ -191,3 +191,11 @@ ggplot(nereis, aes(x = fbiomass, y = concentration, fill = fnutrient)) +
     y = "concentration (mg/l)", fill = "Biomass") + 
     scale_fill_brewer(palette = "RdBu")
 ```
+
+\  
+
+###Session Information
+
+```{r, session-info}
+sessionInfo()
+```

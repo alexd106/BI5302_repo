@@ -129,9 +129,11 @@ par(mfrow = c(2,2))
 plot(birds_lm)
 ```
 
-From the Residual vs Fitted and Scale-Location plots (left-hand side) there doesn't seem to be any issues with heterogeneity of variance. The QQ-plot suggests that the residuals are also approximately normally distributed. The residuals vs leverage plot indicates that non of our residuals are unusual or influential. Looks good so far!
+\  
 
-However, let's be really thorough and plot our residuals against each explanatory variable. First we can plot the residuals from our linear model against the `location` variable. 
+From the Residuals vs Fitted and Scale-Location plots (left-hand side) there seems to be a hint of heterogeneity of variance. On the Residuals vs Fitted plot the spread of the residuals is narrower for smaller fitted values compared to larget fitted values resulting in a slight fan shapped pattern. The QQ-plot suggests that the residuals are approximately normally distributed. The residuals vs leverage plot indicates that none of our residuals are unusual or influential. Looks good so far!
+
+So, to investigate the issue of heterogeneity of variance further let's plot our residuals against each explanatory variable. First we can plot the residuals from our linear model against the `location` variable. 
 
 \  
 
@@ -188,3 +190,11 @@ Oh dear, there are clear patterns in our residuals over time indicating issues w
 \  
 
 So for this dataset and our simple linear model, we cannot assume that our residuals have equal variance, probably due to differences between Oahu and Maui, and that our residuals are not independent. In other words, we need to go and fit a model that takes both of these factors into account. We'll fit this type of model during week 3 of the course.
+
+\  
+
+###Session Information
+
+```{r, session-info}
+sessionInfo()
+```

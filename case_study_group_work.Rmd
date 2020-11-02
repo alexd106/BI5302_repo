@@ -35,6 +35,7 @@ For all of the steps above, it would be great to document your workflow using an
 If you would prefer to work from the pdf version of this document you can find this [here](case_study_group_work.pdf).
 
 If you want to work alongside my R markdown document you can find a link at the end of each case study section.
+
 \  
 
 ### Benthic Biodiversity experiment

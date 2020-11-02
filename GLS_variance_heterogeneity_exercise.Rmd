@@ -1,5 +1,5 @@
 ---
-title: ''
+title: 'BI5302 Variance Heterogeneity Practical'
 author: ''
 date: ''
 output:
@@ -13,8 +13,6 @@ fontsize: 12pt
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## BI5302 Variance Heterogeneity Practical
 
 \  
 

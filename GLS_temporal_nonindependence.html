@@ -381,22 +381,93 @@ $(document).ready(function () {
 <p> </p>
 <p>Import all the packages required for this exercise:</p>
 <p> </p>
-<pre class="r"><code>library(nlme)
-library(lattice)
-library(effects)
-library(ggplot2)  # this is optional</code></pre>
+<pre class="r"><code>library(lattice)
+library(car)
+library(nlme)
+library(effects)</code></pre>
 <p> </p>
-<p>2. Import the <code>hawaii2.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe using the <code>str()</code> function.</p>
+<p>2. Import the <code>hawaii3.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.</p>
 <p> </p>
-<pre class="r"><code>birds &lt;- read.table(&quot;data/hawaii3.txt&quot;, header = TRUE)
-str(birds)
+<pre class="r"><code>dataf &lt;- read.table(&quot;data/hawaii3.txt&quot;, header = TRUE)
+str(dataf)
 ## &#39;data.frame&#39;:    96 obs. of  4 variables:
 ##  $ abund   : int  220 151 183 161 264 192 117 239 263 128 ...
 ##  $ rainfall: num  33.1 12.5 22.2 11.8 41.6 15.6 4.5 40.1 42.1 7.6 ...
 ##  $ year    : int  1956 1957 1958 1959 1960 1961 1962 1963 1964 1965 ...
 ##  $ location: Factor w/ 2 levels &quot;Maui&quot;,&quot;Oahu&quot;: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
 <p> </p>
-<p>3.</p>
+<p>3. How many observations are there for each island?</p>
+<p> </p>
+<pre class="r"><code>table(dataf$location)
+## 
+## Maui Oahu 
+##   48   48</code></pre>
+<p> </p>
+<p>4. Explore these data graphically. Are there any obvious outliers in the <code>abund</code> variable for each of the <code>locations</code> variable levels (perhaps the <code>dotchart()</code> function with the <code>group</code> argument might help)? Next, use an <code>xyplot</code> (from the <code>lattice</code> package) or a <code>coplot</code> to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (<code>year</code>) for each of the two islands.</p>
+<p> </p>
+<pre class="r"><code>dotchart(dataf$abund, groups = dataf$location, col = as.numeric(dataf$location), 
+    xlab = &quot;Bird abundance&quot;, ylab = &quot;Order of observations&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q4a-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There doesn’t appear to be any obvious outliers in the <code>abund</code> variable for each island. However this plot does indicate that the ‘spread’ of bird abundance values is much greater for Oahu than for Maui. Hopefully, our linear model will be anle to account for this.</p>
+<p> </p>
+<pre class="r"><code>xyplot(abund ~ rainfall | location, data = dataf, ylab = &quot;bird abundance&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q4b-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There appears to be a positive relationship between bird abundance and rainfall. The relationship seems to be more apparent for Maui compared to Oahu.</p>
+<p>Now let’s take a look at the change in bird abundance over time on each island.</p>
+<p> </p>
+<pre class="r"><code>xyplot(abund ~ year | location, data = dataf, ylim = c(0, 
+    800), ylab = &quot;bird abundance&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q4c-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Looks like there may be a small decrease in bird abundance for birds sampled on Maui. The decrease on Oahu looks to be more apparent although there seems to be quite a lot of between year variability.</p>
+<p> </p>
+<p>5. With reference to the study aims stated above, fit an appropriate linear model to these data using the <code>lm()</code> function.</p>
+<p> </p>
+<p>So lets fit a linear model to explain the variability in bird abundance by rainfall and location. We’ll also include the interaction term between rainfall and location to see if any relationship is different between the two islands. I have also included the <code>year</code> variable as an additive effect as I want to try to account for the fact that these observations are potentially non-independent.</p>
+<p> </p>
+<pre class="r"><code>birds_lm &lt;- lm(abund ~ rainfall + location + year + rainfall:location, 
+    data = dataf)</code></pre>
+<p> </p>
+<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables (including <code>year</code>). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.</p>
+<p> </p>
+<p>Let’s plot the usual model validation plots by plotting the model object.</p>
+<p> </p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(birds_lm)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q6a-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>From the Residuals vs Fitted and Scale-Location plots (left-hand side) there seems to be a hint of heterogeneity of variance. On the Residuals vs Fitted plot the spread of the residuals is narrower for smaller fitted values compared to larget fitted values resulting in a slight fan shapped pattern. The QQ-plot suggests that the residuals are approximately normally distributed. The residuals vs leverage plot indicates that none of our residuals are unusual or influential. Looks good so far!</p>
+<p>So, to investigate the issue of heterogeneity of variance further let’s plot our residuals against each explanatory variable. First we can plot the residuals from our linear model against the <code>location</code> variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(birds_lm) ~ dataf$location, xlab = &quot;location&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q6b-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There are clear differences in the residual variance between each of the islands. Oahu has a much wider spread in residuals compared to Maui indicating a heterogeneity of variance associated with location.</p>
+<p>We should also plot the residuals from our model against the <code>rainfall</code> explanatory variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(birds_lm) ~ dataf$rainfall, xlab = &quot;rainfall&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q6c-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Not a huge amount to worry about here. There doesn’t seem to be any heterogeneity of variance associated with the <code>rainfall</code> variable. Let’s be extra cautious though and plot the residuals from our model against the <code>rainfall</code> variable again but separately for each island.</p>
+<p> </p>
+<pre class="r"><code>xyplot(resid(birds_lm) ~ rainfall | location, data = dataf, 
+    xlab = &quot;rainfall&quot;, ylab = &quot;Residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q6d-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>So the residuals look OK. We can still see that there is a different spread of our residuals between location which we picked up in our previous diagnostic plot.</p>
+<p> </p>
+<p>Also, don’t forget we need to check the independence of residuals assumptions as these data were collected from both islands each year from 1956 - 2003. The best way to do this is to plot the residuals against the <code>year</code> variable for each island (<code>location</code>).</p>
+<p> </p>
+<pre class="r"><code>xyplot(resid(birds_lm) ~ year | location, data = dataf, 
+    xlab = &quot;year&quot;, ylab = &quot;Residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_files/figure-html/q6e-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p>Oh dear, there are clear patterns in our residuals over time indicating issues with non-independence. The pattern is perhaps strongest for Maui but there also appears to be a downward trend in our residuals for Oahu.</p>
 <p> </p>
 <p>###Session Information</p>
 <pre class="r"><code>sessionInfo()</code></pre>
