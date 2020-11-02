@@ -48,7 +48,7 @@ These data were obtained from a mesocosm experiment which aimed to examine the e
 
 \  
 
-6\. Use appropriate residual plots to identify whether the modelling assumptions are met. Don't forget to also plot the residuals from this model against all explanatory variables. Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.
+6\. Use appropriate residual plots to identify whether the modelling assumptions are met. Don't forget to also plot the residuals from this model against all explanatory variables. Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your R markdown document.
 
 \  
 
@@ -60,7 +60,7 @@ These data were obtained from a mesocosm experiment which aimed to examine the e
 
 \  
 
-9\. With reference to the residual plots you created above, fit models with different variance covariate structures to account for the heterogeneity of variance you identified previously. You will first need to decide which variance structure to use (and which R function to use). I suggest that you start with a simple variance structure and then build up to a more complicated structure. Remember to use the `weights =` argument with the `gls()` function to specify your variance structure. Use the `AIC()` function to compare each of your models with different variance structures. Identify the model with the most appropriate variance covariate structure. Describe and justify your process in your Rmarkdown document.
+9\. With reference to the residual plots you created above, fit models with different variance covariate structures to account for the heterogeneity of variance you identified previously. You will first need to decide which variance structure to use (and which R function to use). I suggest that you start with a simple variance structure and then build up to a more complicated structure. Remember to use the `weights =` argument with the `gls()` function to specify your variance structure. Use the `AIC()` function to compare each of your models with different variance structures. Identify the model with the most appropriate variance covariate structure. Describe and justify your process in your R markdown document.
 
 \  
 

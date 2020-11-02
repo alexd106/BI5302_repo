@@ -411,7 +411,7 @@ str(dataf)
     xlab = &quot;Bird abundance&quot;, ylab = &quot;Order of observations&quot;)</code></pre>
 <p><img src="case_study_hawaiian_birds_files/figure-html/q4a-1.png" width="432" style="display: block; margin: auto;" /></p>
 <p> </p>
-<p>There doesn’t appear to be any obvious outliers in the <code>abund</code> variable for each island. However this plot does indicate that the ‘spread’ of bird abundance values is much greater for Oahu than for Maui. Hopefully, our linear model will be anle to account for this.</p>
+<p>There doesn’t appear to be any obvious outliers in the <code>abund</code> variable for each island. However this plot does indicate that the ‘spread’ of bird abundance values is much greater for Oahu than for Maui. Hopefully, our linear model will be able to account for this.</p>
 <p> </p>
 <pre class="r"><code>xyplot(abund ~ rainfall | location, data = dataf, ylab = &quot;bird abundance&quot;)</code></pre>
 <p><img src="case_study_hawaiian_birds_files/figure-html/q4b-1.png" width="432" style="display: block; margin: auto;" /></p>
@@ -432,7 +432,7 @@ str(dataf)
 <pre class="r"><code>birds_lm &lt;- lm(abund ~ rainfall + location + year + rainfall:location, 
     data = dataf)</code></pre>
 <p> </p>
-<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables (including <code>year</code>). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.</p>
+<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables (including <code>year</code>). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your R markdown document.</p>
 <p> </p>
 <p>Let’s plot the usual model validation plots by plotting the model object.</p>
 <p> </p>
@@ -440,7 +440,7 @@ str(dataf)
 plot(birds_lm)</code></pre>
 <p><img src="case_study_hawaiian_birds_files/figure-html/q6a-1.png" width="528" style="display: block; margin: auto;" /></p>
 <p> </p>
-<p>From the Residuals vs Fitted and Scale-Location plots (left-hand side) there seems to be a hint of heterogeneity of variance. On the Residuals vs Fitted plot the spread of the residuals is narrower for smaller fitted values compared to larget fitted values resulting in a slight fan shapped pattern. The QQ-plot suggests that the residuals are approximately normally distributed. The residuals vs leverage plot indicates that none of our residuals are unusual or influential. Looks good so far!</p>
+<p>From the Residuals vs Fitted and Scale-Location plots (left-hand side) there seems to be a hint of heterogeneity of variance. On the Residuals vs Fitted plot the spread of the residuals is narrower for smaller fitted values compared to larger fitted values resulting in a slight fan shaped pattern. The QQ-plot suggests that the residuals are approximately normally distributed. The residuals vs leverage plot indicates that none of our residuals are unusual or influential. Looks good so far!</p>
 <p>So, to investigate the issue of heterogeneity of variance further let’s plot our residuals against each explanatory variable. First we can plot the residuals from our linear model against the <code>location</code> variable.</p>
 <p> </p>
 <pre class="r"><code>plot(resid(birds_lm) ~ dataf$location, xlab = &quot;location&quot;, 
