@@ -516,9 +516,9 @@ An alternative method to create a boxplot using the `ggplot()` function from the
 
 ```{r, bonus1}
 ggplot(nereis, aes(x = fbiomass, y = concentration, fill = fnutrient)) + 
-  geom_boxplot() + labs(x = "polychaete biomass (g)", 
-  y = "concentration (mg/l)", fill = "Biomass") + 
-  scale_fill_brewer(palette = "RdBu")
+    geom_boxplot() + labs(x = "polychaete biomass (g)", 
+    y = "concentration (mg/l)", fill = "Biomass") + 
+    scale_fill_brewer(palette = "RdBu")
 ```
 
 \  
