@@ -175,6 +175,8 @@ So the residuals look OK. We can still see that there is a different spread of o
 
 Also, don't forget we need to check the independence of residuals assumptions as these data were collected from both islands each year from 1956 - 2003. The best way to do this is to plot the residuals against the `year` variable for each island (`location`).
 
+\  
+
 ```{r, q6e, fig.height=3.8, fig.width=3.8, fig.align="center"}
 xyplot(resid(birds_lm) ~ year | location, data = dataf,
        xlab = "year",

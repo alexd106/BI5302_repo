@@ -464,6 +464,7 @@ abline(h = 0, lty = 2, col = 2)</code></pre>
 <p>So the residuals look OK. We can still see that there is a different spread of our residuals between location which we picked up in our previous diagnostic plot.</p>
 <p> </p>
 <p>Also, don’t forget we need to check the independence of residuals assumptions as these data were collected from both islands each year from 1956 - 2003. The best way to do this is to plot the residuals against the <code>year</code> variable for each island (<code>location</code>).</p>
+<p> </p>
 <pre class="r"><code>xyplot(resid(birds_lm) ~ year | location, data = dataf, 
     xlab = &quot;year&quot;, ylab = &quot;Residuals&quot;)</code></pre>
 <p><img src="case_study_hawaiian_birds_files/figure-html/q6e-1.png" width="364.8" style="display: block; margin: auto;" /></p>

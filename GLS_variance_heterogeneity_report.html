@@ -427,7 +427,7 @@ str(nereis)
 <p> </p>
 <p>There doesn’t appear to be any obvious outliers in the <code>concentration</code> variable for the <code>fbiomass</code> and <code>fnutrient</code> groups.</p>
 <p>Are there any differences in concentration between the biomass treatment? Are these differences dependent on the type of nutrient? Let’s use a boxplot to explore this further (see the end of this document for an alternative approach to creating this boxplot using the <code>ggplot()</code> function).</p>
-<div style="page-break-after: always;"></div>
+<p> </p>
 <pre class="r"><code>boxplot(concentration ~ fbiomass * fnutrient, xlab = &quot;biomass (g)&quot;, 
     main = &quot;&quot;, ylab = &quot;concentration (mg/l)&quot;, data = nereis, 
     cex.axis = 0.8, col = rep(c(&quot;deepskyblue&quot;, &quot;yellowgreen&quot;, 
@@ -714,7 +714,8 @@ plot(effs, lines = list(multiline = TRUE, lwd = 0.8), symbols = list(pch = 1),
 <p> </p>
 <p>These plots confirm our intuition. The nutrient concentration does change with polychaete biomass but this change appears to be dependent on the type of nutrient measured. For PO<sub>3</sub> the nutrient concentration remains at a relatively low concentration regardless of polychaete biomass. For NO<sub>3</sub> the concentration reduces as polychaete biomass increases whereas for NH<sub>4</sub> the concentration increases with an increase in biomass.</p>
 <p> </p>
-<p>That’s more or less it. Well done and congratulations! </p>
+<p>That’s more or less it. Well done and congratulations!</p>
+<div style="page-break-after: always;"></div>
 <div id="bonus-code" class="section level4">
 <h4>Bonus code!</h4>
 <p> </p>

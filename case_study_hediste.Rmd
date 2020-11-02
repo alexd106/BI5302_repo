@@ -93,9 +93,9 @@ There doesn't appear to be any obvious outliers in the `concentration` variable 
    
 Are there any differences in concentration between the biomass treatment? Are these differences dependent on the type of nutrient? Let's use a boxplot to explore this further (see the end of this document for an alternative approach to creating this boxplot using the `ggplot()` function).
 
-\newpage
+\  
 
-```{r, q4c, fig.height=5, fig.width=6, fig.align="center"}
+```{r, q4c, fig.height=4, fig.width=5, fig.align="center"}
 boxplot(concentration ~ fbiomass * fnutrient,
     xlab = "biomass (g)",   	
     main = "", ylab = "concentration (mg/l)", 
