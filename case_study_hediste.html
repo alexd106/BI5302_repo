@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Alex Douglas" />
+
+
+<title>BI5302 Hediste case study practical</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BI5302</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    R Book
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://intro2r.com">
+        <span class="fa fa-firefox"></span>
+         
+        Web book
+      </a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="https://github.com/alexd106/Rbook/raw/master/docs/Rbook.pdf">
+        <span class="fa fa-file-pdf"></span>
+         
+        PDF book
+      </a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="exercises.html">
+    <span class="fa fa-book"></span>
+     
+    Exercises
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-download"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question-circle"></span>
+     
+    Info
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="resources.html">
+        <span class="fa fa-book"></span>
+         
+        Resources
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/alexd106/BI5302_repo">
+        <span class="fa fa-github fa-lg"></span>
+         
+        Source code
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/Scedacity">
+        <span class="fa fa-twitter fa-lg"></span>
+         
+        Twitter
+      </a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">BI5302 Hediste case study practical</h1>
+<h4 class="author">Alex Douglas</h4>
+<h4 class="date">02 November, 2020</h4>
+
+</div>
+
+
+<p> </p>
+<p>Setup global options for knitr package. Normally I wouldn’t display these but I’ll leave them here for your information. The arguments <code>width.cutoff</code> and <code>tidy = TRUE</code> keeps the displayed code within the code boxes (see what happens if you omit this).</p>
+<p> </p>
+<pre class="r"><code>knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)</code></pre>
+<div id="benthic-biodiversity-experiment" class="section level3">
+<h3>Benthic Biodiversity experiment</h3>
+<p>These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (<em>Hediste diversicolor</em>) biomass on sediment nutrient (NH<sub>4</sub>, NO<sub>3</sub> and PO<sub>3</sub>) release. At the start of the experiment replicate mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH<sub>4</sub>, NO<sub>3</sub> or PO<sub>3</sub> was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the nutrient.</p>
+<p> </p>
+<p>1. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
+<p> </p>
+<p>Import all the packages required for this exercise:</p>
+<p> </p>
+<pre class="r"><code>library(nlme)
+library(effects)
+library(ggplot2)  # this is optional</code></pre>
+<p> </p>
+<p>2. Import the <code>Hediste.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the <code>biomass</code> variable to a factor and store it as a new variable in your dataframe.</p>
+<p> </p>
+<pre class="r"><code>nereis &lt;- read.table(&quot;data/Hediste.txt&quot;, header = TRUE)
+nereis$fbiomass &lt;- factor(nereis$biomass)
+str(nereis)
+## &#39;data.frame&#39;:    45 obs. of  4 variables:
+##  $ concentration: num  0.05 0.105 0.105 0.79 0.21 ...
+##  $ biomass      : num  0 0 0 0.5 0.5 0.5 1 1 1 1.5 ...
+##  $ fnutrient    : Factor w/ 3 levels &quot;NH4&quot;,&quot;NO3&quot;,&quot;PO3&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ fbiomass     : Factor w/ 5 levels &quot;0&quot;,&quot;0.5&quot;,&quot;1&quot;,..: 1 1 1 2 2 2 3 3 3 4 ...</code></pre>
+<p> </p>
+<p>3. How many replicates are there for each biomass and nutrient combination?</p>
+<p> </p>
+<pre class="r"><code>xtabs(~fbiomass + fnutrient, data = nereis)
+##         fnutrient
+## fbiomass NH4 NO3 PO3
+##      0     3   3   3
+##      0.5   3   3   3
+##      1     3   3   3
+##      1.5   3   3   3
+##      2     3   3   3</code></pre>
+<p> </p>
+<p>There are 3 replicates per <code>fbiomass</code> and <code>fnutrient</code> combination.</p>
+<p> </p>
+<p>4. Explore these data graphically. Are there any obvious outliers in the <code>concentration</code> variable for each of the <code>biomass</code> or <code>nutrient</code> variable levels (perhaps the <code>dotchart()</code> function with the <code>group</code> argument might help)? Use an appropriate plot to examine whether there are any biomass and/or nutrient effects on concentration (perhaps a boxplot?). Do you notice a potential issue regarding the between group variances?</p>
+<p> </p>
+<pre class="r"><code>dotchart(nereis$concentration, groups = nereis$fnutrient, 
+    col = as.numeric(nereis$fnutrient), xlab = &quot;Concentration&quot;, 
+    ylab = &quot;Order of observations&quot;)</code></pre>
+<p><img src="case_study_hediste_files/figure-html/q4a-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<pre class="r"><code>dotchart(nereis$concentration, groups = nereis$fbiomass, 
+    col = as.numeric(nereis$fbiomass), xlab = &quot;Concentration&quot;, 
+    ylab = &quot;Order of observations&quot;)</code></pre>
+<p><img src="case_study_hediste_files/figure-html/q4b-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There doesn’t appear to be any obvious outliers in the <code>concentration</code> variable for the <code>fbiomass</code> and <code>fnutrient</code> groups.</p>
+<p>Are there any differences in concentration between the biomass treatment? Are these differences dependent on the type of nutrient? Let’s use a boxplot to explore this further (see the end of this document for an alternative approach to creating this boxplot using the <code>ggplot()</code> function).</p>
+<div style="page-break-after: always;"></div>
+<pre class="r"><code>boxplot(concentration ~ fbiomass * fnutrient, xlab = &quot;biomass (g)&quot;, 
+    main = &quot;&quot;, ylab = &quot;concentration (mg/l)&quot;, data = nereis, 
+    cex.axis = 0.8, col = rep(c(&quot;deepskyblue&quot;, &quot;yellowgreen&quot;, 
+        &quot;deeppink3&quot;), each = 5), names = rep(c(0, 0.5, 1, 
+        1.5, 2), 3))
+
+legend(&quot;topright&quot;, col = c(&quot;deepskyblue&quot;, &quot;yellowgreen&quot;, 
+    &quot;deeppink3&quot;), legend = c(&quot;NH4&quot;, &quot;NO3&quot;, &quot;PO3&quot;), pch = 16)</code></pre>
+<p><img src="case_study_hediste_files/figure-html/q4c-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There does appear to be a difference in the nutrient concentration between biomass treatments and this seems to be dependent on the nutrient type. Overall, NO<sub>3</sub> has the highest nutrient concentration compared to NH<sub>4</sub> and PO<sub>3</sub>. Nutrient concentration appears to be consistently low for PO<sub>3</sub> regardless of polychaete biomass whereas for NH<sub>4</sub> the concentration increases with biomass and for NO<sub>3</sub> the concentration decreases with an increase in biomass. This suggests that there is an interaction between biomass and nutrient type.</p>
+<p> </p>
+<p>5. With reference to the study aims stated above, fit an appropriate linear model to these data using the <code>lm()</code> function.</p>
+<p> </p>
+<pre class="r"><code>nereis.lm &lt;- lm(concentration ~ fbiomass * fnutrient, data = nereis)</code></pre>
+<p> </p>
+<p>The code above fits a linear model using the <code>lm()</code> function with <code>concentration</code> as the response variable and <code>fbiomass</code> and <code>fnutrient</code> as explanatory variables. It also includes an interaction between <code>fbiomass</code> and <code>fnutrient</code>.</p>
+<p> </p>
+<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables. Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.</p>
+<p> </p>
+<p>First let’s create the usual residual plots using the <code>plot()</code> function on the <code>lm</code> model object <code>nereis.lm</code>. Don’t forget to split the plotting device into 2 rows and 2 columns so we can visualise all the plots together.</p>
+<p> </p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(nereis.lm)</code></pre>
+<p><img src="case_study_hediste_files/figure-html/q6-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>From the Residual vs Fitted and Scale-Location plots (left-hand side) you can clearly see that the residual variance is different for each of the treatment groups. Larger fitted values have a wider spread and small fitted values a narrower spread. This is a clear violation of the homogeneity of variance assumption!</p>
+<p> </p>
+<p>Let’s try to find which of the explanatory variable(s) is responsible for these differences in residual variance. First we plot the residuals from our linear model against the <code>fbiomass</code> variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(nereis.lm) ~ nereis$fbiomass, xlab = &quot;Biomass&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="case_study_hediste_files/figure-html/unnamed-chunk-1-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There are clear differences in the residual variance between each of the biomass levels. The zero biomass treatment has very little residual variance (as we might expect - why?) whereas the highest biomass group (2 g) has a very large within group variance. There are also differences between the other biomass groups but these are less pronounced.</p>
+<p>We should also plot the residuals from our model against the <code>fnutrient</code> explanatory variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(nereis.lm) ~ nereis$fnutrient, xlab = &quot;Nutrient&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="case_study_hediste_files/figure-html/unnamed-chunk-2-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Again, the residual variance between the three nutrient types is different. The PO<sub>3</sub> nutrient appears to have the smallest variance whereas the NO<sub>3</sub> nutrient has the largest variance. Both of these plots suggest that the cause of our heterogeneity of variance is both the <code>fbiomass</code> and <code>fnutrient</code> variables. Therefore we need fit a model that allows for different variances in each of our <code>fbiomass</code> and <code>fnutrient</code> variables. To do this we will fit a Generalised Least Squares model using the <code>gls()</code> function from the <code>nlme</code> package.</p>
+<p> </p>
+<div id="bonus-code" class="section level4">
+<h4>Bonus code!</h4>
+<p> </p>
+<p>An alternative method to create a boxplot using the <code>ggplot()</code> function from the <code>ggplot2</code> package. We haven’t introduced you to <code>ggplot2</code> but if you are interested see <a href="https://intro2r.com/graphics-r.html">Chapter 5</a> of our ‘Introduction to R’ book.</p>
+<p> </p>
+<pre class="r"><code>ggplot(nereis, aes(x = fbiomass, y = concentration, fill = fnutrient)) + 
+    geom_boxplot() + labs(x = &quot;polychaete biomass (g)&quot;, 
+    y = &quot;concentration (mg/l)&quot;, fill = &quot;Biomass&quot;) + scale_fill_brewer(palette = &quot;RdBu&quot;)</code></pre>
+<p><img src="case_study_hediste_files/figure-html/bonus1-1.png" width="672" /></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

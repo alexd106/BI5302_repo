@@ -33,13 +33,21 @@ suppressPackageStartupMessages(library(stringr))
 
 \  
 
+If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
+
+- [Hediste case study R markdown file](case_study_hediste.Rmd)
+
+- [Hediste case study final rendered html file](case_study_hediste.html)
+
+- [Hediste case study final rendered pdf file](case_study_hediste.pdf)
+
+\   
+
 ### Dealing with Variance heterogeneity 
 
 \  
 
 - [Dealing with variance heterogeneity exercise](GLS_variance_heterogeneity_exercise.html)
-
-\  
 
 If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
 

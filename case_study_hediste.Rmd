@@ -1,0 +1,190 @@
+---
+title: "BI5302 Hediste case study practical"
+author: "Alex Douglas"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: default
+  html_document: default
+fontsize: 11pt
+---
+
+\  
+
+Setup global options for knitr package. Normally I wouldn't display these but I'll leave them here for your information. The arguments ```width.cutoff``` and ```tidy = TRUE``` keeps the displayed code within the code boxes (see what happens if you omit this).
+
+\  
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
+```
+
+### Benthic Biodiversity experiment
+
+These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (*Hediste diversicolor*) biomass on sediment nutrient (NH~4~, NO~3~ and PO~3~) release. At the start of the experiment replicate mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH~4~, NO~3~ or PO~3~ was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the nutrient.
+
+\   
+
+1\. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
+
+\  
+
+Import all the packages required for this exercise:
+
+\    
+
+```{r,q1, message=FALSE}
+library(nlme)
+library(effects)
+library(ggplot2) # this is optional
+```
+
+\   
+
+2\. Import the `Hediste.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the `biomass` variable to a factor and store it as a new variable in your dataframe.
+
+\   
+
+```{r, q2, collapse=TRUE}
+nereis <- read.table("data/Hediste.txt", header = TRUE)
+nereis$fbiomass <- factor(nereis$biomass)
+str(nereis)
+```
+
+\  
+
+3\. How many replicates are there for each biomass and nutrient combination?
+
+\ 
+
+```{r, q3, collapse=TRUE}
+xtabs(~ fbiomass + fnutrient, data = nereis)
+```
+
+\   
+
+There are `r unique(xtabs(~ fbiomass + fnutrient, data = nereis))` replicates per `fbiomass` and `fnutrient` combination.
+
+\  
+
+4\. Explore these data graphically. Are there any obvious outliers in the `concentration` variable for each of the `biomass` or `nutrient` variable levels (perhaps the `dotchart()` function with the `group` argument might help)? Use an appropriate plot to examine whether there are any biomass and/or nutrient effects on concentration (perhaps a boxplot?). Do you notice a potential issue regarding the between group variances?
+
+\  
+
+```{r, q4a, fig.height=4, fig.width=4.5, fig.align="center"}
+dotchart(nereis$concentration, groups = nereis$fnutrient, 
+         col = as.numeric(nereis$fnutrient), 
+         xlab = "Concentration", ylab = "Order of observations")
+```
+
+\  
+
+```{r, q4b, fig.height=4, fig.width=4.5, fig.align="center"}
+dotchart(nereis$concentration,
+	groups = nereis$fbiomass,
+	col = as.numeric(nereis$fbiomass),
+	xlab = "Concentration", ylab = "Order of observations")
+```
+
+\  
+
+There doesn't appear to be any obvious outliers in the `concentration` variable for the `fbiomass` and `fnutrient` groups.
+   
+Are there any differences in concentration between the biomass treatment? Are these differences dependent on the type of nutrient? Let's use a boxplot to explore this further (see the end of this document for an alternative approach to creating this boxplot using the `ggplot()` function).
+
+\newpage
+
+```{r, q4c, fig.height=5, fig.width=6, fig.align="center"}
+boxplot(concentration ~ fbiomass * fnutrient,
+    xlab = "biomass (g)",   	
+    main = "", ylab = "concentration (mg/l)", 
+    data = nereis, cex.axis = 0.8, 
+    col = rep(c("deepskyblue", "yellowgreen", "deeppink3"), each = 5),
+    names = rep(c(0, 0.5, 1, 1.5, 2), 3))
+    
+legend("topright", col = c("deepskyblue", "yellowgreen", "deeppink3"), 
+       legend = c("NH4", "NO3", "PO3"), pch = 16)
+```
+
+\  
+
+There does appear to be a difference in the nutrient concentration between biomass treatments and this seems to be dependent on the nutrient type. Overall, NO~3~ has the highest nutrient concentration compared to NH~4~ and PO~3~. Nutrient concentration appears to be consistently low for PO~3~ regardless of polychaete biomass whereas for NH~4~ the concentration increases with biomass and for NO~3~ the concentration decreases with an increase in biomass. This suggests that there is an interaction between biomass and nutrient type.
+
+\  
+
+5\. With reference to the study aims stated above, fit an appropriate linear model to these data using the `lm()` function.
+
+\  
+
+```{r, q5}
+nereis.lm <- lm(concentration ~ fbiomass * fnutrient, data = nereis)
+```
+
+\  
+
+The code above fits a linear model using the `lm()` function with `concentration` as the response variable and `fbiomass` and `fnutrient` as explanatory variables. It also includes an interaction between `fbiomass` and `fnutrient`.
+
+\  
+
+6\. Use appropriate residual plots to identify whether the modelling assumptions are met. Don't forget to also plot the residuals from this model against all explanatory variables. Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.
+
+\  
+
+First let's create the usual residual plots using the `plot()` function on the `lm` model object `nereis.lm`. Don't forget to split the plotting device into 2 rows and 2 columns so we can visualise all the plots together.
+
+\  
+
+```{r, q6, fig.height=5.5, fig.width=5.5, fig.align="center"}
+par(mfrow = c(2,2))
+plot(nereis.lm)
+```
+
+\  
+
+From the Residual vs Fitted and Scale-Location plots (left-hand side) you can clearly see that the residual variance is different for each of the treatment groups. Larger fitted values have a wider spread and small fitted values a narrower spread. This is a clear violation of the homogeneity of variance assumption!
+
+\  
+
+Let's try to find which of the explanatory variable(s) is responsible for these differences in residual variance. First we plot the residuals from our linear model against the `fbiomass` variable. 
+
+\  
+
+```{r, fig.height=3.8, fig.width=3.8, fig.align="center"}
+plot(resid(nereis.lm) ~ nereis$fbiomass,xlab = "Biomass",
+     ylab = "Residuals")
+abline(h = 0, lty =2, col = 2)
+```
+
+\  
+
+There are clear differences in the residual variance between each of the biomass levels. The zero biomass treatment has very little residual variance (as we might expect - why?) whereas the highest biomass group (2 g) has a very large within group variance. There are also differences between the other biomass groups but these are less pronounced.
+  
+We should also plot the residuals from our model against the `fnutrient` explanatory variable.
+
+\   
+
+```{r, fig.height=3.8, fig.width=3.8, fig.align="center"}
+plot(resid(nereis.lm) ~ nereis$fnutrient,xlab = "Nutrient",
+     ylab = "Residuals")
+abline(h = 0, lty =2, col = 2)
+```
+
+\  
+
+Again, the residual variance between the three nutrient types is different. The PO~3~ nutrient appears to have the smallest variance whereas the NO~3~ nutrient has the largest variance. Both of these plots suggest that the cause of our heterogeneity of variance is both the `fbiomass` and `fnutrient` variables. Therefore we need fit a model that allows for different variances in each of our  `fbiomass` and `fnutrient` variables. To do this we will fit a Generalised Least Squares model using the `gls()` function from the `nlme` package. 
+
+\  
+
+#### Bonus code!
+
+\  
+
+An alternative method to create a boxplot using the `ggplot()` function from the `ggplot2` package. We haven't introduced you to `ggplot2` but if you are interested see [Chapter 5](https://intro2r.com/graphics-r.html) of our 'Introduction to R' book. 
+
+\  
+
+```{r, bonus1}
+ggplot(nereis, aes(x = fbiomass, y = concentration, fill = fnutrient)) + 
+  geom_boxplot() + labs(x = "polychaete biomass (g)", 
+  y = "concentration (mg/l)", fill = "Biomass") + 
+  scale_fill_brewer(palette = "RdBu")
+```

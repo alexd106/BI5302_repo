@@ -351,7 +351,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">BI5302 case study group work</h1>
-<h4 class="date">01 November, 2020</h4>
+<h4 class="date">02 November, 2020</h4>
 
 </div>
 
@@ -377,22 +377,38 @@ $(document).ready(function () {
 </div>
 <div id="benthic-biodiversity-experiment" class="section level3">
 <h3>Benthic Biodiversity experiment</h3>
-<p>These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (<em>Hediste diversicolor</em>) biomass on sediment nutrient release (NH<sub>4</sub>, NO<sub>3</sub> and PO<sub>3</sub>). At the start of the experiment replicate (n = 3) mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH<sub>4</sub>, NO<sub>3</sub> or PO<sub>3</sub> was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the type of nutrient.</p>
+<p> </p>
+<p>These data were obtained from a mesocosm experiment which aimed to examine the effect of benthic polychaete (<em>Hediste diversicolor</em>) biomass on sediment nutrient (NH<sub>4</sub>, NO<sub>3</sub> and PO<sub>3</sub>) release. At the start of the experiment replicate (n = 3) mesocosms were filled with homogenised marine sediment and assigned to one of five polychaete biomass treatments (0, 0.5, 1, 1.5, 2 g per mesocosm). The mesocosms were allowed to acclimatise for 24 h after which the concentration of either NH<sub>4</sub>, NO<sub>3</sub> or PO<sub>3</sub> was measured in the water. The concentration of only one nutrient was measured in each mesocosm. The researchers were particularly interested in whether the nutrient concentration differed between polychaete biomass treatments and whether these effects were dependent on the type of nutrient.</p>
 <p> </p>
 <p><img src="images/hediste.jpg" width="60%" style="display: block; margin: auto;" /></p>
 <p> </p>
 <p>Data for this case study is saved in a tab delimited file called <code>Hediste.txt</code> which you can download from the <strong><a href="data.html"><i class="fa fa-download"></i> Data</a></strong> link. Save this data file in your <code>data</code> directory in your RStudio project.</p>
 <p>The data file contains the following variables:</p>
+<p> </p>
 <ul>
 <li><code>concentration</code> : the nutrient concentration</li>
 <li><code>biomass</code> : the polychaete biomass level</li>
 <li><code>fnutrient</code> : the nutrient measured</li>
 </ul>
+<p> </p>
 <p>As a hint, you should be looking out for violations of the homogeneity of variance assumption for this dataset.</p>
+<p> </p>
+<p>1. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
+<p> </p>
+<p>2. Import the <code>Hediste.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the <code>biomass</code> variable to a factor and store it as a new variable in your dataframe.</p>
+<p> </p>
+<p>3. How many replicates are there for each biomass and nutrient combination?</p>
+<p> </p>
+<p>4. Explore these data graphically. Are there any obvious outliers in the <code>concentration</code> variable for each of the <code>biomass</code> or <code>nutrient</code> variable levels (perhaps the <code>dotchart()</code> function with the <code>group</code> argument might help)? Use an appropriate plot to examine whether there are any biomass and/or nutrient effects on concentration (perhaps a boxplot?). Do you notice a potential issue regarding the between group variances?</p>
+<p> </p>
+<p>5. With reference to the study aims stated above, fit an appropriate linear model to these data using the <code>lm()</code> function.</p>
+<p> </p>
+<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables. Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your Rmarkdown document.</p>
 <p> </p>
 </div>
 <div id="environmental-impacts-on-hawaiian-black-necked-stilt-abundance" class="section level3">
 <h3>Environmental impacts on Hawaiian black-necked stilt abundance</h3>
+<p> </p>
 <p>These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts (<em>Himantopus mexicanus knudseni</em>) was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.</p>
 <p> </p>
 <p><img src="images/stilt.jpg" width="50%" style="display: block; margin: auto;" /></p>
