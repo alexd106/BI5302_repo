@@ -41,6 +41,10 @@ If you want to work alongside my solutions you can find the relevant files below
 
 - [Hediste case study final rendered pdf file](case_study_hediste.pdf)
 
+\  
+
+- [Hawaiian bird case study R markdown file](case_study_hawaiian_birds.Rmd)
+
 \   
 
 ### Dealing with Variance heterogeneity 
