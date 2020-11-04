@@ -1,5 +1,5 @@
 ---
-title: "BI5302 Dealing with temporal non-independence Practical"
+title: "BI5302 Dealing with temporal non-independence practical report"
 author: "Alex Douglas"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -518,7 +518,7 @@ OK, things are looking pretty good. The variance heterogeneity between islands h
 
 \  
 
-21\. Now that we're happy with our model it's time to see what the model is telling us. Use the `summary()` function with our final model to obtain the parameter estimates. What is the estimate of the residual variance for Maui and Oahu? (hint: take a look at the `Variance function` section of the output - you will need to do a little maths!)
+21\. Now that we're happy with our model it's time to see what the model is telling us. Use the `summary()` function with our final model to obtain the parameter estimates. What is the estimate of the residual variance for Maui and Oahu? (hint: take a look at the `Variance function` section of the output - you will need to do a little maths!).
 
 \  
 
