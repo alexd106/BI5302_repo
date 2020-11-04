@@ -14,12 +14,6 @@ fontsize: 11pt
 knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
 ```
 
-**TODO**
-\  
-
-**add hypothesis test info and highlight AIC more relaxed than p vales - location effect**
-**also vif?**
-
 \  
 
 ### Environmental impacts on Hawaiian black-necked stilt abundance 

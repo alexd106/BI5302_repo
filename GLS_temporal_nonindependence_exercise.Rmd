@@ -3,7 +3,9 @@ title: "BI5302 Dealing with temporal non-independence Practical"
 author: "Alex Douglas"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  html_document: default
+  html_document: 
+    css: custom.css
+    toc: no
   pdf_document: default
 fontsize: 11pt
 ---
