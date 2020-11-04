@@ -73,6 +73,15 @@ If you want to work alongside my solutions you can find the relevant files below
 
 \  
 
-Exercise to follow
+- [Dealing with non-independence exercise]()
 
+\  
+
+If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
+
+- [Dealing with non-independence R markdown file](GLS_temporal_nonindependence_report.Rmd)
+
+- [Dealing with non-independence final rendered html file](GLS_temporal_nonindependence_report.html)
+
+- [Dealing with non-independence final rendered pdf file](GLS_temporal_nonindependence_report.pdf)
 
