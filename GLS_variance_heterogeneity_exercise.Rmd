@@ -20,6 +20,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 \  
 
+If you would prefer to work from the pdf version of this document you can find this [here](GLS_variance_heterogeneity_exercise.pdf).
+
+\  
+
 ### Benthic Biodiversity experiment
 
 \  

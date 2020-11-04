@@ -22,6 +22,10 @@ knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
 
 \  
 
+If you would prefer to work from the pdf version of this document you can find this [here](GLS_temporal_nonindependence_exercise.pdf).
+
+\  
+
 Strap yourself in, this is a rather long exercise (but worth it I hope!).
 
 \  

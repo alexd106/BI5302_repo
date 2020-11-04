@@ -73,7 +73,7 @@ If you want to work alongside my solutions you can find the relevant files below
 
 \  
 
-- [Dealing with non-independence exercise](GLS_temporal_nonindependence_exercise.Rmd)
+- [Dealing with non-independence exercise](GLS_temporal_nonindependence_exercise.html)
 
 \  
 
