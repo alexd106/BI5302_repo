@@ -32,7 +32,7 @@ These data were obtained from a mesocosm experiment which aimed to examine the e
 
 \  
 
-2\. Import the `Hediste.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe and convert the `biomass` variable to a factors and store it as a new variable in your dataframe.
+2\. Import the `Hediste.txt` dataset into R and assign it to a suitably named variable. Remember if you're using R version > 4.0.0 (most of you will be) then columns containing character strings will be imported into R as character type variables not as factors by default. You can either use the argument `stringsAsFactors = TRUE` when you use the `read.table()` function to automatically convert character type variables to factors when you import your data or you can use the `read.table()` function without the `stringsAsFactors = TRUE` argument and then covert them after you import your data. Examine the structure of the dataframe and convert the `biomass` variable to a factors and store it as a new variable in your dataframe.
 
 \  
 

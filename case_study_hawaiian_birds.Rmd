@@ -41,12 +41,17 @@ library(effects)
 
 \   
 
-2\. Import the `hawaii3.txt` dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe.
+2\. Import the `hawaii3.txt` dataset into R and assign it to a suitably named variable. Remember if you're using R version > 4.0.0 (most of you will be) then columns containing character strings will be imported into R as character type variables not as factors by default. You can either use the argument `stringsAsFactors = TRUE` when you use the `read.table()` function to automatically convert character type variables to factors when you import your data or you can use the `read.table()` function without the `stringsAsFactors = TRUE` argument and then covert them after you import your data. Examine the structure of the dataframe.
 
 \   
 
 ```{r, q2, collapse=TRUE}
 dataf <- read.table("data/hawaii3.txt", header = TRUE)
+
+# or if R version > 4.0.0
+
+# dataf <- read.table("data/hawaii3.txt", header = TRUE, stringsAsFactors = TRUE)
+
 str(dataf)
 ```
 

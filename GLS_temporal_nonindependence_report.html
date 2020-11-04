@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Alex Douglas" />
+
+
+<title>BI5302 Dealing with temporal non-independence Practical</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BI5302</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    R Book
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://intro2r.com">
+        <span class="fa fa-firefox"></span>
+         
+        Web book
+      </a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="https://github.com/alexd106/Rbook/raw/master/docs/Rbook.pdf">
+        <span class="fa fa-file-pdf"></span>
+         
+        PDF book
+      </a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="exercises.html">
+    <span class="fa fa-book"></span>
+     
+    Exercises
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-download"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question-circle"></span>
+     
+    Info
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="resources.html">
+        <span class="fa fa-book"></span>
+         
+        Resources
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/alexd106/BI5302_repo">
+        <span class="fa fa-github fa-lg"></span>
+         
+        Source code
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/Scedacity">
+        <span class="fa fa-twitter fa-lg"></span>
+         
+        Twitter
+      </a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">BI5302 Dealing with temporal non-independence Practical</h1>
+<h4 class="author">Alex Douglas</h4>
+<h4 class="date">04 November, 2020</h4>
+
+</div>
+
+
+<p> </p>
+<p><strong>TODO</strong>  </p>
+<p><strong>add hypothesis test info and highlight AIC more relaxed than p vales - location effect</strong> <strong>also vif?</strong></p>
+<p> </p>
+<div id="environmental-impacts-on-hawaiian-black-necked-stilt-abundance" class="section level3">
+<h3>Environmental impacts on Hawaiian black-necked stilt abundance</h3>
+<p>These data were collected from bird surveys conducted on two Hawaiian islands (Maui and Oahu) from 1956 - 2003. The annual abundance of black-necked stilts (<em>Himantopus mexicanus knudseni</em>) was measured each winter using transect surveys on each island. Along with bird counts, annual rainfall data for the region was also obtained from the National Climate Data Center. The researchers were interested in understanding whether levels of rainfall impacted on bird abundance and whether any impact was different between the two islands.</p>
+<p> </p>
+<p>1. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
+<p> </p>
+<p>Import all the packages required for this exercise:</p>
+<p> </p>
+<pre class="r"><code>library(lattice)
+library(knitr)
+library(car)
+library(nlme)
+library(AICcmodavg)</code></pre>
+<p> </p>
+<p>2. Import the <code>hawaii3.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe. Remember if you’re using R version &gt; 4.0.0 (most of you will be) then columns containing character strings will be imported into R as character type variables not as factors by default. You can either use the argument <code>stringsAsFactors = TRUE</code> when you use the <code>read.table()</code> function to automatically convert character type variables to factors when you import your data or you can use the <code>read.table()</code> function without the <code>stringsAsFactors = TRUE</code> argument and then covert them after you import your data.</p>
+<p> </p>
+<pre class="r"><code>dataf &lt;- read.table(&quot;data/hawaii3.txt&quot;, header = TRUE)
+
+# or if R version &gt; 4.0.0
+
+# dataf &lt;- read.table(&#39;data/hawaii3.txt&#39;, header = TRUE,
+# stringsAsFactors = TRUE)
+
+str(dataf)
+## &#39;data.frame&#39;:    96 obs. of  4 variables:
+##  $ abund   : int  220 151 183 161 264 192 117 239 263 128 ...
+##  $ rainfall: num  33.1 12.5 22.2 11.8 41.6 15.6 4.5 40.1 42.1 7.6 ...
+##  $ year    : int  1956 1957 1958 1959 1960 1961 1962 1963 1964 1965 ...
+##  $ location: Factor w/ 2 levels &quot;Maui&quot;,&quot;Oahu&quot;: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p> </p>
+<p>3. How many observations are there for each island?</p>
+<p> </p>
+<pre class="r"><code>table(dataf$location)
+## 
+## Maui Oahu 
+##   48   48</code></pre>
+<p> </p>
+<p>4. Explore these data graphically. Are there any obvious outliers in the <code>abund</code> variable for each of the <code>locations</code> variable levels (perhaps the <code>dotchart()</code> function with the <code>group</code> argument might help)? Next, use an <code>xyplot</code> (from the <code>lattice</code> package) or a <code>coplot</code> to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (<code>year</code>) for each of the two islands.</p>
+<p> </p>
+<pre class="r"><code>dotchart(dataf$abund, groups = dataf$location, col = as.numeric(dataf$location), 
+    xlab = &quot;Bird abundance&quot;, ylab = &quot;Order of observations&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q4a-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There doesn’t appear to be any obvious outliers in the <code>abund</code> variable for each island. However this plot does indicate that the ‘spread’ of bird abundance values is much greater for Oahu than for Maui. Hopefully, our linear model will be able to account for this.</p>
+<p> </p>
+<pre class="r"><code>xyplot(abund ~ rainfall | location, data = dataf, ylab = &quot;bird abundance&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q4b-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There appears to be a positive relationship between bird abundance and rainfall. The relationship seems to be more apparent for Maui compared to Oahu.</p>
+<p>Now let’s take a look at the change in bird abundance over time on each island.</p>
+<p> </p>
+<pre class="r"><code>xyplot(abund ~ year | location, data = dataf, ylim = c(0, 
+    800), ylab = &quot;bird abundance&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q4c-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Looks like there may be a small decrease in bird abundance for birds sampled on Maui. The decrease on Oahu looks to be more apparent although there seems to be quite a lot of between year variability.</p>
+<p> </p>
+<p>5. With reference to the study aims stated above, fit an appropriate linear model to these data using the <code>lm()</code> function.</p>
+<p> </p>
+<p>So lets fit a linear model to explain the variability in bird abundance by rainfall and location. We’ll also include the interaction term between rainfall and location to see if any relationship is different between the two islands. I have also included the <code>year</code> variable as an additive effect as I want to try to account for the fact that these observations are potentially non-independent.</p>
+<p> </p>
+<pre class="r"><code>birds_lm &lt;- lm(abund ~ rainfall + location + year + rainfall:location, 
+    data = dataf)</code></pre>
+<p> </p>
+<p>6. Use appropriate residual plots to identify whether the modelling assumptions are met. Don’t forget to also plot the residuals from this model against all explanatory variables (including <code>year</code>). Can you see a problem? Can you assume homogeneity of variance of the residuals from your model? If not, then try to identify the cause of this problem. Make sure you describe and discuss this process in your R markdown document.</p>
+<p> </p>
+<p>Let’s plot the usual model validation plots by plotting the model object.</p>
+<p> </p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(birds_lm)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q6a-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>From the Residuals vs Fitted and Scale-Location plots (left-hand side) there seems to be a hint of heterogeneity of variance. On the Residuals vs Fitted plot the spread of the residuals is narrower for smaller fitted values compared to larger fitted values resulting in a slight fan shaped pattern. The QQ-plot suggests that the residuals are approximately normally distributed. The residuals vs leverage plot indicates that none of our residuals are unusual or influential. Looks good so far!</p>
+<p>So, to investigate the issue of heterogeneity of variance further let’s plot our residuals against each explanatory variable. First we can plot the residuals from our linear model against the <code>location</code> variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(birds_lm) ~ dataf$location, xlab = &quot;location&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q6b-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>There are clear differences in the residual variance between each of the islands. Oahu has a much wider spread in residuals compared to Maui indicating a heterogeneity of variance associated with location.</p>
+<p>We should also plot the residuals from our model against the <code>rainfall</code> explanatory variable.</p>
+<p> </p>
+<pre class="r"><code>plot(resid(birds_lm) ~ dataf$rainfall, xlab = &quot;rainfall&quot;, 
+    ylab = &quot;Residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q6c-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Not a huge amount to worry about here. There doesn’t seem to be any heterogeneity of variance associated with the <code>rainfall</code> variable. Let’s be extra cautious though and plot the residuals from our model against the <code>rainfall</code> variable again but separately for each island.</p>
+<p> </p>
+<pre class="r"><code>xyplot(resid(birds_lm) ~ rainfall | location, data = dataf, 
+    xlab = &quot;rainfall&quot;, ylab = &quot;Residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q6d-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>So the residuals look OK. We can still see that there is a different spread of our residuals between location which we picked up in our previous diagnostic plot.</p>
+<p> </p>
+<p>Also, don’t forget we need to check the independence of residuals assumptions as these data were collected from both islands each year from 1956 - 2003. The best way to do this is to plot the residuals against the <code>year</code> variable for each island (<code>location</code>).</p>
+<p> </p>
+<pre class="r"><code>xyplot(resid(birds_lm) ~ year | location, data = dataf, 
+    xlab = &quot;year&quot;, ylab = &quot;Residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q6e-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p>Oh dear, there are clear patterns in our residuals over time indicating issues with non-independence. The pattern is perhaps strongest for Maui but there also appears to be a downward trend in our residuals for Oahu.</p>
+<p> </p>
+<p>7. Import the <code>nlme</code> package into R.</p>
+<p> </p>
+<pre class="r"><code># I usually import any packages I am going to use in my
+# analysis at the top of my R script or R markdown
+# document. See above.
+
+# if you want to do it here then
+
+# library(nlme)</code></pre>
+<p> </p>
+<p>You will see that I have already done this at the top of this R markdown document using the <code>library()</code> function. It’s good practice to import all the packages required for a particular analysis near the start of your script.</p>
+<p> </p>
+<p>8. Use the <code>gls()</code> function from the <code>nlme</code> package without any variance covariates or correlation structures to refit your linear model specified above (the model you fitted using the <code>lm()</code> function). This GLS model is equivalent to a standard linear model. You will use this GLS model to compare with models you subsequently fit. Store your GLS model in an object with a suitable name (<code>birds_gls1</code> or similar).</p>
+<p> </p>
+<pre class="r"><code>birds_gls1 &lt;- gls(abund ~ rainfall + location + year + rainfall:location, 
+    data = dataf)</code></pre>
+<p> </p>
+<p>9. OK, let’s try to deal with the heterogeneity of variance issue we identified in Q6 above. Remember, it looks like the cause of our heterogeneity of variance was due to differences between location. Hopefully you remember how to deal with this situation using the <code>varIdent</code> variance covariate and the <code>weights =</code> argument when fitting a GLS model. Fit this model and call it something like <code>birds_gls2</code>.</p>
+<p> </p>
+<pre class="r"><code>vf1 &lt;- varIdent(form = ~1 | location)
+birds_gls2 &lt;- gls(abund ~ rainfall + location + year + rainfall:location, 
+    weights = vf1, data = dataf)</code></pre>
+<p> </p>
+<p>10. Compare the <code>birds_gls1</code> and <code>birds_gls2</code> models using AIC to identify the ‘best’ model.</p>
+<p> </p>
+<pre class="r"><code>kable(AIC(birds_gls1, birds_gls2))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">birds_gls1</td>
+<td align="right">6</td>
+<td align="right">1050.371</td>
+</tr>
+<tr class="even">
+<td align="left">birds_gls2</td>
+<td align="right">7</td>
+<td align="right">1027.923</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p>The difference in AIC between our two models is 22.447 suggesting there is substantial support for the model which includes the variance covariate of <code>location</code> using the <code>varIdent</code> variance function. Notice we have also estimated one more degrees of freedom in the <code>birds_gls2</code> due to our variance covariate.</p>
+<p> </p>
+<p>11. Extract the residuals using the <code>resid()</code> function from this model and plot against the the <code>location</code> variable to check whether this model has sorted out the issue of heterogeneity of variance between our two islands. Don’t forget to use the argument <code>type = "normalized"</code> to extract the normalised residuals form the GLS model.</p>
+<p> </p>
+<pre class="r"><code>res_gls2 &lt;- resid(birds_gls2, type = &quot;normalized&quot;)
+boxplot(res_gls2 ~ location, data = dataf, xlab = &quot;location&quot;, 
+    ylab = &quot;residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q11-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>That’s looking quite a bit better!</p>
+<p> </p>
+<p>12. OK, now that we’ve dealt with the heterogeneity of variance issue, its time to look at whether the residuals are independent. Use the extracted residuals from Q11 and plot these over time (<code>year</code>) for both of the island (<code>locations</code>). You can use either the <code>xyplot()</code> function from the <code>lattice</code> package or the <code>coplot()</code> function from base R.</p>
+<p> </p>
+<pre class="r"><code>xyplot(res_gls2 ~ year | location, data = dataf, xlab = &quot;year&quot;, 
+    ylab = &quot;normalised residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q12a-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>So we still see a clear pattern in our residuals over time. In Maui the residuals appear to decrease and then increase over time and in Oahu the residuals seem to generally decrease over time. This indicates that our residuals are clearly not independent.</p>
+<p>If we want to be really flash then we could add a smoother to this residual plot to highlight the pattern.</p>
+<p> </p>
+<pre class="r"><code>xyplot(res_gls2 ~ year | location, data = dataf, type = c(&quot;p&quot;, 
+    &quot;smooth&quot;), xlab = &quot;year&quot;, ylab = &quot;normalised residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q12b-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>13. So now that we’ve identified non-independence in our residuals we need to decide what type of correlation structure to use in our GLS model to account for this non-independence. One of the best ways of doing this is to use the <code>acf()</code> function to plot the autocorrelation function and the <code>pacf()</code> function to plot the partial autocorrelation function on our residuals.</p>
+<p> </p>
+<pre class="r"><code>acf(res_gls2, main = &quot;ACF of residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q13a-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>So from the ACF plot it looks like we have a smooth decline in the correlation at successive lags which would indicate some kind of autoregressive (AR) type structure would model the non-independence in our residuals.</p>
+<p>To determine what order our AR structure might be let’s take a look at the PACF plot.</p>
+<p> </p>
+<pre class="r"><code>pacf(res_gls2, main = &quot;PACF of residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q13b-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p>The PACF plot indicates that a first order autoregressive structure (an AR with a lag of 1) might suffice as the only ‘significant’ lag is at lag 1. Remember the blue dotted lines indicate the confidence interval around zero correlation.</p>
+<p> </p>
+<p>14. Fit a new GLS model that incorporates both our variance covariate to deal with heterogeneity of variance and also a first order autoregressive correlation structure to deal with non-independence in our residuals at each site. Remember to include this AR(1) structure you will need to use the <code>corAR1</code> function and the <code>correlation =</code> argument. The form of the <code>corAR1</code> structure should include the <code>year</code> variable conditional (<code>|</code>) on the <code>location</code>. Assign your model to an appropriately named object (<code>birds_gls3</code>?).</p>
+<p> </p>
+<pre class="r"><code>cor1 &lt;- corAR1(form = ~year | location)
+birds_gls3 &lt;- gls(abund ~ rainfall + location + year + rainfall:location, 
+    weights = vf1, correlation = cor1, data = dataf)</code></pre>
+<p> </p>
+<p>15. Now that we’ve fitted our model let’s once again extract our residuals and plot them against year for each location to see if the first order autoregressive correlation structure has dealt with our non independence. You should also re-plot the ACF and PACF plots.</p>
+<p> </p>
+<pre class="r"><code>res_gls3 &lt;- resid(birds_gls3, type = &quot;normalized&quot;)
+xyplot(res_gls3 ~ year | location, data = dataf, xlab = &quot;year&quot;, 
+    ylab = &quot;normalised residuals&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q15a-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>OK, they look sweet. No patterns present. Let’s look at the ACF and PACF plots to confirm.</p>
+<p> </p>
+<pre class="r"><code>acf(res_gls3, main = &quot;ACF&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q15b-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<pre class="r"><code>pacf(res_gls3, main = &quot;PACF&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q15c-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Not looking too shabby although here is a hint that there is still a ‘significant’ correlation at lag 4 in both of these plots that may warrant a more complex correlation structure. Perhaps we’ll take a look at a more complex structure in a bit.</p>
+<p> </p>
+<p>16. Compare all of your fitted models so far using AIC. Which model has the most support?</p>
+<p> </p>
+<pre class="r"><code>kable(AIC(birds_gls1, birds_gls2, birds_gls3))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">birds_gls1</td>
+<td align="right">6</td>
+<td align="right">1050.3706</td>
+</tr>
+<tr class="even">
+<td align="left">birds_gls2</td>
+<td align="right">7</td>
+<td align="right">1027.9233</td>
+</tr>
+<tr class="odd">
+<td align="left">birds_gls3</td>
+<td align="right">8</td>
+<td align="right">927.3333</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p>So the model that incorporates both the variance covariate and the AR(1) correlation structure seems to be our ‘best’ model so far.</p>
+<p> </p>
+<p>17. So, now that we’ve dealt with the main issues of residual variance heterogeneity and non-independence it’s time to turn our attention to performing model selection of our explanatory variables (remember this is the fixed part of the model). However, before we can perform model selection we must first refit our model using maximum likelihood (ML) rather than restricted maximum likelihood (REML) which is the default. To do this we refit the model using the <code>gls()</code> function once again but this time include the argument <code>method = "ML"</code>.</p>
+<p> </p>
+<pre class="r"><code>birds_gls4 &lt;- gls(abund ~ rainfall + location + year + rainfall:location, 
+    weights = vf1, correlation = cor1, method = &quot;ML&quot;, data = dataf)</code></pre>
+<p> </p>
+<p>18. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It’s up to you how you want to perform this. If you want to automate this process you can use the <code>drop1()</code> function, but remember you need to use this sensibly and with care and don’t forget about the biology! If you use the argument <code>test = "none"</code> with the <code>drop1()</code> function this will return the AIC values for each iteration. Conversely, if you use the argument <code>test = "Chisq"</code> this will return the LRT statistics.</p>
+<p> </p>
+<p>So lets use AIC to compare models</p>
+<p> </p>
+<pre class="r"><code>drop1(birds_gls4, test = &quot;none&quot;)
+## Single term deletions
+## 
+## Model:
+## abund ~ rainfall + location + year + rainfall:location
+##                   Df    AIC
+## &lt;none&gt;               943.65
+## year               1 943.62
+## rainfall:location  1 944.12</code></pre>
+<p> </p>
+<p>So, when we drop the interaction term between the <code>rainfall</code> and <code>locations</code> variables the AIC actually increases. This suggests we can remove the <code>rainfall:location</code> interaction term from our model. Let’s refit without and use <code>drop1()</code> again on our new model.</p>
+<p> </p>
+<pre class="r"><code>birds_gls5 &lt;- gls(abund ~ rainfall + location + year, weights = vf1, 
+    correlation = cor1, method = &quot;ML&quot;, data = dataf)
+
+drop1(birds_gls5, test = &quot;none&quot;)
+## Single term deletions
+## 
+## Model:
+## abund ~ rainfall + location + year
+##          Df     AIC
+## &lt;none&gt;       944.12
+## rainfall  1 1088.43
+## location  1  946.84
+## year      1  943.97
+
+# alternatively you can use the update function to refit
+# the model (not run)
+
+# birds_gls5 &lt;- update(birds_gls4, . ~.
+# -rainfall:location)</code></pre>
+<p> </p>
+<p>Right, so this output suggests that we shouldn’t remove either the <code>rainfall</code> or <code>location</code> variables from the model, but suggests that the goodness of fit doesn’t change very much if we remove <code>year</code>. So lets go ahead and remove year and then rerun <code>drop1()</code>.</p>
+<p> </p>
+<pre class="r"><code>birds_gls6 &lt;- gls(abund ~ rainfall + location, weights = vf1, 
+    correlation = cor1, method = &quot;ML&quot;, data = dataf)
+
+drop1(birds_gls6, test = &quot;none&quot;)
+## Single term deletions
+## 
+## Model:
+## abund ~ rainfall + location
+##          Df     AIC
+## &lt;none&gt;       943.97
+## rainfall  1 1090.16
+## location  1  945.83</code></pre>
+<p> </p>
+<p>So it looks like our minimum adequate model should contain the explanatory variables of <code>rainfall</code> and <code>location</code>.</p>
+<p> </p>
+<p>19. Once you have determined your minimum adequate model, refit this model using REML once again (remember, this is the default for the <code>gls()</code> function).</p>
+<p> </p>
+<pre class="r"><code>birds_gls7_REML &lt;- gls(abund ~ rainfall + location, weights = vf1, 
+    correlation = cor1, data = dataf)</code></pre>
+<p> </p>
+<p>20. Almost there! Now that we’ve determined our minimum adequate model we now need to revalidate the model using our usual residuals plots.</p>
+<p> </p>
+<p>Let’s display the usual model diagnostic plots first.</p>
+<p> </p>
+<pre class="r"><code># residuals vs Fitted
+plot(birds_gls7_REML)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q20a-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># QQplot
+qqnorm(birds_gls7_REML, abline = c(0, 1), lty = 2)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q20a-2.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>These seem to look OK. Now let’s extract our normalised residuals from our minimum adequate model and plot these against all explanatory variables.</p>
+<p> </p>
+<pre class="r"><code>res_gls7 &lt;- resid(birds_gls7_REML, type = &quot;normalized&quot;)
+plot(dataf$location, res_gls7, xlab = &quot;location&quot;, ylab = &quot;normalised residuals&quot;, 
+    main = &quot;&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q20b-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot(dataf$year, res_gls7, xlab = &quot;year&quot;, ylab = &quot;normalised residuals&quot;, 
+    main = &quot;&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q20c-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<pre class="r"><code>acf(res_gls7, main = &quot;ACF&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q20d-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pacf(res_gls7, main = &quot;PACF&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q20e-1.png" width="364.8" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>OK, things are looking pretty good. The variance heterogeneity between islands has been dealt with, there doesn’t appear to be any patterns in our residuals over time and the ACF and PACF plots look OK (although there’s still that hint on non-independence with at lag 4 but its a very low correlation (0.2)).</p>
+<p> </p>
+<p>21. Now that we’re happy with our model it’s time to see what the model is telling us. Use the <code>summary()</code> function with our final model to obtain the parameter estimates. What is the estimate of the residual variance for Maui and Oahu? (hint: take a look at the <code>Variance function</code> section of the output - you will need to do a little maths!)</p>
+<p> </p>
+<pre class="r"><code>summary(birds_gls7_REML)
+## Generalized least squares fit by REML
+##   Model: abund ~ rainfall + location 
+##   Data: dataf 
+##        AIC      BIC    logLik
+##   929.1273 944.3229 -458.5636
+## 
+## Correlation Structure: AR(1)
+##  Formula: ~year | location 
+##  Parameter estimate(s):
+##      Phi 
+## 0.866559 
+## Variance function:
+##  Structure: Different standard deviations per stratum
+##  Formula: ~1 | location 
+##  Parameter estimates:
+##     Maui     Oahu 
+## 1.000000 2.516114 
+## 
+## Coefficients:
+##                 Value Std.Error   t-value p-value
+## (Intercept)  87.43848  19.25286  4.541584  0.0000
+## rainfall      3.44195   0.15328 22.455252  0.0000
+## locationOahu 98.29025  51.02740  1.926225  0.0571
+## 
+##  Correlation: 
+##              (Intr) ranfll
+## rainfall     -0.205       
+## locationOahu -0.363  0.009
+## 
+## Standardized residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.00062920 -0.68054513  0.03075564  0.65289845  2.36837189 
+## 
+## Residual standard error: 39.35089 
+## Degrees of freedom: 96 total; 93 residual</code></pre>
+<p> </p>
+<p>The variance estimate for Maui is just the squared value of residual standard error. Remember, the variance function estimates are multiplication factors we use to multiple the residual standard error by. So for Maui this is 1 x 39.35 = 39.35 and then we square this value to go from a standard deviation to a variance (39.35)<sup>2</sup> = 1548.49.</p>
+<p>For Oahu, we multiple the residual standard error by the multiplication factor 2.52, so 2.52 x 39.35 = 99.16 and again square this value to get a variance (99.16)<sup>2</sup> = 9833.54.</p>
+<p> </p>
+<p>22. Once again looking at the output of the summary table what is the estimate of the correlation of residuals at lag 1, 2 and 3?</p>
+<p> </p>
+<p>The estimate of the correlation between residuals at lag 1 is just the estimate of <em>Phi</em> = 0.867 to the power of 1 (the lag) = (0.867)<sup>1</sup> = 0.867. At lag 2 we have (0.867)<sup>2</sup> = 0.752 and lag 3 (0.867)<sup>3</sup> = 0.652 and so on.</p>
+<p> </p>
+<p>23. OK, let’s finish this beast! Take a look at the parameter estimates and see if you can figure out what they are telling you. What does the <code>intercept</code> parameter represent? What do the <code>rainfall</code> and <code>locationOahu</code> parameters represent?</p>
+<p> </p>
+<p>The <code>intercept</code> parameter represents the estimated number of birds in Maui when the rainfall is 0, which is estimated at 87.44.</p>
+<p>The <code>rainfall</code> parameter is the estimate of the slope of the relationship between rainfall and bird abundance for both Maui and Oahu (remember, the interaction term was non-significant). So for every one unit increase in <code>rainfall</code> there is on average an increase of 3.44 birds.</p>
+<p>The parameter <code>locationOahu</code> is the <strong>difference</strong> in the intercept between Maui and Oahu. So the estimate for the intercept for Oahu is 87.44 + 98.29 = 174.88 birds.</p>
+<p> </p>
+<p>24. A picture paints a thousand words as they say, so finally, let’s create a graph of our predicted values along with 95 % confidence intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the <code>predictSE()</code> function from the <code>AICcmodavg</code> package (you will need to install this). You use the <code>predictSE()</code> function in much the same way as you would use the standard <code>predict()</code> function. See <code>?predictSE()</code> for more details about this function.</p>
+<p> </p>
+<pre class="r"><code># create data to make predictions from. Do each location
+# separately.
+my_data_maui &lt;- data.frame(rainfall = seq(min(dataf$rainfall), 
+    max(dataf$rainfall), length = 50), location = c(&quot;Maui&quot;))
+
+my_data_oahu &lt;- data.frame(rainfall = seq(min(dataf$rainfall), 
+    max(dataf$rainfall), length = 50), location = c(&quot;Oahu&quot;))
+
+# now use the predictSE function with our model and new
+# data.  Again do separately for each location
+p.maui &lt;- predictSE(birds_gls7_REML, newdata = my_data_maui, 
+    se.fit = TRUE)
+p.oahu &lt;- predictSE(birds_gls7_REML, newdata = my_data_oahu, 
+    se.fit = TRUE)
+
+# Plot our raw data but without points
+plot(dataf$rainfall, dataf$abund, type = &quot;n&quot;, xlab = &quot;rainfall&quot;, 
+    ylab = &quot;bird abundance&quot;)
+
+# add different coloured points for each location
+points(dataf$rainfall[dataf$location == &quot;Maui&quot;], dataf$abund[dataf$location == 
+    &quot;Maui&quot;], col = &quot;deepskyblue&quot;, pch = 16)
+
+points(dataf$rainfall[dataf$location == &quot;Oahu&quot;], dataf$abund[dataf$location == 
+    &quot;Oahu&quot;], col = &quot;yellowgreen&quot;, pch = 16)
+
+# add the fitted lines for each location
+lines(my_data_maui$rainfall, p.maui$fit, col = &quot;deepskyblue&quot;)
+lines(my_data_oahu$rainfall, p.oahu$fit, col = &quot;yellowgreen&quot;)
+
+# add the upper and lower 95% confidence intervals to
+# each line for maui
+lines(my_data_maui$rainfall, p.maui$fit + 1.96 * (p.maui$se.fit), 
+    col = &quot;deepskyblue&quot;, lty = 2)
+lines(my_data_maui$rainfall, p.maui$fit - 1.96 * (p.maui$se.fit), 
+    col = &quot;deepskyblue&quot;, lty = 2)
+# for oahu
+lines(my_data_oahu$rainfall, p.oahu$fit + 1.96 * (p.oahu$se.fit), 
+    col = &quot;yellowgreen&quot;, lty = 2)
+lines(my_data_oahu$rainfall, p.oahu$fit - 1.96 * (p.oahu$se.fit), 
+    col = &quot;yellowgreen&quot;, lty = 2)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/q24-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+</div>
+<div id="session-information" class="section level3">
+<h3>Session Information</h3>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Catalina 10.15.7
+## 
+## Matrix products: default
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] AICcmodavg_2.3-1 stringr_1.4.0    dplyr_1.0.1      knitr_1.29       ggplot2_3.3.2    effects_4.2-0    nlme_3.1-148    
+##  [8] car_3.0-9        carData_3.0-4    lattice_0.20-41 
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.5         unmarked_1.0.1     digest_0.6.25      packrat_0.5.0      plyr_1.8.6         R6_2.4.1          
+##  [7] cellranger_1.1.0   stats4_3.6.3       survey_4.0         evaluate_0.14      highr_0.8          pillar_1.4.6      
+## [13] rlang_0.4.7        curl_4.3           readxl_1.3.1       minqa_1.2.4        data.table_1.12.8  raster_3.3-13     
+## [19] nloptr_1.2.2.2     Matrix_1.2-18      rmarkdown_2.3      labeling_0.3       splines_3.6.3      lme4_1.1-23       
+## [25] statmod_1.4.34     foreign_0.8-76     munsell_0.5.0      tinytex_0.25       compiler_3.6.3     xfun_0.16         
+## [31] pkgconfig_2.0.3    htmltools_0.5.0    mitools_2.4        nnet_7.3-14        insight_0.9.0      tidyselect_1.1.0  
+## [37] tibble_3.0.3       codetools_0.2-16   rio_0.5.16         crayon_1.3.4       withr_2.2.0        MASS_7.3-51.6     
+## [43] grid_3.6.3         xtable_1.8-4       gtable_0.3.0       lifecycle_0.2.0    DBI_1.1.0          magrittr_1.5      
+## [49] formatR_1.7        scales_1.1.1       zip_2.1.0          stringi_1.4.6      farver_2.0.3       sp_1.4-2          
+## [55] ellipsis_0.3.1     vctrs_0.3.2        generics_0.0.2     boot_1.3-25        openxlsx_4.1.5     RColorBrewer_1.1-2
+## [61] tools_3.6.3        forcats_0.5.0      glue_1.4.1         purrr_0.3.4        hms_0.5.3          parallel_3.6.3    
+## [67] abind_1.4-5        survival_3.2-3     yaml_2.2.1         colorspace_1.4-1   VGAM_1.1-3         haven_2.3.1</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
