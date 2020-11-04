@@ -16,7 +16,11 @@ knitr::opts_chunk$set(echo=TRUE,tidy.opts=list(width.cutoff=55),tidy=TRUE)
 
 \  
 
-**Note:** The first 6 questions in this practical are the same questions that you answered in the case study group work where you identified issues of residual heterogeneity of variance when fitting a standard linear model to these data. You can either add to your previous R markdown document (recommended) when completing this exercise or you can create a new R markdown document which only contains your answers to questions 7 onwards (don't forget though that you will need to import the `Hediste.txt` dataset again and perform any data transformations required.) 
+**Note:** The first 6 questions in this practical are the same questions that you answered in the case study group work where you identified issues of residual heterogeneity of variance and residual non-independence when fitting a standard linear model to these data. You can either add to your previous R markdown document (recommended) when completing this exercise or you can create a new R markdown document which only contains your answers to questions 7 onwards (don't forget though that you will need to import the `Hediste.txt` dataset again and perform any data transformations required.) 
+
+\  
+
+Strap yourself in, this is a rather long exercise (but worth it I hope!).
 
 \  
 
@@ -35,6 +39,8 @@ These data were collected from bird surveys conducted on two Hawaiian islands (M
 \   
 
 3\. How many observations are there for each island?
+
+\  
 
 4\. Explore these data graphically. Are there any obvious outliers in the `abund` variable for each of the `locations`  variable levels (perhaps the `dotchart()` function with the `group` argument might help)? Next, use an `xyplot` (from the `lattice` package) or a `coplot` to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (`year`) for each of the two islands. 
 

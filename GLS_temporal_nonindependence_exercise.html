@@ -374,7 +374,9 @@ $(document).ready(function () {
 
 <p> </p>
 <p> </p>
-<p><strong>Note:</strong> The first 6 questions in this practical are the same questions that you answered in the case study group work where you identified issues of residual heterogeneity of variance when fitting a standard linear model to these data. You can either add to your previous R markdown document (recommended) when completing this exercise or you can create a new R markdown document which only contains your answers to questions 7 onwards (don’t forget though that you will need to import the <code>Hediste.txt</code> dataset again and perform any data transformations required.)</p>
+<p><strong>Note:</strong> The first 6 questions in this practical are the same questions that you answered in the case study group work where you identified issues of residual heterogeneity of variance and residual non-independence when fitting a standard linear model to these data. You can either add to your previous R markdown document (recommended) when completing this exercise or you can create a new R markdown document which only contains your answers to questions 7 onwards (don’t forget though that you will need to import the <code>Hediste.txt</code> dataset again and perform any data transformations required.)</p>
+<p> </p>
+<p>Strap yourself in, this is a rather long exercise (but worth it I hope!).</p>
 <p> </p>
 <div id="environmental-impacts-on-hawaiian-black-necked-stilt-abundance" class="section level3">
 <h3>Environmental impacts on Hawaiian black-necked stilt abundance</h3>
@@ -385,6 +387,7 @@ $(document).ready(function () {
 <p>2. Import the <code>hawaii3.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe. Remember if you’re using R version &gt; 4.0.0 (most of you will be) then columns containing character strings will be imported into R as character type variables not as factors by default. You can either use the argument <code>stringsAsFactors = TRUE</code> when you use the <code>read.table()</code> function to automatically convert character type variables to factors when you import your data or you can use the <code>read.table()</code> function without the <code>stringsAsFactors = TRUE</code> argument and then covert them after you import your data.</p>
 <p> </p>
 <p>3. How many observations are there for each island?</p>
+<p> </p>
 <p>4. Explore these data graphically. Are there any obvious outliers in the <code>abund</code> variable for each of the <code>locations</code> variable levels (perhaps the <code>dotchart()</code> function with the <code>group</code> argument might help)? Next, use an <code>xyplot</code> (from the <code>lattice</code> package) or a <code>coplot</code> to explore any relationships between bird abundance and rainfall for each of the two islands Finally, create a plot to examine how bird abundance changes over time (<code>year</code>) for each of the two islands.</p>
 <p> </p>
 <p>5. With reference to the study aims stated above, fit an appropriate linear model to these data using the <code>lm()</code> function.</p>
