@@ -3,8 +3,8 @@ title: "BI5302 Dealing with temporal non-independence practical report"
 author: "Alex Douglas"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 fontsize: 11pt
 ---
 
@@ -613,7 +613,7 @@ An alternative way to calculate and plot the predicted values for each location 
 
 \  
 
-```{r, bonus_rms, fig.height=5.5, fig.width=5.5, fig.align="center", message=FALSE }
+```{r, bonus_rms, fig.height=5.5, fig.width=5.5, fig.align="center", message=FALSE, tidy=FALSE }
 library(rms)
 f <- Gls(abund ~ rainfall + location, 
                   weights = vf1, 
@@ -621,22 +621,23 @@ f <- Gls(abund ~ rainfall + location,
                   data = dataf)
 
 w.maui <- as.data.frame(rms::Predict(f, 
-                     rainfall = seq(min(dataf$rainfall[dataf$location == "Maui"]),  
-                     max(dataf$rainfall[dataf$location == "Maui"]), length = 50), 
-                     location = "Maui"))
+            rainfall = seq(min(dataf$rainfall[dataf$location == "Maui"]),  
+            max(dataf$rainfall[dataf$location == "Maui"]), length = 50), 
+            location = "Maui"))
 w.oahu <- as.data.frame(rms::Predict(f, 
-                     rainfall = seq(min(dataf$rainfall[dataf$location == "Oahu"]),  
-                     max(dataf$rainfall[dataf$location == "Oahu"]), 
-                     length = 50), 
-                     location = "Oahu"))
+            rainfall = seq(min(dataf$rainfall[dataf$location == "Oahu"]),
+            max(dataf$rainfall[dataf$location == "Oahu"]), length = 50), 
+            location = "Oahu"))
 
 pred_dat <- rbind(w.maui, w.oahu)
-ggplot(pred_dat, aes(x = rainfall, y = yhat, group = location, fill = location)) +
+ggplot(pred_dat, aes(x = rainfall, y = yhat, 
+                     group = location, fill = location)) +
   geom_ribbon(aes(ymin = lower, ymax = upper, group = location, 
                   fill = location), alpha = 0.2) +
   geom_line(aes(colour = location)) +
   geom_point(data = dataf, 
-             aes(x = rainfall, y = abund, group = location, colour = location)) +
+             aes(x = rainfall, y = abund, group = location, 
+                 colour = location)) +
   labs(x = "rainfall" , 
        y = "bird abundance")
 
