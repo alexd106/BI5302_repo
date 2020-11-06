@@ -104,7 +104,7 @@ These data were collected from bird surveys conducted on two Hawaiian islands (M
 
 \  
 
-18\. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It's up to you how you want to perform this. If you want to automate this process you can use the `drop1()` function, but remember you need to use this sensibly and with care and don't forget about the biology! If you use the argument `test = "none"` with the `drop1()` function this will return the AIC values for each iteration. Conversely, if you use the argument `test = "Chisq"` this will return the LRT statistics.
+18\. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It's up to you how you want to perform this. If you want to automate this process you can use the `drop1()` function, but remember you need to use this sensibly and with care and don't forget about the biology! If you use the argument `test = "none"` with the `drop1()` function this will return the AIC values for each iteration. Conversely, if you use the argument `test = "Chisq"` this will return the LRT statistics. Alternatively you can just use the `AIC()` function.
 
 \  
 
@@ -129,7 +129,7 @@ These data were collected from bird surveys conducted on two Hawaiian islands (M
 
 \  
 
-24\. A picture paints a thousand words as they say, so finally, let's create a graph of our predicted values along with 95 % confidence intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the `predictSE()` function from the `AICcmodavg` package (you will need to install this). You use the `predictSE()` function in much the same way as you would use the standard `predict()` function. See `?predictSE()` for more details about this function.
+24\. A picture paints a thousand words as they say, so finally, let's create a graph of our predicted values along with 95 % prediction intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the `predictSE()` function from the `AICcmodavg` package (you will need to install this). You use the `predictSE()` function in much the same way as you would use the standard `predict()` function. See `?predictSE()` for more details about this function. Note, this approach is not ideal as the standard errors from the `predictSE()` function do not take into account the correlation or the variance structure.  
 
 \  
 

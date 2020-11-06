@@ -45,12 +45,7 @@ library(AICcmodavg)
 \   
 
 ```{r, q2, collapse=TRUE}
-dataf <- read.table("data/hawaii3.txt", header = TRUE)
-
-# or if R version > 4.0.0
-
-# dataf <- read.table("data/hawaii3.txt", header = TRUE, stringsAsFactors = TRUE)
-
+dataf <- read.table("data/hawaii3.txt", header = TRUE, stringsAsFactors = TRUE)
 str(dataf)
 ```
 
@@ -396,7 +391,7 @@ birds_gls4 <- gls(abund ~ rainfall + location + year + rainfall:location,
 
 \  
 
-18\. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It's up to you how you want to perform this. If you want to automate this process you can use the `drop1()` function, but remember you need to use this sensibly and with care and don't forget about the biology! If you use the argument `test = "none"` with the `drop1()` function this will return the AIC values for each iteration. Conversely, if you use the argument `test = "Chisq"` this will return the LRT statistics.
+18\. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It's up to you how you want to perform this. If you want to automate this process you can use the `drop1()` function, but remember you need to use this sensibly and with care and don't forget about the biology! If you use the argument `test = "none"` with the `drop1()` function this will return the AIC values for each iteration. Conversely, if you use the argument `test = "Chisq"` this will return the LRT statistics. Alternatively you can just use the `AIC()` function.
 
 \  
 
@@ -548,57 +543,106 @@ The parameter `locationOahu` is the **difference** in the intercept between Maui
 
 \  
 
-24\. A picture paints a thousand words as they say, so finally, let's create a graph of our predicted values along with 95 % confidence intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the `predictSE()` function from the `AICcmodavg` package (you will need to install this). You use the `predictSE()` function in much the same way as you would use the standard `predict()` function. See `?predictSE()` for more details about this function.
+24\. A picture paints a thousand words as they say, so finally, let's create a graph of our predicted values along with 95 % prediction intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the `predictSE()` function from the `AICcmodavg` package (you will need to install this). You use the `predictSE()` function in much the same way as you would use the standard `predict()` function. See `?predictSE()` for more details about this function. Note, this approach is not ideal as the standard errors from the `predictSE()` function do not take into account the correlation or the variance structure.  
 
 \  
 
 ```{r, q24, fig.height=5.5, fig.width=5.5, fig.align="center"}
 # create data to make predictions from. Do each location separately.
-my_data_maui <- data.frame(rainfall = seq(min(dataf$rainfall),  
-                                          max(dataf$rainfall), length = 50), 
-                       location = c("Maui"))
-
-my_data_oahu <- data.frame(rainfall = seq(min(dataf$rainfall),  
-                                          max(dataf$rainfall), length = 50), 
-                       location = c("Oahu"))
+my_data_maui <- data.frame(rainfall = seq(min(dataf$rainfall[dataf$location == "Maui"]),  
+                                          max(dataf$rainfall[dataf$location == "Maui"]), length = 50), 
+                       location = factor("Maui"))
+my_data_oahu <- data.frame(rainfall = seq(min(dataf$rainfall[dataf$location == "Oahu"]),  
+                                          max(dataf$rainfall[dataf$location == "Oahu"]), length = 50), 
+                       location = factor("Oahu"))
 
 # now use the predictSE function with our model and new data.
-# Again do separately for each location
+# again do separately for each location
 p.maui <- predictSE(birds_gls7_REML, newdata = my_data_maui, se.fit = TRUE)
 p.oahu <- predictSE(birds_gls7_REML, newdata = my_data_oahu, se.fit = TRUE)
-
+ 
 # Plot our raw data but without points
 plot(dataf$rainfall, dataf$abund, type = "n", 
-      xlab = "rainfall",
-      ylab = "bird abundance")
+     xlab = "rainfall",
+     ylab = "bird abundance")
 
 # add different coloured points for each location      
 points(dataf$rainfall[dataf$location == "Maui"], 
-       dataf$abund[dataf$location == "Maui"], col = "deepskyblue", pch = 16)
+      dataf$abund[dataf$location == "Maui"], col = "deepskyblue", pch = 16)
 
 points(dataf$rainfall[dataf$location == "Oahu"], 
-       dataf$abund[dataf$location == "Oahu"], col = "yellowgreen", pch = 16)
+      dataf$abund[dataf$location == "Oahu"], col = "yellowgreen", pch = 16)
 
 # add the fitted lines for each location
 lines(my_data_maui$rainfall, p.maui$fit, col = "deepskyblue")
 lines(my_data_oahu$rainfall, p.oahu$fit, col = "yellowgreen")
 
-# add the upper and lower 95% confidence intervals to each line
+# add the upper and lower 95% intervals to each line
 # for maui
 lines(my_data_maui$rainfall, p.maui$fit + 1.96 * (p.maui$se.fit), 
-      col = "deepskyblue", lty = 2)
+     col = "deepskyblue", lty = 2)
 lines(my_data_maui$rainfall, p.maui$fit - 1.96 * (p.maui$se.fit), 
-      col = "deepskyblue", lty = 2)
+     col = "deepskyblue", lty = 2)
 #for oahu
 lines(my_data_oahu$rainfall, p.oahu$fit + 1.96 * (p.oahu$se.fit), 
-      col = "yellowgreen", lty = 2)
+     col = "yellowgreen", lty = 2)
 lines(my_data_oahu$rainfall, p.oahu$fit - 1.96 * (p.oahu$se.fit), 
-      col = "yellowgreen", lty = 2)
+     col = "yellowgreen", lty = 2)
+
+# or if you want shaded intervals
+# for maui
+polygon(x = c(my_data_maui$rainfall, rev(my_data_maui$rainfall)),
+        y = c(p.maui$fit - 1.96 * (p.maui$se.fit), 
+              rev(p.maui$fit + 1.96 * (p.maui$se.fit))),
+        col =  adjustcolor("dodgerblue", alpha.f = 0.10), border = NA)
+#for oahu
+polygon(x = c(my_data_oahu$rainfall, rev(my_data_oahu$rainfall)),
+        y = c(p.oahu$fit - 1.96 * (p.oahu$se.fit), 
+              rev(p.oahu$fit + 1.96 * (p.oahu$se.fit))),
+        col =  adjustcolor("yellowgreen", alpha.f = 0.10), border = NA)
 ```
 
 
 \  
 
+### Bonus code
+
+\  
+
+An alternative way to calculate and plot the predicted values for each location and associated 95%  intervals. This method requires you to install the `rms` package, use the `Gls()` function (note the capital G) to fit your model and the `Predict()` function (notice the capital P) to estimate the group means and approximate confidence intervals. Finally `ggplot()` is used to plot these values (you can also use base R graphics to plot these values but I thought I would show you an alternative!). You'll see that there's not much difference in the intervals using this method and the approach given above.
+
+\  
+
+```{r, bonus_rms, fig.height=5.5, fig.width=5.5, fig.align="center", message=FALSE }
+library(rms)
+f <- Gls(abund ~ rainfall + location, 
+                  weights = vf1, 
+                  correlation = cor1,
+                  data = dataf)
+
+w.maui <- as.data.frame(rms::Predict(f, 
+                     rainfall = seq(min(dataf$rainfall[dataf$location == "Maui"]),  
+                     max(dataf$rainfall[dataf$location == "Maui"]), length = 50), 
+                     location = "Maui"))
+w.oahu <- as.data.frame(rms::Predict(f, 
+                     rainfall = seq(min(dataf$rainfall[dataf$location == "Oahu"]),  
+                     max(dataf$rainfall[dataf$location == "Oahu"]), 
+                     length = 50), 
+                     location = "Oahu"))
+
+pred_dat <- rbind(w.maui, w.oahu)
+ggplot(pred_dat, aes(x = rainfall, y = yhat, group = location, fill = location)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper, group = location, 
+                  fill = location), alpha = 0.2) +
+  geom_line(aes(colour = location)) +
+  geom_point(data = dataf, 
+             aes(x = rainfall, y = abund, group = location, colour = location)) +
+  labs(x = "rainfall" , 
+       y = "bird abundance")
+
+```
+
+\  
 
 ### Session Information
 

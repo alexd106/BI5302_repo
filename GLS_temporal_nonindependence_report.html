@@ -14,6 +14,7 @@
 
 <title>BI5302 Dealing with temporal non-independence practical report</title>
 
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -23,8 +24,19 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -367,7 +379,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">BI5302 Dealing with temporal non-independence practical report</h1>
 <h4 class="author">Alex Douglas</h4>
-<h4 class="date">04 November, 2020</h4>
+<h4 class="date">06 November, 2020</h4>
 
 </div>
 
@@ -390,13 +402,7 @@ library(AICcmodavg)</code></pre>
 <p> </p>
 <p>2. Import the <code>hawaii3.txt</code> dataset into R and assign it to a suitably named variable. Examine the structure of the dataframe. Remember if you’re using R version &gt; 4.0.0 (most of you will be) then columns containing character strings will be imported into R as character type variables not as factors by default. You can either use the argument <code>stringsAsFactors = TRUE</code> when you use the <code>read.table()</code> function to automatically convert character type variables to factors when you import your data or you can use the <code>read.table()</code> function without the <code>stringsAsFactors = TRUE</code> argument and then covert them after you import your data.</p>
 <p> </p>
-<pre class="r"><code>dataf &lt;- read.table(&quot;data/hawaii3.txt&quot;, header = TRUE)
-
-# or if R version &gt; 4.0.0
-
-# dataf &lt;- read.table(&#39;data/hawaii3.txt&#39;, header = TRUE,
-# stringsAsFactors = TRUE)
-
+<pre class="r"><code>dataf &lt;- read.table(&quot;data/hawaii3.txt&quot;, header = TRUE, stringsAsFactors = TRUE)
 str(dataf)
 ## &#39;data.frame&#39;:    96 obs. of  4 variables:
 ##  $ abund   : int  220 151 183 161 264 192 117 239 263 128 ...
@@ -622,7 +628,7 @@ xyplot(res_gls3 ~ year | location, data = dataf, xlab = &quot;year&quot;,
 <pre class="r"><code>birds_gls4 &lt;- gls(abund ~ rainfall + location + year + rainfall:location, 
     weights = vf1, correlation = cor1, method = &quot;ML&quot;, data = dataf)</code></pre>
 <p> </p>
-<p>18. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It’s up to you how you want to perform this. If you want to automate this process you can use the <code>drop1()</code> function, but remember you need to use this sensibly and with care and don’t forget about the biology! If you use the argument <code>test = "none"</code> with the <code>drop1()</code> function this will return the AIC values for each iteration. Conversely, if you use the argument <code>test = "Chisq"</code> this will return the LRT statistics.</p>
+<p>18. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It’s up to you how you want to perform this. If you want to automate this process you can use the <code>drop1()</code> function, but remember you need to use this sensibly and with care and don’t forget about the biology! If you use the argument <code>test = "none"</code> with the <code>drop1()</code> function this will return the AIC values for each iteration. Conversely, if you use the argument <code>test = "Chisq"</code> this will return the LRT statistics. Alternatively you can just use the <code>AIC()</code> function.</p>
 <p> </p>
 <p>So lets use AIC to compare models</p>
 <p> </p>
@@ -760,18 +766,19 @@ plot(dataf$location, res_gls7, xlab = &quot;location&quot;, ylab = &quot;normali
 <p>The <code>rainfall</code> parameter is the estimate of the slope of the relationship between rainfall and bird abundance for both Maui and Oahu (remember, the interaction term was non-significant). So for every one unit increase in <code>rainfall</code> there is on average an increase of 3.44 birds.</p>
 <p>The parameter <code>locationOahu</code> is the <strong>difference</strong> in the intercept between Maui and Oahu. So the estimate for the intercept for Oahu is 87.44 + 98.29 = 174.88 birds.</p>
 <p> </p>
-<p>24. A picture paints a thousand words as they say, so finally, let’s create a graph of our predicted values along with 95 % confidence intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the <code>predictSE()</code> function from the <code>AICcmodavg</code> package (you will need to install this). You use the <code>predictSE()</code> function in much the same way as you would use the standard <code>predict()</code> function. See <code>?predictSE()</code> for more details about this function.</p>
+<p>24. A picture paints a thousand words as they say, so finally, let’s create a graph of our predicted values along with 95 % prediction intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the <code>predictSE()</code> function from the <code>AICcmodavg</code> package (you will need to install this). You use the <code>predictSE()</code> function in much the same way as you would use the standard <code>predict()</code> function. See <code>?predictSE()</code> for more details about this function. Note, this approach is not ideal as the standard errors from the <code>predictSE()</code> function do not take into account the correlation or the variance structure.</p>
 <p> </p>
 <pre class="r"><code># create data to make predictions from. Do each location
 # separately.
-my_data_maui &lt;- data.frame(rainfall = seq(min(dataf$rainfall), 
-    max(dataf$rainfall), length = 50), location = c(&quot;Maui&quot;))
-
-my_data_oahu &lt;- data.frame(rainfall = seq(min(dataf$rainfall), 
-    max(dataf$rainfall), length = 50), location = c(&quot;Oahu&quot;))
+my_data_maui &lt;- data.frame(rainfall = seq(min(dataf$rainfall[dataf$location == 
+    &quot;Maui&quot;]), max(dataf$rainfall[dataf$location == &quot;Maui&quot;]), 
+    length = 50), location = factor(&quot;Maui&quot;))
+my_data_oahu &lt;- data.frame(rainfall = seq(min(dataf$rainfall[dataf$location == 
+    &quot;Oahu&quot;]), max(dataf$rainfall[dataf$location == &quot;Oahu&quot;]), 
+    length = 50), location = factor(&quot;Oahu&quot;))
 
 # now use the predictSE function with our model and new
-# data.  Again do separately for each location
+# data.  again do separately for each location
 p.maui &lt;- predictSE(birds_gls7_REML, newdata = my_data_maui, 
     se.fit = TRUE)
 p.oahu &lt;- predictSE(birds_gls7_REML, newdata = my_data_oahu, 
@@ -792,8 +799,8 @@ points(dataf$rainfall[dataf$location == &quot;Oahu&quot;], dataf$abund[dataf$loc
 lines(my_data_maui$rainfall, p.maui$fit, col = &quot;deepskyblue&quot;)
 lines(my_data_oahu$rainfall, p.oahu$fit, col = &quot;yellowgreen&quot;)
 
-# add the upper and lower 95% confidence intervals to
-# each line for maui
+# add the upper and lower 95% intervals to each line for
+# maui
 lines(my_data_maui$rainfall, p.maui$fit + 1.96 * (p.maui$se.fit), 
     col = &quot;deepskyblue&quot;, lty = 2)
 lines(my_data_maui$rainfall, p.maui$fit - 1.96 * (p.maui$se.fit), 
@@ -802,20 +809,57 @@ lines(my_data_maui$rainfall, p.maui$fit - 1.96 * (p.maui$se.fit),
 lines(my_data_oahu$rainfall, p.oahu$fit + 1.96 * (p.oahu$se.fit), 
     col = &quot;yellowgreen&quot;, lty = 2)
 lines(my_data_oahu$rainfall, p.oahu$fit - 1.96 * (p.oahu$se.fit), 
-    col = &quot;yellowgreen&quot;, lty = 2)</code></pre>
+    col = &quot;yellowgreen&quot;, lty = 2)
+
+# or if you want shaded intervals for maui
+polygon(x = c(my_data_maui$rainfall, rev(my_data_maui$rainfall)), 
+    y = c(p.maui$fit - 1.96 * (p.maui$se.fit), rev(p.maui$fit + 
+        1.96 * (p.maui$se.fit))), col = adjustcolor(&quot;dodgerblue&quot;, 
+        alpha.f = 0.1), border = NA)
+# for oahu
+polygon(x = c(my_data_oahu$rainfall, rev(my_data_oahu$rainfall)), 
+    y = c(p.oahu$fit - 1.96 * (p.oahu$se.fit), rev(p.oahu$fit + 
+        1.96 * (p.oahu$se.fit))), col = adjustcolor(&quot;yellowgreen&quot;, 
+        alpha.f = 0.1), border = NA)</code></pre>
 <p><img src="GLS_temporal_nonindependence_report_files/figure-html/q24-1.png" width="528" style="display: block; margin: auto;" /></p>
+<p> </p>
+</div>
+<div id="bonus-code" class="section level3">
+<h3>Bonus code</h3>
+<p> </p>
+<p>An alternative way to calculate and plot the predicted values for each location and associated 95% intervals. This method requires you to install the <code>rms</code> package, use the <code>Gls()</code> function (note the capital G) to fit your model and the <code>Predict()</code> function (notice the capital P) to estimate the group means and approximate confidence intervals. Finally <code>ggplot()</code> is used to plot these values (you can also use base R graphics to plot these values but I thought I would show you an alternative!). You’ll see that there’s not much difference in the intervals using this method and the approach given above.</p>
+<p> </p>
+<pre class="r"><code>library(rms)
+f &lt;- Gls(abund ~ rainfall + location, weights = vf1, correlation = cor1, 
+    data = dataf)
+
+w.maui &lt;- as.data.frame(rms::Predict(f, rainfall = seq(min(dataf$rainfall[dataf$location == 
+    &quot;Maui&quot;]), max(dataf$rainfall[dataf$location == &quot;Maui&quot;]), 
+    length = 50), location = &quot;Maui&quot;))
+w.oahu &lt;- as.data.frame(rms::Predict(f, rainfall = seq(min(dataf$rainfall[dataf$location == 
+    &quot;Oahu&quot;]), max(dataf$rainfall[dataf$location == &quot;Oahu&quot;]), 
+    length = 50), location = &quot;Oahu&quot;))
+
+pred_dat &lt;- rbind(w.maui, w.oahu)
+ggplot(pred_dat, aes(x = rainfall, y = yhat, group = location, 
+    fill = location)) + geom_ribbon(aes(ymin = lower, ymax = upper, 
+    group = location, fill = location), alpha = 0.2) + geom_line(aes(colour = location)) + 
+    geom_point(data = dataf, aes(x = rainfall, y = abund, 
+        group = location, colour = location)) + labs(x = &quot;rainfall&quot;, 
+    y = &quot;bird abundance&quot;)</code></pre>
+<p><img src="GLS_temporal_nonindependence_report_files/figure-html/bonus_rms-1.png" width="528" style="display: block; margin: auto;" /></p>
 <p> </p>
 </div>
 <div id="session-information" class="section level3">
 <h3>Session Information</h3>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+<pre><code>## R version 4.0.3 (2020-10-10)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
 ## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
@@ -824,22 +868,31 @@ lines(my_data_oahu$rainfall, p.oahu$fit - 1.96 * (p.oahu$se.fit),
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] AICcmodavg_2.3-1 stringr_1.4.0    dplyr_1.0.1      knitr_1.29       ggplot2_3.3.2    effects_4.2-0    nlme_3.1-148    
-##  [8] car_3.0-9        carData_3.0-4    lattice_0.20-41 
+##  [1] stringr_1.4.0    dplyr_1.0.2      effects_4.2-0    rms_6.0-1        SparseM_1.78     Hmisc_4.4-1     
+##  [7] ggplot2_3.3.2    Formula_1.2-4    survival_3.2-7   AICcmodavg_2.3-1 nlme_3.1-150     car_3.0-10      
+## [13] carData_3.0-4    knitr_1.30       lattice_0.20-41 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5         unmarked_1.0.1     digest_0.6.25      plyr_1.8.6         R6_2.4.1           cellranger_1.1.0  
-##  [7] stats4_3.6.3       survey_4.0         evaluate_0.14      highr_0.8          pillar_1.4.6       rlang_0.4.7       
-## [13] curl_4.3           readxl_1.3.1       minqa_1.2.4        data.table_1.12.8  raster_3.3-13      nloptr_1.2.2.2    
-## [19] Matrix_1.2-18      rmarkdown_2.3      labeling_0.3       splines_3.6.3      lme4_1.1-23        statmod_1.4.34    
-## [25] foreign_0.8-76     munsell_0.5.0      tinytex_0.25       compiler_3.6.3     xfun_0.16          pkgconfig_2.0.3   
-## [31] htmltools_0.5.0    mitools_2.4        nnet_7.3-14        insight_0.9.0      tidyselect_1.1.0   tibble_3.0.3      
-## [37] codetools_0.2-16   rio_0.5.16         crayon_1.3.4       withr_2.2.0        MASS_7.3-51.6      grid_3.6.3        
-## [43] xtable_1.8-4       gtable_0.3.0       lifecycle_0.2.0    DBI_1.1.0          magrittr_1.5       formatR_1.7       
-## [49] scales_1.1.1       zip_2.1.0          stringi_1.4.6      farver_2.0.3       sp_1.4-2           ellipsis_0.3.1    
-## [55] vctrs_0.3.2        generics_0.0.2     boot_1.3-25        openxlsx_4.1.5     RColorBrewer_1.1-2 tools_3.6.3       
-## [61] forcats_0.5.0      glue_1.4.1         purrr_0.3.4        hms_0.5.3          parallel_3.6.3     abind_1.4-5       
-## [67] survival_3.2-3     yaml_2.2.1         colorspace_1.4-1   VGAM_1.1-3         haven_2.3.1</code></pre>
+##  [1] matrixStats_0.57.0  insight_0.10.0      RColorBrewer_1.1-2  tools_4.0.3         backports_1.2.0    
+##  [6] R6_2.5.0            rpart_4.1-15        DBI_1.1.0           colorspace_1.4-1    nnet_7.3-14        
+## [11] raster_3.3-13       withr_2.3.0         sp_1.4-4            tidyselect_1.1.0    gridExtra_2.3      
+## [16] curl_4.3            compiler_4.0.3      cli_2.1.0           quantreg_5.75       formatR_1.7        
+## [21] htmlTable_2.1.0     sandwich_3.0-0      unmarked_1.0.1      labeling_0.4.2      scales_1.1.1       
+## [26] checkmate_2.0.0     polspline_1.1.19    mvtnorm_1.1-1       digest_0.6.27       minqa_1.2.4        
+## [31] foreign_0.8-80      rmarkdown_2.5       rio_0.5.16          base64enc_0.1-3     jpeg_0.1-8.1       
+## [36] pkgconfig_2.0.3     htmltools_0.5.0     lme4_1.1-25         highr_0.8           htmlwidgets_1.5.2  
+## [41] rlang_0.4.8         readxl_1.3.1        rstudioapi_0.11     VGAM_1.1-4          generics_0.1.0     
+## [46] farver_2.0.3        zoo_1.8-8           zip_2.1.1           magrittr_1.5        Matrix_1.2-18      
+## [51] Rcpp_1.0.5          munsell_0.5.0       fansi_0.4.1         abind_1.4-5         lifecycle_0.2.0    
+## [56] stringi_1.5.3       multcomp_1.4-14     yaml_2.2.1          MASS_7.3-53         plyr_1.8.6         
+## [61] grid_4.0.3          parallel_4.0.3      forcats_0.5.0       crayon_1.3.4        haven_2.3.1        
+## [66] splines_4.0.3       hms_0.5.3           pillar_1.4.6        boot_1.3-25         codetools_0.2-18   
+## [71] stats4_4.0.3        glue_1.4.2          evaluate_0.14       mitools_2.4         latticeExtra_0.6-29
+## [76] data.table_1.13.2   nloptr_1.2.2.2      png_0.1-7           vctrs_0.3.4         MatrixModels_0.4-1 
+## [81] cellranger_1.1.0    gtable_0.3.0        purrr_0.3.4         assertthat_0.2.1    xfun_0.19          
+## [86] openxlsx_4.2.3      xtable_1.8-4        survey_4.0          rsconnect_0.8.16    tibble_3.0.4       
+## [91] conquer_1.0.2       tinytex_0.27        cluster_2.1.0       statmod_1.4.35      TH.data_1.0-10     
+## [96] ellipsis_0.3.1</code></pre>
 </div>
 
 
@@ -851,7 +904,7 @@ lines(my_data_oahu$rainfall, p.oahu$fit - 1.96 * (p.oahu$se.fit),
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

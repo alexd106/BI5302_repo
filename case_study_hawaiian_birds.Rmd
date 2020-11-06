@@ -46,12 +46,7 @@ library(effects)
 \   
 
 ```{r, q2, collapse=TRUE}
-dataf <- read.table("data/hawaii3.txt", header = TRUE)
-
-# or if R version > 4.0.0
-
-# dataf <- read.table("data/hawaii3.txt", header = TRUE, stringsAsFactors = TRUE)
-
+dataf <- read.table("data/hawaii3.txt", header = TRUE, stringsAsFactors = TRUE)
 str(dataf)
 ```
 

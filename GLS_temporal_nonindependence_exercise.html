@@ -14,6 +14,7 @@
 
 <title>BI5302 Dealing with temporal non-independence Practical</title>
 
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -22,8 +23,19 @@
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
@@ -352,7 +364,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">BI5302 Dealing with temporal non-independence Practical</h1>
 <h4 class="author">Alex Douglas</h4>
-<h4 class="date">04 November, 2020</h4>
+<h4 class="date">06 November, 2020</h4>
 
 </div>
 
@@ -403,7 +415,7 @@ $(document).ready(function () {
 <p> </p>
 <p>17. So, now that we’ve dealt with the main issues of residual variance heterogeneity and non-independence it’s time to turn our attention to performing model selection of our explanatory variables (remember this is the fixed part of the model). However, before we can perform model selection we must first refit our model using maximum likelihood (ML) rather than restricted maximum likelihood (REML) which is the default. To do this we refit the model using the <code>gls()</code> function once again but this time include the argument <code>method = "ML"</code>.</p>
 <p> </p>
-<p>18. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It’s up to you how you want to perform this. If you want to automate this process you can use the <code>drop1()</code> function, but remember you need to use this sensibly and with care and don’t forget about the biology! If you use the argument <code>test = "none"</code> with the <code>drop1()</code> function this will return the AIC values for each iteration. Conversely, if you use the argument <code>test = "Chisq"</code> this will return the LRT statistics.</p>
+<p>18. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It’s up to you how you want to perform this. If you want to automate this process you can use the <code>drop1()</code> function, but remember you need to use this sensibly and with care and don’t forget about the biology! If you use the argument <code>test = "none"</code> with the <code>drop1()</code> function this will return the AIC values for each iteration. Conversely, if you use the argument <code>test = "Chisq"</code> this will return the LRT statistics. Alternatively you can just use the <code>AIC()</code> function.</p>
 <p> </p>
 <p>19. Once you have determined your minimum adequate model, refit this model using REML once again (remember, this is the default for the <code>gls()</code> function).</p>
 <p> </p>
@@ -415,7 +427,7 @@ $(document).ready(function () {
 <p> </p>
 <p>23. OK, let’s finish this beast! Take a look at the parameter estimates and see if you can figure out what they are telling you. What does the <code>intercept</code> parameter represent? What do the <code>rainfall</code> and <code>locationOahu</code> parameters represent?</p>
 <p> </p>
-<p>24. A picture paints a thousand words as they say, so finally, let’s create a graph of our predicted values along with 95 % confidence intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the <code>predictSE()</code> function from the <code>AICcmodavg</code> package (you will need to install this). You use the <code>predictSE()</code> function in much the same way as you would use the standard <code>predict()</code> function. See <code>?predictSE()</code> for more details about this function.</p>
+<p>24. A picture paints a thousand words as they say, so finally, let’s create a graph of our predicted values along with 95 % prediction intervals. There are many ways to do this but perhaps the easiest way to also contain the standard errors of the fitted values is to use the <code>predictSE()</code> function from the <code>AICcmodavg</code> package (you will need to install this). You use the <code>predictSE()</code> function in much the same way as you would use the standard <code>predict()</code> function. See <code>?predictSE()</code> for more details about this function. Note, this approach is not ideal as the standard errors from the <code>predictSE()</code> function do not take into account the correlation or the variance structure.</p>
 <p> </p>
 <p>[End of exercise]</p>
 <p> </p>
@@ -436,7 +448,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

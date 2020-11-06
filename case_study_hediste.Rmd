@@ -47,11 +47,7 @@ library(ggplot2) # this is optional (see bonus code at the end)
 \   
 
 ```{r, q2, collapse=TRUE}
-nereis <- read.table("data/Hediste.txt", header = TRUE)
-
-# or if R version > 4.0.0
-
-# nereis <- read.table("data/Hediste.txt", header = TRUE, stringsAsFactors = TRUE)
+nereis <- read.table("data/Hediste.txt", header = TRUE, stringsAsFactors = TRUE)
 
 nereis$fbiomass <- factor(nereis$biomass)
 str(nereis)
