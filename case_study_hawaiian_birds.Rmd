@@ -56,8 +56,9 @@ str(dataf)
 
 \ 
 
-```{r, q3, collapse=TRUE}
-table(dataf$location)
+```{r, q3, collapse=TRUE, warnings=FALSE, message=FALSE}
+library(knitr)
+kable(table(dataf$location))
 ```
 
 \  
