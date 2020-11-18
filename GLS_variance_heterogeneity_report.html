@@ -379,7 +379,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">BI5302 Variance Heterogeneity Practical</h1>
 <h4 class="author">Alex Douglas</h4>
-<h4 class="date">11 November, 2020</h4>
+<h4 class="date">18 November, 2020</h4>
 
 </div>
 
@@ -619,7 +619,7 @@ abline(h = 0, lty = 2, col = 2)</code></pre>
 <p> </p>
 <p>This looks a lot better than the equivalent plot from the first linear model we fitted (go back and take a look). It appears that the assumption of homogeneity of residual variance is now satisfied. An easier (but perhaps less transparent) way to create this plot (not shown) is :</p>
 <p> </p>
-<pre class="r"><code>plot(nereis.gls.final, resid(., type = &quot;n&quot;) ~ fitted(.))</code></pre>
+<pre class="r"><code>plot(nereis.gls.final, resid(., type = &quot;normalized&quot;) ~ fitted(.))</code></pre>
 <p> </p>
 <p>We should also plot our normalised residual against each of our explanatory variables.</p>
 <p> </p>
@@ -633,12 +633,13 @@ abline(h = 0, lty = 2, col = 2)</code></pre>
 <p>Again, these look much better than for our naive linear model.</p>
 <p>As before, we can use a short cut to obtain similar plots (not shown):</p>
 <p> </p>
-<pre class="r"><code>plot(nereis.gls.final, fnutrient ~ resid(., type = &quot;n&quot;))
-plot(nereis.gls.final, fbiomass ~ resid(., type = &quot;n&quot;))</code></pre>
+<pre class="r"><code>plot(nereis.gls.final, fnutrient ~ resid(., type = &quot;normalized&quot;))
+plot(nereis.gls.final, fbiomass ~ resid(., type = &quot;normalized&quot;))</code></pre>
 <p> </p>
 <p>14. Now (and only now!) you can go ahead and interpret the the output from your final model (use the <code>anova()</code> and <code>summary()</code> functions). Summarise your interpretation in your R markdown document.</p>
 <p> </p>
 <p>Display the ANOVA table using the <code>anova()</code> function. This highlights the significant interaction term between <code>fbiomass</code> and <code>fnutrient</code> variables. In fact, notice the interaction term <em>p-value</em> is the same (within rounding error) as the one obtained using the likelihood ratio test above.</p>
+<p> </p>
 <pre class="r"><code>anova(nereis.gls.final)
 ## Denom. DF: 30 
 ##                    numDF   F-value p-value
@@ -647,7 +648,7 @@ plot(nereis.gls.final, fbiomass ~ resid(., type = &quot;n&quot;))</code></pre>
 ## fnutrient              2  22.93364  &lt;.0001
 ## fbiomass:fnutrient     8   3.01002  0.0133</code></pre>
 <p> </p>
-<p>To display the parameter estimates we use the <code>summary()</code> function. Prepare for voluminous output! Take note of the <code>Variance function:</code> section which displays the multiplication factors for each of our treatment group (<code>fbiomass</code> and <code>fnutrient</code>) combinations. We can use these multiplication factors to multiply the residual standard error from the model, (0.0318), to give us our group standard deviations and then square these values to give us our group level variance estimates (i.e. for the NH4<code>*</code>0.5 group: (30.48 x 0.0318)<sup>2</sup> = 0.939). The parameter estimates are provided in the form of treatment contrasts (remember those!) which will take you quite a while to work through.</p>
+<p>To display the parameter estimates we use the <code>summary()</code> function. Prepare for voluminous output! Take note of the <code>Variance function:</code> section which displays the multiplication factors for each of our treatment group (<code>fbiomass</code> and <code>fnutrient</code>) combinations. We can use these multiplication factors to multiply the residual standard error from the model, (0.0318), to give us our group standard deviations and then square these values to give us our group level variance estimates (i.e. for the NH4<code>*</code>0.5 group: (30.48 x 0.0318)<sup>2</sup> = 0.939). The parameter estimates are provided in the form of treatment contrasts (remember those!) which will take you quite a while to work through (see below for some help).</p>
 <p> </p>
 <pre class="r"><code>summary(nereis.gls.final)
 ## Generalized least squares fit by REML
@@ -660,10 +661,10 @@ plot(nereis.gls.final, fbiomass ~ resid(., type = &quot;n&quot;))</code></pre>
 ##  Structure: Different standard deviations per stratum
 ##  Formula: ~1 | fnutrient * fbiomass 
 ##  Parameter estimates:
-##     NH4*0   NH4*0.5     NH4*1   NH4*1.5     NH4*2     NO3*0   NO3*0.5     NO3*1   NO3*1.5     NO3*2     PO3*0   PO3*0.5 
-##  1.000000 30.490662 10.433659  9.512390 43.814615 41.570039 22.368561 16.553389 18.043296 15.284863  1.196884 15.889925 
-##     PO3*1   PO3*1.5     PO3*2 
-##  6.693475  5.688974 15.730721 
+##     NH4*0   NH4*0.5     NH4*1   NH4*1.5     NH4*2     NO3*0   NO3*0.5     NO3*1   NO3*1.5     NO3*2     PO3*0 
+##  1.000000 30.490662 10.433659  9.512390 43.814615 41.570039 22.368561 16.553389 18.043296 15.284863  1.196884 
+##   PO3*0.5     PO3*1   PO3*1.5     PO3*2 
+## 15.889925  6.693475  5.688974 15.730721 
 ## 
 ## Coefficients:
 ##                              Value Std.Error   t-value p-value
@@ -684,21 +685,36 @@ plot(nereis.gls.final, fbiomass ~ resid(., type = &quot;n&quot;))</code></pre>
 ## fbiomass2:fnutrientPO3   -1.906533 0.8539516 -2.232601  0.0332
 ## 
 ##  Correlation: 
-##                          (Intr) fbm0.5 fbmss1 fbm1.5 fbmss2 fntNO3 fntPO3 f0.5:N f1:NO3 f1.5:N f2:NO3 f0.5:P f1:PO3 f1.5:P
-## fbiomass0.5              -0.033                                                                                           
-## fbiomass1                -0.095  0.003                                                                                    
-## fbiomass1.5              -0.105  0.003  0.010                                                                             
-## fbiomass2                -0.023  0.001  0.002  0.002                                                                      
-## fnutrientNO3             -0.024  0.001  0.002  0.003  0.001                                                               
-## fnutrientPO3             -0.641  0.021  0.061  0.067  0.015  0.015                                                        
-## fbiomass0.5:fnutrientNO3  0.018 -0.543 -0.002 -0.002  0.000 -0.740 -0.011                                                 
-## fbiomass1:fnutrientNO3    0.022 -0.001 -0.228 -0.002  0.000 -0.905 -0.014  0.669                                          
-## fbiomass1.5:fnutrientNO3  0.022 -0.001 -0.002 -0.207  0.000 -0.898 -0.014  0.664  0.812                                   
-## fbiomass2:fnutrientNO3    0.016 -0.001 -0.002 -0.002 -0.703 -0.667 -0.010  0.494  0.604  0.599                            
-## fbiomass0.5:fnutrientPO3  0.029 -0.886 -0.003 -0.003 -0.001 -0.001 -0.045  0.481  0.001  0.001  0.000                     
-## fbiomass1:fnutrientPO3    0.080 -0.003 -0.839 -0.008 -0.002 -0.002 -0.125  0.001  0.191  0.002  0.001  0.006              
-## fbiomass1.5:fnutrientPO3  0.089 -0.003 -0.009 -0.855 -0.002 -0.002 -0.139  0.002  0.002  0.176  0.001  0.006  0.017       
-## fbiomass2:fnutrientPO3    0.021 -0.001 -0.002 -0.002 -0.941 -0.001 -0.033  0.000  0.000  0.000  0.662  0.002  0.004  0.005
+##                          (Intr) fbm0.5 fbmss1 fbm1.5 fbmss2 fntNO3 fntPO3 f0.5:N f1:NO3 f1.5:N f2:NO3 f0.5:P f1:PO3
+## fbiomass0.5              -0.033                                                                                    
+## fbiomass1                -0.095  0.003                                                                             
+## fbiomass1.5              -0.105  0.003  0.010                                                                      
+## fbiomass2                -0.023  0.001  0.002  0.002                                                               
+## fnutrientNO3             -0.024  0.001  0.002  0.003  0.001                                                        
+## fnutrientPO3             -0.641  0.021  0.061  0.067  0.015  0.015                                                 
+## fbiomass0.5:fnutrientNO3  0.018 -0.543 -0.002 -0.002  0.000 -0.740 -0.011                                          
+## fbiomass1:fnutrientNO3    0.022 -0.001 -0.228 -0.002  0.000 -0.905 -0.014  0.669                                   
+## fbiomass1.5:fnutrientNO3  0.022 -0.001 -0.002 -0.207  0.000 -0.898 -0.014  0.664  0.812                            
+## fbiomass2:fnutrientNO3    0.016 -0.001 -0.002 -0.002 -0.703 -0.667 -0.010  0.494  0.604  0.599                     
+## fbiomass0.5:fnutrientPO3  0.029 -0.886 -0.003 -0.003 -0.001 -0.001 -0.045  0.481  0.001  0.001  0.000              
+## fbiomass1:fnutrientPO3    0.080 -0.003 -0.839 -0.008 -0.002 -0.002 -0.125  0.001  0.191  0.002  0.001  0.006       
+## fbiomass1.5:fnutrientPO3  0.089 -0.003 -0.009 -0.855 -0.002 -0.002 -0.139  0.002  0.002  0.176  0.001  0.006  0.017
+## fbiomass2:fnutrientPO3    0.021 -0.001 -0.002 -0.002 -0.941 -0.001 -0.033  0.000  0.000  0.000  0.662  0.002  0.004
+##                          f1.5:P
+## fbiomass0.5                    
+## fbiomass1                      
+## fbiomass1.5                    
+## fbiomass2                      
+## fnutrientNO3                   
+## fnutrientPO3                   
+## fbiomass0.5:fnutrientNO3       
+## fbiomass1:fnutrientNO3         
+## fbiomass1.5:fnutrientNO3       
+## fbiomass2:fnutrientNO3         
+## fbiomass0.5:fnutrientPO3       
+## fbiomass1:fnutrientPO3         
+## fbiomass1.5:fnutrientPO3       
+## fbiomass2:fnutrientPO3    0.005
 ## 
 ## Standardized residuals:
 ##         Min          Q1         Med          Q3         Max 
@@ -713,6 +729,35 @@ plot(nereis.gls.final, fbiomass ~ resid(., type = &quot;n&quot;))</code></pre>
 
 # and the summary table of parameter estimates
 # summary(nereis.gls.final)$tTable</code></pre>
+<p> </p>
+<p>OK, that’s quite a few parameter estimates! Let’s work through the interpretation of each of them in turn to clarify what they actually are and what they mean.</p>
+<ul>
+<li><p>As always we start with the <strong><code>intercept</code></strong> estimate. In this model, the <code>intercept</code> is 0.0867 and represents the estimated mean concentration at <code>fbiomass</code> level 0 for the NH4 <code>fnutrient</code> (this is first alphabetically).</p></li>
+<li><p>Next the <strong><code>fbiomass0.5</code></strong> estimate (0.9467) is the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 0.5 and <code>fnutrient</code> NH4. In other words, the nutrient concentration for <code>fbiomass</code> level 0.5 and <code>fnutrient</code> NH4 is 0.9467 higher than the <code>intercept</code>. If you want to calculate the concentration for the <code>fbiomass</code> level 0.5 and <code>fnutrient</code> NH4 group then you simply take the <code>intercept</code> value and add it to the <code>fbiomass0.5</code> value 0.0867 + 0.9467 = 1.0334 mg/l.</p></li>
+<li><p>The estimate for <strong><code>fbiomass1</code></strong> (0.8076) is the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 1 and <code>fnutrient</code> NH4. In other words, the nutrient concentration for <code>fbiomass</code> level 1 and <code>fnutrient</code> NH4 is 0.8076 higher than the <code>intercept</code>. Again, if you want to calculate the concentration for the <code>fbiomass</code> level 1 and <code>fnutrient</code> NH4 group then you simply take the <code>intercept</code> value and add it to the <code>fbiomass1</code> value 0.0867 + 0.8076 = 0.8943 mg/l.</p></li>
+<li><p>The estimates for <strong><code>fbiomass1.5</code></strong> and <strong><code>fbiomass2</code></strong> are interpreted in the same way as above.</p></li>
+<li><p>The <strong><code>fnutrientNO3</code></strong> estimate of 2.4133 is the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 0 and <code>fnutrient</code> NO3. So the nutrient concentration for <code>fbiomass</code> level 0 and <code>fnutrient</code> NO3 is 2.4133 higher than the <code>intercept</code>. To calculate the mean concentration for the <code>fbiomass</code> level 0 and <code>fnutrient</code> NO3 group then you simply take the <code>intercept</code> value and add it to the <code>fnutrientNO3</code> value 0.0867 + 2.4133 = 2.5 mg/l.</p></li>
+<li><p>The <strong><code>fnutrientPO3</code></strong> estimate of 0.0417 is the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 0 and <code>fnutrient</code> PO3. So the nutrient concentration for <code>fbiomass</code> level 0 and <code>fnutrient</code> PO3 is 0.0417 higher than the <code>intercept</code>. To calculate the mean concentration for the <code>fbiomass</code> level 0 and <code>fnutrient</code> PO3 group then you simply take the <code>intercept</code> value and add it to the <code>fnutrientNO3</code> value 0.0867 + 0.0417 = 0.1284 mg/l.</p></li>
+<li><p>The <strong><code>fbiomass0.5:fnutrientNO3</code></strong> estimate (-0.5017) is the <em>difference</em> of the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 0.5 and <code>fnutrient</code> NO3. So, to calculate this difference we need to add the estimate of <code>fbiomass0.5</code> (0.9467) and the estimate of <code>fnutrientNO3</code> (2.4133) to the <code>fbiomass0.5:fnutrientNO3</code> estimate (because its a <em>difference</em> of a <em>difference</em>). So the difference is 0.9467 + 2.4133 + -0.5017 = 2.8583. To obtain the mean concentration for the <code>fbiomass</code> level 0.5 and <code>fnutrient</code> NO3 group we simply add this difference to the intercept 0.9467 + 2.4133 + -0.5017 + 0.0867 = 2.945 mg/l.</p></li>
+<li><p>The <strong><code>fbiomass1:fnutrientNO3</code></strong> estimate (-1.3426) is the <em>difference</em> of the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 1 and <code>fnutrient</code> NO3. So, to calculate this difference we need to add the estimate of <code>fbiomass1</code> (0.8076) and the estimate of <code>fnutrientNO3</code> (2.4133) to the <code>fbiomass1:fnutrientNO3</code> estimate (because its a <em>difference</em> of a <em>difference</em>). So the difference is 0.8076 + 2.4133 + -1.3426 = 1.8783. To obtain the mean concentration for the <code>fbiomass</code> level 1 and <code>fnutrient</code> NO3 group we simply add this difference to the intercept 0.8076 + 2.4133 + -1.3426 + 0.0867 = 1.965 mg/l.</p></li>
+<li><p><strong><code>fbiomass1.5:fnutrientNO3</code></strong> and <strong><code>fbiomass2:fnutrientNO3</code></strong> are interpreted in the same way.</p></li>
+<li><p>The <strong><code>fbiomass0.5:fnutrientPO3</code></strong> estimate of -0.3481 is the <em>difference</em> of the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 0.5 and <code>fnutrient</code> PO3. So, to calculate this difference we need to add the estimate of <code>fbiomass0.5</code> (0.9467) and the estimate of <code>fnutrientPO3</code> (0.0417) to the <code>fbiomass0.5:fnutrientPO3</code> estimate (because its a <em>difference</em> of a <em>difference</em>). So the difference is 0.9467 + 0.0417 + -0.3481 = 0.6403. To obtain the mean concentration for the <code>fbiomass</code> level 0.5 and <code>fnutrient</code> PO3 group we simply add this difference to the intercept 0.9467 + 0.0417 + -0.3481 + 0.0867 = 0.7269 mg/l.</p></li>
+<li><p>The <strong><code>fbiomass1:fnutrientPO3</code></strong> estimate of -0.2799 is the <em>difference</em> of the <em>difference</em> in mean concentration between <code>fbiomass</code> level 0 for <code>fnutrient</code> NH4 (the intercept) and <code>fbiomass</code> level 1 and <code>fnutrient</code> PO3. So, to calculate this difference we need to add the estimate of <code>fbiomass1</code> (0.8076) and the estimate of <code>fnutrientPO3</code> (0.0417) to the <code>fbiomass1:fnutrientPO3</code> estimate (because its a <em>difference</em> of a <em>difference</em>). So the difference is 0.8076 + 0.0417 + -0.2799 = 0.5694. To obtain the mean concentration for the <code>fbiomass</code> level 1 and <code>fnutrient</code> PO3 group we simply add this difference to the intercept 0.8076 + 0.0417 + -0.2799 + 0.0867 = 0.6561 mg/l.</p></li>
+<li><p><strong><code>fbiomass1.5:fnutrientPO3</code></strong> and <strong><code>fbiomass2:fnutrientPO3</code></strong> are interpreted in the same way.</p></li>
+</ul>
+<p> </p>
+<p>Wow, interpreting all of the those parameter estimates and calculating all those differences by hand was a pain (but hopefully instructive, possibly I’ve just bamboozled you!). Actually, you can get these values with less number crunching by using the <code>effect()</code> function form the <code>effects</code> package.</p>
+<p> </p>
+<pre class="r"><code>effect(term = &quot;fbiomass*fnutrient&quot;, mod = nereis.gls.final)
+## 
+##  fbiomass*fnutrient effect
+##         fnutrient
+## fbiomass        NH4   NO3       PO3
+##      0   0.08666667 2.500 0.1284000
+##      0.5 1.03333333 2.945 0.7269333
+##      1   0.89423333 1.965 0.6560667
+##      1.5 1.19966667 1.755 0.6548667
+##      2   2.68200000 1.605 0.8172000</code></pre>
 <p> </p>
 <p>As with most things in life, things are often clearer if we draw a picture. Let’s create a graph of our predicted values along with 95 % confidence intervals. There are many ways to do this (including using the <code>predict()</code> function) but perhaps an easier way is to use the <code>allEffects()</code> function from the <code>effects</code> package (install this if required). See <code>?allEffects</code> for more details of this function.</p>
 <p> </p>
@@ -781,28 +826,31 @@ ggplot(w, aes(x = fbiomass, y = yhat, group = fnutrient,
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] rms_6.0-1        SparseM_1.78     Hmisc_4.4-1      Formula_1.2-4    survival_3.2-7   AICcmodavg_2.3-1 stringr_1.4.0   
-##  [8] dplyr_1.0.2      ggplot2_3.3.2    effects_4.2-0    nlme_3.1-150     car_3.0-10       carData_3.0-4    lattice_0.20-41 
-## [15] formatR_1.7      kableExtra_1.3.1 pander_0.6.3     knitr_1.30      
+##  [1] AICcmodavg_2.3-1 stringr_1.4.0    dplyr_1.0.2      knitr_1.30       car_3.0-10       rms_6.0-1       
+##  [7] SparseM_1.78     Hmisc_4.4-1      Formula_1.2-4    survival_3.2-7   lattice_0.20-41  ggplot2_3.3.2   
+## [13] effects_4.2-0    carData_3.0-4    nlme_3.1-150    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] matrixStats_0.57.0  insight_0.10.0      webshot_0.5.2       RColorBrewer_1.1-2  httr_1.4.2          tools_4.0.3        
-##  [7] backports_1.2.0     R6_2.5.0            rpart_4.1-15        DBI_1.1.0           colorspace_1.4-1    raster_3.3-13      
-## [13] nnet_7.3-14         sp_1.4-4            withr_2.3.0         tidyselect_1.1.0    gridExtra_2.3       curl_4.3           
-## [19] compiler_4.0.3      rvest_0.3.6         quantreg_5.75       htmlTable_2.1.0     xml2_1.3.2          sandwich_3.0-0     
-## [25] unmarked_1.0.1      labeling_0.4.2      scales_1.1.1        checkmate_2.0.0     polspline_1.1.19    mvtnorm_1.1-1      
-## [31] digest_0.6.27       foreign_0.8-80      minqa_1.2.4         rmarkdown_2.5       rio_0.5.16          base64enc_0.1-3    
-## [37] jpeg_0.1-8.1        pkgconfig_2.0.3     htmltools_0.5.0     lme4_1.1-25         highr_0.8           htmlwidgets_1.5.2  
-## [43] rlang_0.4.8         readxl_1.3.1        VGAM_1.1-4          rstudioapi_0.11     farver_2.0.3        generics_0.1.0     
-## [49] zoo_1.8-8           zip_2.1.1           magrittr_1.5        Matrix_1.2-18       Rcpp_1.0.5          munsell_0.5.0      
-## [55] abind_1.4-5         lifecycle_0.2.0     stringi_1.5.3       multcomp_1.4-14     yaml_2.2.1          MASS_7.3-53        
-## [61] plyr_1.8.6          grid_4.0.3          parallel_4.0.3      forcats_0.5.0       crayon_1.3.4        haven_2.3.1        
-## [67] splines_4.0.3       hms_0.5.3           pillar_1.4.6        boot_1.3-25         estimability_1.3    stats4_4.0.3       
-## [73] codetools_0.2-18    glue_1.4.2          evaluate_0.14       mitools_2.4         latticeExtra_0.6-29 data.table_1.13.2  
-## [79] png_0.1-7           vctrs_0.3.4         nloptr_1.2.2.2      MatrixModels_0.4-1  cellranger_1.1.0    gtable_0.3.0       
-## [85] purrr_0.3.4         xfun_0.19           openxlsx_4.2.3      xtable_1.8-4        survey_4.0          rsconnect_0.8.16   
-## [91] viridisLite_0.3.0   tibble_3.0.4        conquer_1.0.2       tinytex_0.27        cluster_2.1.0       statmod_1.4.35     
-## [97] TH.data_1.0-10      ellipsis_0.3.1</code></pre>
+##  [1] matrixStats_0.57.0  insight_0.10.0      RColorBrewer_1.1-2  tools_4.0.3         backports_1.2.0    
+##  [6] R6_2.5.0            rpart_4.1-15        DBI_1.1.0           colorspace_1.4-1    raster_3.3-13      
+## [11] nnet_7.3-14         sp_1.4-4            withr_2.3.0         tidyselect_1.1.0    gridExtra_2.3      
+## [16] curl_4.3            compiler_4.0.3      cli_2.1.0           quantreg_5.75       formatR_1.7        
+## [21] htmlTable_2.1.0     sandwich_3.0-0      unmarked_1.0.1      labeling_0.4.2      scales_1.1.1       
+## [26] checkmate_2.0.0     polspline_1.1.19    mvtnorm_1.1-1       digest_0.6.27       foreign_0.8-80     
+## [31] minqa_1.2.4         rmarkdown_2.5       rio_0.5.16          base64enc_0.1-3     jpeg_0.1-8.1       
+## [36] pkgconfig_2.0.3     htmltools_0.5.0     lme4_1.1-25         highr_0.8           readxl_1.3.1       
+## [41] htmlwidgets_1.5.2   rlang_0.4.8         VGAM_1.1-4          rstudioapi_0.11     generics_0.1.0     
+## [46] farver_2.0.3        zoo_1.8-8           zip_2.1.1           magrittr_1.5        Matrix_1.2-18      
+## [51] Rcpp_1.0.5          munsell_0.5.0       fansi_0.4.1         abind_1.4-5         lifecycle_0.2.0    
+## [56] stringi_1.5.3       multcomp_1.4-14     yaml_2.2.1          MASS_7.3-53         plyr_1.8.6         
+## [61] grid_4.0.3          parallel_4.0.3      forcats_0.5.0       crayon_1.3.4        haven_2.3.1        
+## [66] splines_4.0.3       pander_0.6.3        hms_0.5.3           pillar_1.4.6        boot_1.3-25        
+## [71] estimability_1.3    stats4_4.0.3        codetools_0.2-18    glue_1.4.2          evaluate_0.14      
+## [76] mitools_2.4         latticeExtra_0.6-29 data.table_1.13.2   png_0.1-7           vctrs_0.3.4        
+## [81] nloptr_1.2.2.2      cellranger_1.1.0    MatrixModels_0.4-1  gtable_0.3.0        purrr_0.3.4        
+## [86] assertthat_0.2.1    openxlsx_4.2.3      xfun_0.19           xtable_1.8-4        survey_4.0         
+## [91] rsconnect_0.8.16    tibble_3.0.4        conquer_1.0.2       tinytex_0.27        cluster_2.1.0      
+## [96] statmod_1.4.35      TH.data_1.0-10      ellipsis_0.3.1</code></pre>
 </div>
 
 

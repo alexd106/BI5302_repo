@@ -3,8 +3,8 @@ title: "BI5302 Variance Heterogeneity Practical"
 author: "Alex Douglas"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 fontsize: 11pt
 ---
 
@@ -416,7 +416,7 @@ This looks a lot better than the equivalent plot from the first linear model we 
 \  
 
 ```{r, fig.show="hide"}
-plot(nereis.gls.final, resid(., type = "n") ~ fitted(.))
+plot(nereis.gls.final, resid(., type = "normalized") ~ fitted(.))
 ```
 
 \  
@@ -442,8 +442,8 @@ As before, we can use a short cut to obtain similar plots (not shown):
 \  
 
 ```{r, fig.show="hide", collapse=TRUE}
-plot(nereis.gls.final, fnutrient ~ resid(., type = "n"))
-plot(nereis.gls.final, fbiomass ~ resid(., type = "n"))
+plot(nereis.gls.final, fnutrient ~ resid(., type = "normalized"))
+plot(nereis.gls.final, fbiomass ~ resid(., type = "normalized"))
 ```
 
 \  
@@ -454,6 +454,7 @@ plot(nereis.gls.final, fbiomass ~ resid(., type = "n"))
 
 Display the ANOVA table using the `anova()` function. This highlights the significant interaction term between `fbiomass` and `fnutrient` variables. In fact, notice the interaction term  *p-value* is the same (within rounding error) as the one obtained using the likelihood ratio test above.
 
+\  
 
 ```{r, q14a, collapse=TRUE}
 anova(nereis.gls.final)
@@ -461,7 +462,7 @@ anova(nereis.gls.final)
 
 \  
 
-To display the parameter estimates we use the `summary()` function. Prepare for voluminous output! Take note of the `Variance function:` section which displays the multiplication factors for each of our treatment group (`fbiomass` and `fnutrient`) combinations. We can use these multiplication factors to multiply the residual standard error from the model, (`r round(nereis.gls.final$sigma, digits = 4)`), to give us our group standard deviations and then square these values to give us our group level variance estimates (i.e. for the NH4`*`0.5 group: (30.48 x `r round(nereis.gls.final$sigma, digits = 4)`)^2^ = `r round((30.48 * round(nereis.gls.final$sigma, digits = 4))^2, digits = 3)`). The parameter estimates are provided in the form of treatment contrasts (remember those!) which will take you quite a while to work through. 
+To display the parameter estimates we use the `summary()` function. Prepare for voluminous output! Take note of the `Variance function:` section which displays the multiplication factors for each of our treatment group (`fbiomass` and `fnutrient`) combinations. We can use these multiplication factors to multiply the residual standard error from the model, (`r round(nereis.gls.final$sigma, digits = 4)`), to give us our group standard deviations and then square these values to give us our group level variance estimates (i.e. for the NH4`*`0.5 group: (30.48 x `r round(nereis.gls.final$sigma, digits = 4)`)^2^ = `r round((30.48 * round(nereis.gls.final$sigma, digits = 4))^2, digits = 3)`). The parameter estimates are provided in the form of treatment contrasts (remember those!) which will take you quite a while to work through (see below for some help). 
 
 \  
 
@@ -473,6 +474,45 @@ summary(nereis.gls.final)
 
 # and the summary table of parameter estimates
 # summary(nereis.gls.final)$tTable
+```
+
+\  
+
+OK, that's quite a few parameter estimates! Let's work through the interpretation of each of them in turn to clarify what they actually are and what they mean.
+
+- As always we start with the **`intercept`** estimate. In this model, the `intercept` is `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` and represents the estimated mean concentration at `fbiomass` level 0 for the NH4 `fnutrient` (this is first alphabetically).
+
+- Next the **`fbiomass0.5`** estimate (`r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)`) is the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 0.5 and `fnutrient` NH4. In other words, the nutrient concentration for `fbiomass` level 0.5 and `fnutrient` NH4 is `r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)` higher than the `intercept`. If you want to calculate the concentration for the `fbiomass` level 0.5 and `fnutrient` NH4 group then you simply take the `intercept` value and add it to the `fbiomass0.5` value `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4) + round(summary(nereis.gls.final)$tTable[2,1], digits = 4)` mg/l. 
+
+- The estimate for **`fbiomass1`** (`r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)`) is the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 1 and `fnutrient` NH4. In other words, the nutrient concentration for `fbiomass` level 1 and `fnutrient` NH4 is `r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)` higher than the `intercept`. Again, if you want to calculate the concentration for the `fbiomass` level 1 and `fnutrient` NH4 group then you simply take the `intercept` value and add it to the `fbiomass1` value `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4) + round(summary(nereis.gls.final)$tTable[3,1], digits = 4)` mg/l. 
+
+
+- The estimates for **`fbiomass1.5`** and **`fbiomass2`** are interpreted in the same way as above. 
+
+- The **`fnutrientNO3`** estimate of `r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` is the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 0 and `fnutrient` NO3. So the nutrient concentration for `fbiomass` level 0 and `fnutrient` NO3 is `r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` higher than the `intercept`. To calculate the mean concentration for the `fbiomass` level 0 and `fnutrient` NO3 group then you simply take the `intercept` value and add it to the `fnutrientNO3` value `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4) + round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` mg/l.
+
+- The **`fnutrientPO3`** estimate of `r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` is the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 0 and `fnutrient` PO3. So the nutrient concentration for `fbiomass` level 0 and `fnutrient` PO3 is `r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` higher than the `intercept`. To calculate the mean concentration for the `fbiomass` level 0 and `fnutrient` PO3 group then you simply take the `intercept` value and add it to the `fnutrientNO3` value `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4) + round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` mg/l.
+
+- The **`fbiomass0.5:fnutrientNO3`** estimate (`r round(summary(nereis.gls.final)$tTable[8,1], digits = 4)`) is the *difference* of the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 0.5 and `fnutrient` NO3. So, to calculate this difference we need to add the estimate of `fbiomass0.5` (`r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)`) and the estimate of `fnutrientNO3` (`r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)`) to the `fbiomass0.5:fnutrientNO3` estimate (because its a *difference* of a *difference*). So the difference is `r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[8,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[2,1] + summary(nereis.gls.final)$tTable[6,1] + summary(nereis.gls.final)$tTable[8,1], digits = 4)`. To obtain the mean concentration for the `fbiomass` level 0.5 and `fnutrient` NO3 group we simply add this difference to the intercept `r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[8,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1] +  summary(nereis.gls.final)$tTable[2,1] +  summary(nereis.gls.final)$tTable[6,1] + summary(nereis.gls.final)$tTable[8,1], digits  = 4)` mg/l.
+
+- The **`fbiomass1:fnutrientNO3`** estimate (`r round(summary(nereis.gls.final)$tTable[9,1], digits = 4)`) is the *difference* of the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 1 and `fnutrient` NO3. So, to calculate this difference we need to add the estimate of `fbiomass1` (`r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)`) and the estimate of `fnutrientNO3` (`r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)`) to the `fbiomass1:fnutrientNO3` estimate (because its a *difference* of a *difference*). So the difference is `r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[9,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[3,1] + summary(nereis.gls.final)$tTable[6,1] + summary(nereis.gls.final)$tTable[9,1], digits = 4)`. To obtain the mean concentration for the `fbiomass` level 1 and `fnutrient` NO3 group we simply add this difference to the intercept `r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[6,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[9,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1] +  summary(nereis.gls.final)$tTable[3,1] +  summary(nereis.gls.final)$tTable[6,1] + summary(nereis.gls.final)$tTable[9,1], digits  = 4)` mg/l.
+
+- **`fbiomass1.5:fnutrientNO3`** and **`fbiomass2:fnutrientNO3`** are interpreted in the same way.
+
+- The **`fbiomass0.5:fnutrientPO3`** estimate of `r round(summary(nereis.gls.final)$tTable[12,1], digits = 4)` is the *difference* of the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 0.5 and `fnutrient` PO3. So, to calculate this difference we need to add the estimate of `fbiomass0.5` (`r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)`) and the estimate of `fnutrientPO3` (`r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)`) to the `fbiomass0.5:fnutrientPO3` estimate (because its a *difference* of a *difference*). So the difference is `r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[12,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[2,1] + summary(nereis.gls.final)$tTable[7,1] + summary(nereis.gls.final)$tTable[12,1], digits = 4)`. To obtain the mean concentration for the `fbiomass` level 0.5 and `fnutrient` PO3 group we simply add this difference to the intercept `r round(summary(nereis.gls.final)$tTable[2,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[12,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1] +  summary(nereis.gls.final)$tTable[2,1] +  summary(nereis.gls.final)$tTable[7,1] + summary(nereis.gls.final)$tTable[12,1], digits  = 4)` mg/l.
+
+- The **`fbiomass1:fnutrientPO3`** estimate of `r round(summary(nereis.gls.final)$tTable[13,1], digits = 4)` is the *difference* of the *difference* in mean concentration between `fbiomass` level 0 for `fnutrient` NH4 (the intercept) and `fbiomass` level 1 and `fnutrient` PO3. So, to calculate this difference we need to add the estimate of `fbiomass1` (`r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)`) and the estimate of `fnutrientPO3` (`r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)`) to the `fbiomass1:fnutrientPO3` estimate (because its a *difference* of a *difference*). So the difference is `r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[13,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[3,1] + summary(nereis.gls.final)$tTable[7,1] + summary(nereis.gls.final)$tTable[13,1], digits = 4)`. To obtain the mean concentration for the `fbiomass` level 1 and `fnutrient` PO3 group we simply add this difference to the intercept `r round(summary(nereis.gls.final)$tTable[3,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[7,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[13,1], digits = 4)` + `r round(summary(nereis.gls.final)$tTable[1,1], digits = 4)` = `r round(summary(nereis.gls.final)$tTable[1,1] +  summary(nereis.gls.final)$tTable[3,1] +  summary(nereis.gls.final)$tTable[7,1] + summary(nereis.gls.final)$tTable[13,1], digits  = 4)` mg/l.
+
+- **`fbiomass1.5:fnutrientPO3`** and **`fbiomass2:fnutrientPO3`** are interpreted in the same way.
+
+\  
+
+Wow, interpreting all of the those parameter estimates and calculating all those differences by hand was a pain (but hopefully instructive, possibly I've just bamboozled you!). Actually, you can get these values with less number crunching by using the `effect()` function form the `effects` package.
+
+\  
+
+```{r, q14b2, collapse=TRUE}
+effect(term = "fbiomass*fnutrient", mod = nereis.gls.final)
 ```
 
 \  
