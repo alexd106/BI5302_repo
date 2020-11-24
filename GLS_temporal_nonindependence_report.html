@@ -379,7 +379,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">BI5302 Dealing with temporal non-independence practical report</h1>
 <h4 class="author">Alex Douglas</h4>
-<h4 class="date">18 November, 2020</h4>
+<h4 class="date">24 November, 2020</h4>
 
 </div>
 
@@ -511,39 +511,22 @@ birds_gls2 &lt;- gls(abund ~ rainfall + location + year + rainfall:location,
 <pre class="r"><code>kable(AIC(birds_gls1, birds_gls2))</code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-df
-</th>
-<th style="text-align:right;">
-AIC
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-birds_gls1
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-1050.371
-</td>
+<tr class="odd">
+<td align="left">birds_gls1</td>
+<td align="right">6</td>
+<td align="right">1050.371</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-birds_gls2
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-1027.923
-</td>
+<tr class="even">
+<td align="left">birds_gls2</td>
+<td align="right">7</td>
+<td align="right">1027.923</td>
 </tr>
 </tbody>
 </table>
@@ -613,50 +596,27 @@ xyplot(res_gls3 ~ year | location, data = dataf, xlab = &quot;year&quot;,
 <pre class="r"><code>kable(AIC(birds_gls1, birds_gls2, birds_gls3))</code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-df
-</th>
-<th style="text-align:right;">
-AIC
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-birds_gls1
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-1050.3706
-</td>
+<tr class="odd">
+<td align="left">birds_gls1</td>
+<td align="right">6</td>
+<td align="right">1050.3706</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-birds_gls2
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-1027.9233
-</td>
+<tr class="even">
+<td align="left">birds_gls2</td>
+<td align="right">7</td>
+<td align="right">1027.9233</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-birds_gls3
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-927.3333
-</td>
+<tr class="odd">
+<td align="left">birds_gls3</td>
+<td align="right">8</td>
+<td align="right">927.3333</td>
 </tr>
 </tbody>
 </table>
@@ -668,7 +628,7 @@ birds_gls3
 <pre class="r"><code>birds_gls4 &lt;- gls(abund ~ rainfall + location + year + rainfall:location, 
     weights = vf1, correlation = cor1, method = &quot;ML&quot;, data = dataf)</code></pre>
 <p> </p>
-<p>18. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It’s up to you how you want to perform this. If you want to automate this process you can use the <code>drop1()</code> function, but remember you need to use this sensibly and with care and don’t forget about the biology! If you use the argument <code>test = "none"</code> with the <code>drop1()</code> function this will return the AIC values for each iteration. Conversely, if you use the argument <code>test = "Chisq"</code> this will return the LRT statistics. Alternatively you can just use the <code>AIC()</code> function.</p>
+<p>18. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It’s up to you how you want to perform this. If you want to automate this process you can use the <code>drop1()</code> function, but remember you need to use this sensibly and with care and don’t forget about the biology! If you use the argument <code>test = "none"</code> with the <code>drop1()</code> function this will return the AIC values for each iteration. Conversely, if you use the argument <code>test = "Chisq"</code> this will return the LRT statistics (give it a try and compare with AIC). Alternatively you can just use the <code>AIC()</code> function.</p>
 <p> </p>
 <p>So lets use AIC to compare models</p>
 <p> </p>
@@ -680,12 +640,21 @@ birds_gls3
 ##                   Df    AIC
 ## &lt;none&gt;               943.65
 ## year               1 943.62
-## rainfall:location  1 944.12</code></pre>
+## rainfall:location  1 944.12
+
+# or if you want to perform a LRT then: (not run)
+# drop1(birds_gls4, test =&#39;Chisq&#39;)</code></pre>
 <p> </p>
-<p>So, when we drop the interaction term between the <code>rainfall</code> and <code>locations</code> variables the AIC actually increases. This suggests we can remove the <code>rainfall:location</code> interaction term from our model. Let’s refit without and use <code>drop1()</code> again on our new model.</p>
+<p>So, when we drop the interaction term between the <code>rainfall</code> and <code>location</code> variables the AIC increases by a little bit but doesn’t really change that much (certainly less than a difference in AIC of 2). This suggests we can remove the <code>rainfall:location</code> interaction term from our model. Let’s refit without and use <code>drop1()</code> again on our new model.</p>
 <p> </p>
 <pre class="r"><code>birds_gls5 &lt;- gls(abund ~ rainfall + location + year, weights = vf1, 
     correlation = cor1, method = &quot;ML&quot;, data = dataf)
+
+# alternatively you can use the update function to refit
+# the model (not run)
+
+# birds_gls5 &lt;- update(birds_gls4, . ~.
+# -rainfall:location)
 
 drop1(birds_gls5, test = &quot;none&quot;)
 ## Single term deletions
@@ -696,15 +665,9 @@ drop1(birds_gls5, test = &quot;none&quot;)
 ## &lt;none&gt;       944.12
 ## rainfall  1 1088.43
 ## location  1  946.84
-## year      1  943.97
-
-# alternatively you can use the update function to refit
-# the model (not run)
-
-# birds_gls5 &lt;- update(birds_gls4, . ~.
-# -rainfall:location)</code></pre>
+## year      1  943.97</code></pre>
 <p> </p>
-<p>Right, so this output suggests that we shouldn’t remove either the <code>rainfall</code> or <code>location</code> variables from the model, but suggests that the goodness of fit doesn’t change very much if we remove <code>year</code>. So lets go ahead and remove year and then rerun <code>drop1()</code>.</p>
+<p>Right, so this output suggests that we shouldn’t remove either the <code>rainfall</code> or <code>location</code> variables from the model, but suggests that the goodness of fit doesn’t change very much if we remove <code>year</code>. So lets go ahead and remove <code>year</code> and then rerun <code>drop1()</code>.</p>
 <p> </p>
 <pre class="r"><code>birds_gls6 &lt;- gls(abund ~ rainfall + location, weights = vf1, 
     correlation = cor1, method = &quot;ML&quot;, data = dataf)
@@ -916,32 +879,27 @@ ggplot(pred_dat, aes(x = rainfall, y = yhat,
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] kableExtra_1.3.1 pander_0.6.3     htmltools_0.5.0  AICcmodavg_2.3-1 stringr_1.4.0    dplyr_1.0.2     
-##  [7] knitr_1.30       car_3.0-10       rms_6.0-1        SparseM_1.78     Hmisc_4.4-1      Formula_1.2-4   
-## [13] survival_3.2-7   lattice_0.20-41  ggplot2_3.3.2    effects_4.2-0    carData_3.0-4    nlme_3.1-150    
+##  [1] stringr_1.4.0    dplyr_1.0.2      effects_4.2-0    rms_6.0-1        SparseM_1.78     Hmisc_4.4-1      ggplot2_3.3.2   
+##  [8] Formula_1.2-4    survival_3.2-7   AICcmodavg_2.3-1 nlme_3.1-150     car_3.0-10       carData_3.0-4    knitr_1.30      
+## [15] lattice_0.20-41 
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] TH.data_1.0-10      VGAM_1.1-4          minqa_1.2.4         colorspace_1.4-1    ellipsis_0.3.1     
-##   [6] rio_0.5.16          rsconnect_0.8.16    estimability_1.3    htmlTable_2.1.0     base64enc_0.1-3    
-##  [11] rstudioapi_0.11     farver_2.0.3        MatrixModels_0.4-1  fansi_0.4.1         mvtnorm_1.1-1      
-##  [16] xml2_1.3.2          codetools_0.2-18    splines_4.0.3       nloptr_1.2.2.2      cluster_2.1.0      
-##  [21] png_0.1-7           httr_1.4.2          compiler_4.0.3      backports_1.2.0     assertthat_0.2.1   
-##  [26] Matrix_1.2-18       survey_4.0          cli_2.1.0           formatR_1.7         quantreg_5.75      
-##  [31] tools_4.0.3         gtable_0.3.0        glue_1.4.2          tinytex_0.27        Rcpp_1.0.5         
-##  [36] cellranger_1.1.0    raster_3.3-13       vctrs_0.3.4         conquer_1.0.2       insight_0.10.0     
-##  [41] xfun_0.19           rvest_0.3.6         openxlsx_4.2.3      lme4_1.1-25         lifecycle_0.2.0    
-##  [46] statmod_1.4.35      polspline_1.1.19    MASS_7.3-53         zoo_1.8-8           scales_1.1.1       
-##  [51] hms_0.5.3           parallel_4.0.3      sandwich_3.0-0      RColorBrewer_1.1-2  yaml_2.2.1         
-##  [56] curl_4.3            gridExtra_2.3       rpart_4.1-15        latticeExtra_0.6-29 stringi_1.5.3      
-##  [61] highr_0.8           checkmate_2.0.0     boot_1.3-25         zip_2.1.1           rlang_0.4.8        
-##  [66] pkgconfig_2.0.3     matrixStats_0.57.0  evaluate_0.14       purrr_0.3.4         htmlwidgets_1.5.2  
-##  [71] labeling_0.4.2      tidyselect_1.1.0    plyr_1.8.6          magrittr_1.5        R6_2.5.0           
-##  [76] generics_0.1.0      multcomp_1.4-14     DBI_1.1.0           pillar_1.4.6        haven_2.3.1        
-##  [81] foreign_0.8-80      withr_2.3.0         abind_1.4-5         sp_1.4-4            nnet_7.3-14        
-##  [86] tibble_3.0.4        crayon_1.3.4        rmarkdown_2.5       jpeg_0.1-8.1        grid_4.0.3         
-##  [91] readxl_1.3.1        data.table_1.13.2   forcats_0.5.0       webshot_0.5.2       digest_0.6.27      
-##  [96] xtable_1.8-4        stats4_4.0.3        munsell_0.5.0       unmarked_1.0.1      viridisLite_0.3.0  
-## [101] mitools_2.4</code></pre>
+##  [1] matrixStats_0.57.0  insight_0.10.0      RColorBrewer_1.1-2  tools_4.0.3         backports_1.2.0     R6_2.5.0           
+##  [7] rpart_4.1-15        DBI_1.1.0           colorspace_1.4-1    nnet_7.3-14         raster_3.3-13       withr_2.3.0        
+## [13] sp_1.4-4            tidyselect_1.1.0    gridExtra_2.3       curl_4.3            compiler_4.0.3      cli_2.1.0          
+## [19] quantreg_5.75       formatR_1.7         htmlTable_2.1.0     sandwich_3.0-0      unmarked_1.0.1      labeling_0.4.2     
+## [25] scales_1.1.1        checkmate_2.0.0     polspline_1.1.19    mvtnorm_1.1-1       digest_0.6.27       minqa_1.2.4        
+## [31] foreign_0.8-80      rmarkdown_2.5       rio_0.5.16          base64enc_0.1-3     jpeg_0.1-8.1        pkgconfig_2.0.3    
+## [37] htmltools_0.5.0     lme4_1.1-25         highr_0.8           htmlwidgets_1.5.2   rlang_0.4.8         readxl_1.3.1       
+## [43] rstudioapi_0.11     VGAM_1.1-4          generics_0.1.0      farver_2.0.3        zoo_1.8-8           zip_2.1.1          
+## [49] magrittr_1.5        Matrix_1.2-18       Rcpp_1.0.5          munsell_0.5.0       fansi_0.4.1         abind_1.4-5        
+## [55] lifecycle_0.2.0     stringi_1.5.3       multcomp_1.4-14     yaml_2.2.1          MASS_7.3-53         plyr_1.8.6         
+## [61] grid_4.0.3          parallel_4.0.3      forcats_0.5.0       crayon_1.3.4        haven_2.3.1         splines_4.0.3      
+## [67] hms_0.5.3           pillar_1.4.6        boot_1.3-25         codetools_0.2-18    stats4_4.0.3        glue_1.4.2         
+## [73] evaluate_0.14       mitools_2.4         latticeExtra_0.6-29 data.table_1.13.2   nloptr_1.2.2.2      png_0.1-7          
+## [79] vctrs_0.3.4         MatrixModels_0.4-1  cellranger_1.1.0    gtable_0.3.0        purrr_0.3.4         assertthat_0.2.1   
+## [85] xfun_0.19           openxlsx_4.2.3      xtable_1.8-4        survey_4.0          tibble_3.0.4        conquer_1.0.2      
+## [91] tinytex_0.27        cluster_2.1.0       statmod_1.4.35      TH.data_1.0-10      ellipsis_0.3.1</code></pre>
 </div>
 
 

@@ -391,7 +391,7 @@ birds_gls4 <- gls(abund ~ rainfall + location + year + rainfall:location,
 
 \  
 
-18\. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It's up to you how you want to perform this. If you want to automate this process you can use the `drop1()` function, but remember you need to use this sensibly and with care and don't forget about the biology! If you use the argument `test = "none"` with the `drop1()` function this will return the AIC values for each iteration. Conversely, if you use the argument `test = "Chisq"` this will return the LRT statistics. Alternatively you can just use the `AIC()` function.
+18\. Now we can perform model selection using either AIC or by performing a likelihood ratio test (LRT). It's up to you how you want to perform this. If you want to automate this process you can use the `drop1()` function, but remember you need to use this sensibly and with care and don't forget about the biology! If you use the argument `test = "none"` with the `drop1()` function this will return the AIC values for each iteration. Conversely, if you use the argument `test = "Chisq"` this will return the LRT statistics (give it a try and compare with AIC). Alternatively you can just use the `AIC()` function.
 
 \  
 
@@ -401,11 +401,14 @@ So lets use AIC to compare models
 
 ```{r, q18a, collapse=TRUE}
 drop1(birds_gls4, test ="none")
+
+# or if you want to perform a LRT then: (not run)
+# drop1(birds_gls4, test ="Chisq")
 ```
 
 \  
 
-So, when we drop the interaction term between the `rainfall` and `locations` variables the AIC actually increases. This suggests we can remove the `rainfall:location` interaction term from our model. Let's refit without and use `drop1()` again on our new model.
+So, when we drop the interaction term between the `rainfall` and `location` variables the AIC increases by a little bit but doesn't really change that much (certainly less than a difference in AIC of 2). This suggests we can remove the `rainfall:location` interaction term from our model. Let's refit without and use `drop1()` again on our new model.
 
 \ 
 
@@ -416,16 +419,16 @@ birds_gls5 <- gls(abund ~ rainfall + location + year,
                   method = "ML",
                   data = dataf)
 
-drop1(birds_gls5, test ="none")
-
 # alternatively you can use the update function to refit the model (not run)
 
 # birds_gls5 <- update(birds_gls4, . ~. -rainfall:location)
+
+drop1(birds_gls5, test ="none")
 ```
 
 \  
 
-Right, so this output suggests that we shouldn't remove either the `rainfall` or `location` variables from the model, but suggests that the goodness of fit doesn't change very much if we remove `year`. So lets go ahead and remove year and then rerun `drop1()`.
+Right, so this output suggests that we shouldn't remove either the `rainfall` or `location` variables from the model, but suggests that the goodness of fit doesn't change very much if we remove `year`. So lets go ahead and remove `year` and then rerun `drop1()`.
 
 \  
 
