@@ -1,0 +1,604 @@
+---
+title: "Spatial GLS Exercise Solutions"
+author: "Thomas Cornulier"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document: default
+  pdf_document: default
+fontsize: 11pt
+---
+
+\  
+
+Setup global options for knitr package. Normally I wouldn't display these but I'll leave them here for your information.
+
+\  
+
+```{r setup, inlcude=TRUE}
+knitr::opts_chunk$set(echo=TRUE, message = FALSE, warning = FALSE, eval = FALSE, cache = FALSE)
+
+SOLUTIONS<- TRUE
+```
+
+\  
+
+# Spatial GLS - Ungulate species distribution models
+
+\  
+
+0. This practical expands on the spatial data analysis lecture. It will allow you to revisit the analysis of environmental drivers of the wild boar distribution in Poland, using a larger set of environmental variables, and of the distribution of other species if you wish. The idea is to practice doing model selection while accounting for non-independence in the residuals by modelling their spatial covariance. More info on the data for this exercise in the published paper: http://bit.do/UngulatesDistributionPaper. 
+Variables:
+  + `Reddeer`: Red deer abundance index
+  + `Roedeer`: Roe deer abundance index
+  + `Wildboar`: Wild boar abundance index
+  + `Moose`: Moose abundance index
+  + `Total.arable`: proportion of arable land (all 3 categories above pooled)
+  + `Pastures`: proportion of pasture land
+  + `BroadLForest`: proportion of broad leaved forest
+  + `ConForest`: proportion of coniferous forest
+  + `MixForest`: proportion of mixed forest
+  + `Shrub`: proportion of shrubland
+  + `Total.forest`: proportion of forests (all 4 above pooled)
+  + `DeciMixFor`: proportion of broad-leaved and mixed forests
+  + `Marsh`: proportion of marsh land
+  + `Waterbodies`: proportion of water bodies
+  + `Open`: proportion of open habitat (non-forested)
+  + `SnowDays`: mean number of snow days
+  + `JanTemp`: mean January temperature
+  + `LONG`: Longitude
+  + `LAT`: Latitude
+  + `Quadrant`: Poland divided in 4 blocks: NE / NW / SW / SE
+
+\  
+
+\  
+
+1\. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use `echo = TRUE`) for later reference.
+
+\  
+
+Import the data file 'ungulates.csv' into R. Before doing any data exploration, take a look at the structure of this dataframe, and check the (rather large!) list of predictors available to you. Take a moment to think if all are plausible predictors of ungulate abundance, what they represent, and how they may differ (or perhaps some are partly redundant). Are there any that seem more relevant to you or some which you may wish to exclude a priori?
+If you refuse to make choices at this stage they might impose themselves to you and maybe complicate your life later on!
+
+\  
+
+Please run the code below to load the data, the R libraries and a couple of extra optional but useful functions.
+
+\  
+
+```{r Q1a, eval=TRUE, echo=TRUE, results=TRUE, collapse=FALSE}
+
+library(lattice)
+library(nlme)
+library(effects)
+library(knitr)
+
+# load extra panel function for pair plots
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+pairs2<- function (x) pairs(x, lower.panel = panel.smooth, upper.panel = panel.cor)
+
+# load data set
+un<- read.csv("data/ungulates.csv")
+
+str(un)
+
+```
+
+```{r Q1b, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=FALSE}
+# My choice of Potential Predictor Variables (a rather broad first selection)
+# I like to store the names of the variables of interest in a vector,
+# for convenience
+PPV<- c("Total.arable", "Pastures", "BroadLForest", "ConForest", "MixForest",
+	"Shrub", "Total.forest", "DeciMixFor", "Marsh", "Waterbodies", "Open",
+	"SnowDays", "JanTemp")
+
+# I have excluded Longitude, Latitude and Quadrant because these
+# are not environmental predictors, so they would not tell us directly
+# about the environmental determinants of WB distribution.
+
+# I have not selected other species as predictors, although if there
+# were ecological inter-specific interactions between the wild boar
+# and another species, they could be relevant as predictors.
+
+```
+ 
+\  
+
+2\. Start with an initial data exploration of the predictors you have chosen to try and explain the abundance of wild boars. If you have too many predictors, consider making smaller subsets to make the exploration easier. Look at any collinearity between them, and if needed, narrow down the set of candidate predictors you want to work with and make any transformation you feel would be necessary. 
+
+\  
+
+```{r Q2, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE}
+pairs2(un[, PPV])
+# a bit too many! Let's make subsets.
+
+# Could start with all variables associated with forest habitats
+PPV1<- c("DeciMixFor", "BroadLForest", "ConForest", "MixForest", "Shrub",
+	"Total.forest")
+pairs2(un[, PPV1])
+# Forest habitats are mostly coniferous (industrial plantations).
+# Therefore ConForest and Total.forest are highly correlated.
+# Non-coniferous forests are mostly broad-leaved or mixed.
+# wouldn't make much sense to include ConForest and Total.forest together
+# option 1: use Total.forest alone
+# option 2: if interested in forest type, use ConForest and DeciMixFor
+# shrublands not too correlated with other forests-> can be used together
+
+# variables associated with other habitats (keeping Total.Forest
+# to see how forest cover is correlated with other land uses)
+PPV2<- c("Total.arable", "Pastures", "Total.forest", "Marsh", "Waterbodies",
+	"Open", "SnowDays", "JanTemp")
+pairs2(un[, PPV2])
+# Open habitats mostly Arable land (the two are therefore redundant)
+# Non-arable is mostly forest (not to be used together)
+# -> instead of Open/Arable, use Total.forest or ConForest + DeciMixFor
+# SnowDays and JanTemp highly correlated -> use only one
+# Pastures, Marsh and Waterbodies skewed -> try log-transform
+
+un$LogPastures<- log(un$Pastures + 1)
+un$LogMarsh<- log(un$Marsh + 1)
+un$LogWaterbodies<- log(un$Waterbodies + 1)
+
+PPV2<- c("Total.arable", "LogPastures", "Total.forest", "LogMarsh",
+	"LogWaterbodies", "Open", "SnowDays", "JanTemp")
+pairs2(un[, PPV2])
+# Log of Marsh and Waterbodies still skewed -> use log for now and hope for the best.
+# stronger transformations are possible but the stronger the less it reflects
+# the original variable -> risk of losing some interpretability!
+
+# My set of candidate predictors
+CP<- c("DeciMixFor", "ConForest", "LogPastures", "LogMarsh", "LogWaterbodies",
+	"JanTemp")
+
+```
+
+\  
+
+3\. Using your set of candidate predictors, do an extra piece of data exploration to look relationships with wild boars abundance index. Do you need to transform the response? Any other transformation required?
+
+Hint: my set of candidate predictors includes `c("DeciMixFor", "ConForest", "LogPastures", "LogMarsh", "LogWaterbodies",	"JanTemp")`, but there is absolutely no requirement for you to use the same ones. The most important thing is that you have a rationale for whichever candidate predictors you decide to use.
+
+\  
+
+```{r Q3, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE}
+hist(un[, "Wildboar"], nclass= 25)
+# positively skewed and mean close to zero
+# -> log transform to avoid risk of negative predictions
+
+un$logWB<- log(un$Wildboar)
+# one obs with zero value (returning a -Inf)
+# One approach is to use log(un$Wildboar + 1) for example,
+# or we can replace the zero by something close to
+# the smallest non-zero value in the data
+min(un$Wildboar[un$Wildboar!=0])
+# smallest non-zero value is 0.033, so we could use 0.01 for example
+un$logWB[un$Wildboar==0]<- log(0.01) 
+
+hist(un[, "logWB"], nclass= 25)
+# Looking better
+
+# Relationship between wild boar and selected predictors (bottom row):
+pairs2(un[, c("DeciMixFor", "ConForest", "LogPastures", "LogMarsh",
+	"LogWaterbodies", "JanTemp", "logWB")])
+# suggestion of negative effect of deciduous forests
+# suggestion of positive effect of coniferous forests
+# suggestion of positive effect of water bodies
+# suggestion of positive effect of January temperature
+
+# no obvious transformation that would help
+
+```
+
+
+\  
+
+4\. (Optional) Create maps of the candidate predictors. Hint: you could use the 'symbols' function (see lecture slides), remembering to set the maximum symbol size with 'inches ='. Which of these variables vary at the broadest and smallest spatial scales?
+
+\  
+
+```{r Q4, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE, fig.width=8, fig.height=12}
+
+par(mfrow= c(3, 2))
+# par(mfrow= c(2, 3))
+max.size<- 0.05
+symbols(x= un$LONG, y= un$LAT, circles= un$DeciMixFor, 
+	bg= grey(0.3), inches= max.size, main= "DeciMixFor")
+symbols(x= un$LONG, y= un$LAT, circles= un$ConForest, 
+	bg= grey(0.3), inches= max.size, main= "ConForest")
+symbols(x= un$LONG, y= un$LAT, circles= un$LogPastures, 
+	bg= grey(0.3), inches= max.size, main= "LogPastures")
+symbols(x= un$LONG, y= un$LAT, circles= un$LogMarsh, 
+	bg= grey(0.3), inches= max.size, main= "LogMarsh")
+symbols(x= un$LONG, y= un$LAT, circles= un$LogWaterbodies, 
+	bg= grey(0.3), inches= max.size, main= "LogWaterbodies")
+symbols(x= un$LONG, y= un$LAT, circles= abs(un$JanTemp), 
+	bg= grey(0.3), inches= max.size, main= "JanTemp")
+
+# JanTemp varies at very broad scale (very smooth
+# change at national scale)
+
+# Forest and Pastures vary at medium scales (some 
+# clear regional patterns, not as smooth as JanTemp)
+
+# Water-related habitats vary very locally
+
+```
+
+
+\  
+
+5\. Fit a GLS model with the predictors of interest (include only additive effects unless you have a theory for why a particular interaction would be relevant to include). Are all terms significant? Plot the empirical variogram of the residuals of the model. Based on lecture slide #18, what might be a sensible variogram model for fitting this empirical variogram? What might be sensible starting values for the range and the nugget?
+
+\  
+
+```{r Q5, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE}
+
+M1<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, data= un)
+# DeciMixFor * ConForest asks if the (negative?) mixed forests effect
+# depends on the availability of coniferous forests
+
+summary(M1)
+
+plot(Variogram(M1, nint= 25, form= ~ LONG + LAT, resType= "pearson"), 
+		smooth= F)
+
+# Could use a range of 3 to 4 and a nugget of 0.4, as starting points
+
+```
+
+\  
+
+6\. Re-fit the GLS model, including potential spatial correlation structure. Hint: Remember to use the correct fitting method for selecting covariance strucures, and to check that estimated range and nugget are a sensible fit to the data. What structure is best according to AIC? **If model fitting is too slow on your computer, use 'form= ~ LONG + LAT | Quadrant' to speed things up.**
+(Note that this will probably affect the range estimate, as the 4 regions over which the covariance is calculated will be smaller: this is an approximation in order to gain some speed)
+
+\  
+
+```{r Q6, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE}
+
+# let's start with an initial value of the range lower than suggested 
+# by the empirical variogram.
+# If all is well, this should not make a difference to the model 
+# estimates of the range and nugget coefficients:
+M1.corSpher.1<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corSpher(value= c(1, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corSpher.1)
+plot(Variogram(M1.corSpher.1, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F)
+
+# then one which is close but slightly under, maybe:
+M1.corSpher.2<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corSpher(value= c(2, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corSpher.2)
+plot(Variogram(M1.corSpher.2, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F)
+
+# then one which is close but slightly higher, maybe:
+M1.corSpher.4<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corSpher(value= c(4, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corSpher.4)
+plot(Variogram(M1.corSpher.4, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F, ylim= c(0, 1.2))
+
+# then end with an initial value of the range much larger than suggested
+# by the empirical variogram, to explore how sensitive the estimate is:
+M1.corSpher.10<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corSpher(value= c(10, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+# summary(M1.corSpher.10)
+plot(Variogram(M1.corSpher.10, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F, ylim= c(0, 1.2))
+# starting values 4 or greater for the range lead to the same range
+# estimate (5.31), which is a good thing.
+# But lower starting values (1 or 2) lead to different estimates, 
+# so there is a high sensitivity to starting values overall, 
+# which is a bit annoying. 
+# This means that there is perhaps no unique way of fitting
+# this model to the data. Could be because the assumptions of the Spherical
+# model are not a very good match with the pattern in the data.
+
+# For lack of a better approach, we'll ask AIC what fits the
+# data best among the spherical variogram models:
+kable(AIC(M1.corSpher.1, M1.corSpher.2, M1.corSpher.4, M1.corSpher.10))
+# let's choose starting values set "M1.corSpher.4"
+
+
+M1.corExp.2<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corExp(value= c(2, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corExp.2)
+plot(Variogram(M1.corExp.2, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F)
+
+M1.corExp.10<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corExp(value= c(10, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corExp.10)
+plot(Variogram(M1.corExp.10, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F)
+
+# with the exponential variogram the best estimates of the range and nugget
+#  don't depend on the choice of initial values, whether small or 
+# (unrealistically) large: that's more reassuring that the estimate is robust
+
+kable(AIC(M1.corExp.2, M1.corExp.10))
+# no difference
+
+
+M1.corLin.4<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corLin(value= c(4, 0.3), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corLin.4)
+plot(Variogram(M1.corLin.4, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F)
+
+# the following does not converge:
+#M1.corLin.5<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+#		LogWaterbodies + JanTemp, correlation= corLin(value= c(5, 0.3), 
+#		form = ~ LONG + LAT, nugget= T), data= un)
+#summary(M1.corLin.5)
+#plot(Variogram(M1.corLin.5, nint= 25, form= ~ LONG + LAT,
+#		resType= "pearson"), smooth= F)
+
+#kable(AIC(M1.corLin.4, M1.corLin.5))
+# no difference -> choose either
+
+M1.corRatio.4<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corRatio(value= c(4, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corRatio.4)
+plot(Variogram(M1.corRatio.4, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F)
+
+M1.corRatio.10<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corRatio(value= c(10, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corRatio.10)
+plot(Variogram(M1.corRatio.10, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F)
+
+kable(AIC(M1.corRatio.4, M1.corRatio.10))
+# no difference -> choose either
+
+# now compare the different structures, using the best estimates for each one:
+kable(AIC(M1.corSpher.4, M1.corExp.2, M1.corLin.4, M1.corRatio.4))
+# corExp wins
+
+```
+
+
+\  
+
+7\. Apply model selection (using AIC?) to the best GLS model above. Remember to select the appropriate model fitting method for the fixed part of the model.
+
+\  
+
+```{r Q7, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE}
+
+M1.corExp.2.ML<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+		LogWaterbodies + JanTemp, correlation= corExp(value= c(2, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un, method= "ML")
+summary(M1.corExp.2.ML)
+
+drop1(M1.corExp.2.ML, test= "Chisq")
+# remove LogWaterbodies
+
+M2.corExp.2.ML<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh +
+		JanTemp, correlation= corExp(value= c(2, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un, method= "ML")
+summary(M2.corExp.2.ML)
+
+drop1(M2.corExp.2.ML, test= "Chisq")
+# no more terms to delete
+
+```
+
+
+\  
+
+8\. (Optional, if you have plenty of time left) Re-fit your minimum adequate model with REML and test alternative covariance structures, to be sure that the change in the fixed part of the model hasn't changed the residuals structure. Make any required adjustment to the random or fixed parts.
+
+\  
+
+```{r Q8, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE}
+
+# no blocking performed, to check that the covariance structure is appropriate:
+M2.corExp.2.REML<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh +
+		JanTemp, correlation= corExp(value= c(2, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un, method= "REML")
+summary(M2.corExp.2.REML)
+plot(Variogram(M2.corExp.2.REML, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F, ylim= c(0, 1.5))
+
+M2.corSpher.4.REML<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh +
+		JanTemp, correlation= corSpher(value= c(4, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un, method= "REML")
+summary(M2.corSpher.4.REML)
+plot(Variogram(M2.corSpher.4.REML, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F, ylim= c(0, 1.5))
+# seems a lot better for the estimated sill, worse for the fit at low distances
+
+AIC(M2.corExp.2.REML, M2.corSpher.4.REML)
+# AIC still slightly favours exponential
+# (not a very meaningful difference, we could pick either covariance model)
+
+summary(M2.corExp.2.REML)
+
+M2.corExp.2.ML<- update(M2.corExp.2.REML, method= "ML")
+kable(drop1(M2.corExp.2.ML))
+
+# minimum adequate model unchanged
+
+```
+
+
+\  
+
+9\. Validate your minimum adequate model, using the usual graphs and maps of the residuals as in the lecture. For which plot should you use which type of residuals? Is everything looking good?
+
+\  
+
+```{r Q9a, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE, fig.width=8, fig.height=4}
+
+# We want the normalized residuals primarily, to see 
+# if the model was successful at capturing all the
+# residual spatial autocorrelation (little should remain)
+
+# We may want to look at Pearson residuals as well, to see
+# the spatial autocorrelation not accounted for by
+# the predictors in the model
+
+plot(Variogram(M2.corExp.2.REML, nint= 25, form= ~ LONG + LAT,
+		resType= "pearson"), smooth= F, ylim= c(0, 1.5))
+plot(Variogram(M2.corExp.2.REML, nint= 25, form= ~ LONG + LAT,
+		resType= "normalized"), smooth= F, ylim= c(0, 1.5))
+
+par(mfrow= c(1, 2))
+M2.corExp.2.REML.res.p<-resid(M2.corExp.2.REML, type= "pearson")
+
+symbols(x= un$LON, y= un$LAT, circles= abs(M2.corExp.2.REML.res.p), 
+	inches= 0.17, bg= c("blue3", "red3")[(M2.corExp.2.REML.res.p > 0) + 1])
+
+M2.corExp.2.REML.res.n<-resid(M2.corExp.2.REML, type= "normalized")
+
+symbols(x= un$LON, y= un$LAT, circles= abs(M2.corExp.2.REML.res.n), 
+	inches= 0.17, bg= c("blue3", "red3")[(M2.corExp.2.REML.res.n > 0) + 1])
+
+# residuals vs fitted and QQplot
+plot(resid(M2.corExp.2.REML, type= "normalized") ~ fitted(M2.corExp.2.REML))
+abline(h= 0, col= 2)
+
+qqnorm(resid(M2.corExp.2.REML, type= "normalized"))
+qqline(resid(M2.corExp.2.REML, type= "normalized"))
+
+```
+
+\  
+
+```{r Q9b, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE, fig.width=8, fig.height=12}
+
+par(mfrow= c(3, 2))
+plot(resid(M2.corExp.2.REML, type= "pearson") ~ un$DeciMixFor); abline(h= 0, col= 2)
+# slight non-linearity maybe
+
+plot(resid(M2.corExp.2.REML, type= "pearson") ~ un$ConForest); abline(h= 0, col= 2)
+# probable non-linearity (slight)
+
+plot(resid(M2.corExp.2.REML, type= "pearson") ~ un$LogPastures); abline(h= 0, col= 2)
+# looks fine
+
+plot(resid(M2.corExp.2.REML, type= "pearson") ~ un$LogMarsh); abline(h= 0, col= 2)
+# Likely over-influential values due to larger Marshes
+
+plot(resid(M2.corExp.2.REML, type= "pearson") ~ un$JanTemp); abline(h= 0, col= 2)
+# probable non-linearity (slight)
+
+# One possible way of addressing this (being creative today!)
+# censor (cap) LogMarshes values to a max of 1 
+# (i.e., turn every value greater than 1 into 1)
+# Not the most statistically elegant transformations (avoid if
+# better available) but hopefully better than misleading
+# conclusions due to overly influential observations
+un$LogMarshCensored<- ifelse(un$LogMarsh < 1, un$LogMarsh, 1)
+
+# if you are unsure about what the above command does, try this:
+example<- 1:10
+example
+example < 6
+ifelse(example < 6, example, 99)
+# when test is true, takes value of example at the same position
+# when test is false, takes 99
+
+M3.corExp.2.REML<- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarshCensored +
+		JanTemp, correlation= corExp(value= c(2, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un, method= "REML")
+summary(M3.corExp.2.REML)
+# no longer an effect of logMarsh
+
+M3.corExp.2.ML<- update(M3.corExp.2.REML, method= "ML")
+drop1(M3.corExp.2.ML)
+
+M3.corExp.2.REML.res.p<-resid(M3.corExp.2.REML, type= "pearson")
+
+plot(resid(M3.corExp.2.REML, type= "pearson") ~ un$LogMarshCensored); abline(h= 0, col= 2)
+
+M4.corExp.2.REML<- gls(logWB ~ DeciMixFor * ConForest + LogPastures +
+		JanTemp, correlation= corExp(value= c(2, 0.4), 
+		form = ~ LONG + LAT, nugget= T), data= un, method= "REML")
+summary(M4.corExp.2.REML)
+
+M4.corExp.2.ML<- update(M4.corExp.2.REML, method= "ML")
+kable(AIC(M2.corExp.2.ML, M3.corExp.2.ML, M4.corExp.2.ML))
+
+# M2 favoured by AIC but flawed by influential values; Choose M4
+
+# Note: there are much better alternatives to torturing the predictors 
+# by transformation.
+# The best one in my opinion is what we did in the Polish ungulates paper
+# these data come from: treating the relationship as a smooth non-linear one
+# using what is called a Generalized Additive Model (an extension of the LM/GLM).
+# Not covered in this course, but a good introduction here:
+# https://www.frontiersin.org/articles/10.3389/fevo.2018.00149/full 
+
+```
+
+\  
+
+10\. Interpret your minimum adequate model using graphs of the fitted effects.
+
+\  
+
+```{r Q10a, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE, fig.width=4.5, fig.height=4.5}
+
+plot(Effect("LogPastures", M4.corExp.2.REML))
+plot(Effect("JanTemp", M4.corExp.2.REML))
+
+```
+
+\  
+
+```{r Q10b, eval=SOLUTIONS, echo=SOLUTIONS, results=SOLUTIONS, collapse=TRUE, fig.width=8, fig.height=8}
+
+plot(predictorEffect("DeciMixFor", M4.corExp.2.REML, xlevels= 4))
+
+# positive effect of pastures
+# positive effect of January temperature (Wild boars don't like it cold?)
+# positive effect of coniferous forests
+# positive effect of deciduous forests once taken other predictors
+# 	into account(contrary to suggested by data exploration)
+# interaction between coniferous and deciduous forests:
+# the more coniferous forest around (hence the more total forest?),
+#	the more positive is the effect of deciduous forests
+# Hypothesis: 
+# the wild boar uses the two types of forests in a complementary way
+# (more research required to test that one!)
+
+```
+
+
+\  
+
+11. (Optional) compare the minimum adequate model obtained using GLS with spatial autocorrelation to a MAM obtained by model selection without accounting for spatial non-independence. What difference does it make?
+
+
+\  
+
+12. (Optional) There are a few more species which you could use as response variables, if you fancy some practice...
+
+
+End of the spatial autocorrelation practical
+
+\  

@@ -85,3 +85,40 @@ If you want to work alongside my solutions you can find the relevant files below
 
 - [Dealing with non-independence final rendered pdf file](GLS_temporal_nonindependence_report.pdf)
 
+\  
+
+### Dealing with spatial non-independence
+
+\  
+
+- [Dealing with spatial non-independence exercise](GLS_spatial_nonindependence_exercise.html)
+
+\  
+
+If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
+
+- [Dealing with non-independence R markdown file](GLS_spatial_nonindependence_report.Rmd)
+
+- [Dealing with non-independence final rendered html file](GLS_spatial_nonindependence_report.html)
+
+- [Dealing with non-independence final rendered pdf file](GLS_spatial_nonindependence_report.pdf)
+
+\  
+
+### Mixed effects models 
+
+\  
+
+- [Mixed effects model exercise](Mixed_Models_Exercise.html)
+
+\  
+
+If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
+
+- [Mixed effects model R markdown file](Mixed_Models_report.Rmd)
+
+- [Mixed effects model final rendered html file](Mixed_Models_report.html)
+
+- [Mixed effects model final rendered pdf file](Mixed_Models_report.pdf)
+
+\  

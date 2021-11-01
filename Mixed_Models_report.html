@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Thomas Cornulier" />
+
+
+<title>BI5302 Mixed Effects Models Exercise</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BI5302</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    R Book
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://intro2r.com">
+        <span class="fa fa-firefox"></span>
+         
+        Web book
+      </a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="https://github.com/alexd106/Rbook/raw/master/docs/Rbook.pdf">
+        <span class="fa fa-file-pdf"></span>
+         
+        PDF book
+      </a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="exercises.html">
+    <span class="fa fa-book"></span>
+     
+    Exercises
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-download"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question-circle"></span>
+     
+    Info
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="resources.html">
+        <span class="fa fa-book"></span>
+         
+        Resources
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/alexd106/BI5302_repo">
+        <span class="fa fa-github fa-lg"></span>
+         
+        Source code
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/Scedacity">
+        <span class="fa fa-twitter fa-lg"></span>
+         
+        Twitter
+      </a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">BI5302 Mixed Effects Models Exercise</h1>
+<h4 class="author">Thomas Cornulier</h4>
+<h4 class="date">01 November, 2021</h4>
+
+</div>
+
+
+<p> </p>
+<p>Setup global options for knitr package. Normally I wouldn’t display these but I’ll leave them here for your information.</p>
+<pre class="r"><code>knitr::opts_chunk$set(echo= TRUE, message= FALSE, warning= FALSE, eval= FALSE, cache= FALSE, fig.height= 6)
+SOLUTIONS&lt;- TRUE</code></pre>
+<p> </p>
+<div id="exercise-mixed-effects-models---rikz-data" class="section level1">
+<h1>Exercise: MIxed effects models - RIKZ data</h1>
+<p> </p>
+<p>0. In this exercise we will use the RIKZ data set (in the ‘RIKZRichness.txt’ file). The aim of the research was to explain the variation in species richness (R) using the variable Normal Amsterdam Peil (NAP) using data collected from various beaches in the Netherlands. All measurements were taken in June 2002.Please note that the full analysis of these data is much more involved than the one suggested here. The less self-explanatory variables are: + <code>R</code>: Species richness (number of species). This is the response variable + <code>angle1</code>: angle of individual stations on a beach + <code>angle2</code>: angle of the beach + <code>exposure</code>: index summarizing multiple variables: wave action, length of the surf zone, slope, grain size and depth of anaerobic layer + <code>sorting1</code>: index of particle structure at individual sampling station + <code>NAP</code>: height of the sampling station relative to the average sea level</p>
+<p> </p>
+<p>1. Load the nlme package to make the <code>lme()</code> function available. Also load the lattice package. Import the data file <code>RIKZRichness.txt</code> into R. How many observations are in the dataset? How many variables are in the dataset which could be relevant as predictors of species richness?</p>
+<p> </p>
+<pre class="r"><code># 1. Make functions in the nlme and lattice package available
+library(nlme)
+library(lattice)
+
+rikz&lt;- read.table(&quot;data/RIKZRichness.txt&quot;, header = TRUE, stringsAsFactors = TRUE)
+
+str(rikz)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    45 obs. of  15 variables:
+##  $ Sample       : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ R            : int  11 10 13 11 10 8 9 8 19 17 ...
+##  $ week         : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ angle1       : int  32 62 65 55 23 129 126 52 26 143 ...
+##  $ angle2       : int  96 96 96 96 96 89 89 89 89 89 ...
+##  $ exposure     : int  10 10 10 10 10 8 8 8 8 8 ...
+##  $ salinity     : num  29.4 29.4 29.4 29.4 29.4 29.6 29.6 29.6 29.6 29.6 ...
+##  $ temperature  : num  17.5 17.5 17.5 17.5 17.5 20.8 20.8 20.8 20.8 20.8 ...
+##  $ NAP          : num  0.045 -1.036 -1.336 0.616 -0.684 ...
+##  $ penetrability: num  254 227 237 249 252 ...
+##  $ grainsize    : num  222 200 194 221 202 ...
+##  $ humus        : num  0.05 0.3 0.1 0.15 0.05 0.1 0.1 0.1 0.15 0 ...
+##  $ chalk        : num  2.05 2.5 3.45 1.6 2.45 2.5 1.85 1.7 2.3 2.6 ...
+##  $ sorting1     : num  69.8 59 59.2 67.8 57.8 ...
+##  $ Beach        : int  1 1 1 1 1 2 2 2 2 2 ...</code></pre>
+<pre class="r"><code># 12 potential predictors (ignoring &#39;sample&#39; and &#39;sorting&#39;, and the response &quot;R&quot;)
+# 45 observations</code></pre>
+<p> </p>
+<p>2. Convert the variable <code>Beach</code> to a factor and store it as a new variable called <code>Fbeach</code> in the same dataframe. Log-transform the species richness (<code>R</code>) variable and store as <code>logR</code>. Why do you think you are advised to do this?</p>
+<p> </p>
+<pre class="r"><code>rikz$Fbeach&lt;- factor(rikz$Beach)
+# there is no natural ordering of beaches, so treat as factor
+# to be able to estimate variation between beaches
+
+rikz$logR&lt;- log(rikz$R + 1)
+# Species richness is a count, so should be positive
+# We would also expect greater variance for higher counts,
+# So log transform should help stabilizing variance</code></pre>
+<p> </p>
+<p>3. How many beaches are there? How many observations for each beach?</p>
+<p> </p>
+<pre class="r"><code>table(rikz$Fbeach)</code></pre>
+<pre><code>## 
+## 1 2 3 4 5 6 7 8 9 
+## 5 5 5 5 5 5 5 5 5</code></pre>
+<pre class="r"><code># 9 beaches
+# 5 obs per beach on all beaches</code></pre>
+<p> </p>
+<p>4. Plot the relationship between log-richness (<code>logR</code>) and <code>NAP</code> conditional on each <code>Beach</code> (Hint: use the <code>coplot</code> or <code>xyplot</code> functions). Describe this relationship. Is the relationship the same for each beach?</p>
+<p> </p>
+<pre class="r"><code>with(rikz, plot(logR ~ NAP, col = Beach, pch = Beach))</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q4-1.png" width="672" /></p>
+<pre class="r"><code># there appears to be a decline in species richness with NAP
+
+xyplot(logR ~ NAP|Fbeach, data = rikz)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q4-2.png" width="672" /></p>
+<pre class="r"><code># not all beaches cover the whole range of NAP in the sample
+# negative effect of NAP suggested in most beaches, but not obvious in all
+
+# more fancy plot with lines of best fit for each beach
+coplot(logR ~ NAP|Fbeach, 
+      data = rikz, 
+        panel = function(x, y, ...) {
+         tmp &lt;- lm(y ~ x, na.action = na.omit)
+         abline(tmp)
+         points(x, y) })</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q4-3.png" width="672" /></p>
+<pre class="r"><code># confirms comments above;
+# very few points to support each fitted line -&gt; refrain from over-interpreting</code></pre>
+<p> </p>
+<p>5. Fit a simple linear model (using the <code>lm</code> function) with log transformed <code>R</code> as the response variable and <code>NAP</code> as the predictor. Produce the usual model validation plots of the residuals using the <code>par(mfrow= c(2, 2))</code> and the <code>plot</code> functions. Identify any issues highlighted by these plots. What inference does this model suggest? In addition, extract the residuals (use the <code>resid</code> function) and plot the residuals against beach. Can you see a problem?</p>
+<p> </p>
+<pre class="r"><code>rikz.lm&lt;- lm(logR ~ NAP, data = rikz)     
+
+# model validation
+par(mfrow = c(2, 2))    
+plot(rikz.lm)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q5-1.png" width="672" /></p>
+<pre class="r"><code># residuals vs fitted suggest horseshoe-shape trend: 
+# could be sign of a non linear relationship?
+# Normality (from QQ plot) poor
+
+# extract residuals from model object and plot against beach
+res.lm&lt;- resid(rikz.lm)
+
+par(mfrow = c(1, 1))
+plot(res.lm ~ rikz$Fbeach)
+abline(h = 0, col = 2, lty = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q5-2.png" width="672" /></p>
+<pre class="r"><code># some beaches have all positive residuals, some all negative
+
+anova(rikz.lm)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: logR
+##           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## NAP        1 13.873 13.8734   47.75 1.736e-08 ***
+## Residuals 43 12.493  0.2905                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code># NAP effect hugely significant
+
+summary(rikz.lm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = logR ~ NAP, data = rikz)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.9091 -0.3628 -0.1363  0.2141  1.2023 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  1.82790    0.08523   21.45  &lt; 2e-16 ***
+## NAP         -0.56473    0.08172   -6.91 1.74e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.539 on 43 degrees of freedom
+## Multiple R-squared:  0.5262, Adjusted R-squared:  0.5152 
+## F-statistic: 47.75 on 1 and 43 DF,  p-value: 1.736e-08</code></pre>
+<pre class="r"><code># NAP effect negative
+# 43 residual degrees of freedom 
+# (45-2= sample size - 1 for intercept - 1 for slope)</code></pre>
+<p> </p>
+<p>6. Fit a new linear model as above but with <code>NAP</code> and <code>FBeach</code> as predictors. Extract the residuals and re-plot the residuals for each beach. Does this look better? How many more parameters have you estimated in this model?</p>
+<p> </p>
+<pre class="r"><code>rikz.lm2 &lt;- lm(logR ~ NAP + Fbeach, data = rikz)
+
+# model validation
+
+par(mfrow = c(2, 2))
+plot(rikz.lm2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q6-1.png" width="672" /></p>
+<pre class="r"><code># a bit better,
+# less of a trend in the residuals (mostly due to 2-3 residuals, so no big deal)
+# Better normality, but some annoyingly large residuals
+
+# plot residuals vs Beach
+# looks better but possibly some heterogeneity of variance among beaches
+# (remember, only 5 obs per beach, so not conclusive)
+
+res.lm2 &lt;- resid(rikz.lm2)
+par(mfrow = c(1, 1))
+plot(res.lm2 ~ rikz$Fbeach, xlab = &quot;Beach&quot;, ylab = &quot;residuals&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q6-2.png" width="672" /></p>
+<pre class="r"><code># produce a summary of the analysis
+summary(rikz.lm2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = logR ~ NAP + Fbeach, data = rikz)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.16096 -0.18464 -0.01796  0.18628  0.88732 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2.23644    0.18456  12.118 4.44e-14 ***
+## NAP         -0.51043    0.06671  -7.651 5.63e-09 ***
+## Fbeach2      0.42025    0.26193   1.604  0.11760    
+## Fbeach3     -0.83201    0.25905  -3.212  0.00283 ** 
+## Fbeach4     -0.80163    0.26609  -3.013  0.00479 ** 
+## Fbeach5     -0.24501    0.26704  -0.917  0.36516    
+## Fbeach6     -0.58716    0.26142  -2.246  0.03112 *  
+## Fbeach7     -0.69613    0.27237  -2.556  0.01509 *  
+## Fbeach8     -0.57004    0.26527  -2.149  0.03864 *  
+## Fbeach9     -0.53503    0.26644  -2.008  0.05240 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4065 on 35 degrees of freedom
+## Multiple R-squared:  0.7807, Adjusted R-squared:  0.7243 
+## F-statistic: 13.84 on 9 and 35 DF,  p-value: 3.82e-09</code></pre>
+<pre class="r"><code># 8 additional parameters estimated (error df= 35 compared to 43 for the lm without beach)
+# Are we interested in the value of the differences between beaches?
+# If not, that&#39;s quite a lot of parameters to be estimating, 
+# given the already low sample size</code></pre>
+<p> </p>
+<p>7. Fit a linear mixed effects model using the <code>lme</code> function and assign it to an object called <code>rikz.lme</code>. As before use log-richness (<code>logR</code>) as the response variable and <code>NAP</code> as the predictor, but including <code>FBeach</code> as a random effect this time.</p>
+<p> </p>
+<pre class="r"><code>rikz.lme &lt;- lme(fixed = logR ~ NAP, random = ~ 1|Fbeach, data = rikz)
+# This is also known as a &quot;random intercept only&quot; model.
+
+# Assumes these beaches are a random sample from a wider population of beaches.
+# Therefore assumes the Fbeach intercepts, or differences between beaches,
+# are normally distributed</code></pre>
+<p> </p>
+<p>8. Extract the normalized residuals using the <code>residuals</code> function and the argument <code>type= "normalized"</code>. Extract the fitted values using the <code>fitted</code> function. Plot the residuals vs the fitted values and include a horizontal line at residual value= 0. In addition, plot the normalized residuals for each Beach. How does this plot compare with the equivalent plots from the linear models? Is the model an improvement?</p>
+<p> </p>
+<pre class="r"><code>res.lme &lt;- residuals(rikz.lme, type = &quot;normalized&quot;)
+# many standard functions such as &#39;residuals&#39;, &#39;fitted&#39;, &#39;plot&#39;, etc have
+# a special &quot;method&quot; (= version) when applied to lme objects which changes
+# their default behaviour.
+# To access the help pages, type ?functionOfInterest.lme
+# the help page for residuals is ?residuals.lme
+
+fit.lme &lt;- fitted(rikz.lme)
+# ?fitted.lme
+plot(res.lme ~ fit.lme, xlab = &quot;fitted&quot;, ylab = &quot;normalised residuals&quot;)
+# ?plot.lme
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q8-1.png" width="672" /></p>
+<pre class="r"><code># Not great, but so few observations that it is hard to judge!
+
+# plot residuals for each beach. 
+plot(res.lme ~ rikz$Fbeach, ylab = &quot;normalised residuals&quot;, xlab = &quot;Beach&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q8-2.png" width="672" /></p>
+<pre class="r"><code># Quite similar to the rikz.lm2 model, not better
+# But much better than rikz.lm
+
+# or use built in functions for lme objects
+plot(rikz.lme, 
+     form = resid(., type = &quot;p&quot;) ~ fitted(.)|Fbeach, abline = 0, lty = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q8-3.png" width="672" /></p>
+<pre class="r"><code># this plots the standardised (or Pearson) residuals versus fitted for 
+# each beach. Quite variable between beaches, but difficult to judge if
+# this is could be problematic
+
+# boxplots per beach:
+plot(rikz.lme, Fbeach ~ resid(.), abline = 0)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q8-4.png" width="672" /></p>
+<p> </p>
+<p>9. Produce a summary of the model output using the <code>summary</code> function. What is the within beach (residual) variation? What is the between beach variation? Remember, the output from the <code>lme</code> function gives these values in standard deviation units, not as variances, so you will need to calculate the variances manually. Compare the parameter estimate for <code>NAP</code> and the standard error of the parameter estimate to those obtained from the linear models.</p>
+<p> </p>
+<pre class="r"><code>summary(rikz.lm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = logR ~ NAP, data = rikz)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.9091 -0.3628 -0.1363  0.2141  1.2023 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  1.82790    0.08523   21.45  &lt; 2e-16 ***
+## NAP         -0.56473    0.08172   -6.91 1.74e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.539 on 43 degrees of freedom
+## Multiple R-squared:  0.5262, Adjusted R-squared:  0.5152 
+## F-statistic: 47.75 on 1 and 43 DF,  p-value: 1.736e-08</code></pre>
+<pre class="r"><code>#             Estimate Std. Error t value Pr(&gt;|t|)    
+# (Intercept)  1.82790    0.08523   21.45  &lt; 2e-16 ***
+# NAP         -0.56473    0.08172   -6.91 1.74e-08 ***
+
+summary(rikz.lm2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = logR ~ NAP + Fbeach, data = rikz)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.16096 -0.18464 -0.01796  0.18628  0.88732 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2.23644    0.18456  12.118 4.44e-14 ***
+## NAP         -0.51043    0.06671  -7.651 5.63e-09 ***
+## Fbeach2      0.42025    0.26193   1.604  0.11760    
+## Fbeach3     -0.83201    0.25905  -3.212  0.00283 ** 
+## Fbeach4     -0.80163    0.26609  -3.013  0.00479 ** 
+## Fbeach5     -0.24501    0.26704  -0.917  0.36516    
+## Fbeach6     -0.58716    0.26142  -2.246  0.03112 *  
+## Fbeach7     -0.69613    0.27237  -2.556  0.01509 *  
+## Fbeach8     -0.57004    0.26527  -2.149  0.03864 *  
+## Fbeach9     -0.53503    0.26644  -2.008  0.05240 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4065 on 35 degrees of freedom
+## Multiple R-squared:  0.7807, Adjusted R-squared:  0.7243 
+## F-statistic: 13.84 on 9 and 35 DF,  p-value: 3.82e-09</code></pre>
+<pre class="r"><code>#             Estimate Std. Error t value Pr(&gt;|t|)    
+# (Intercept)  2.23644    0.18456  12.118 4.44e-14 ***
+# NAP         -0.51043    0.06671  -7.651 5.63e-09 ***
+
+summary(rikz.lme)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##        AIC      BIC    logLik
+##   73.17517 80.21997 -32.58758
+## 
+## Random effects:
+##  Formula: ~1 | Fbeach
+##         (Intercept)  Residual
+## StdDev:   0.3704644 0.4064515
+## 
+## Fixed effects:  logR ~ NAP 
+##                  Value  Std.Error DF   t-value p-value
+## (Intercept)  1.8131735 0.13943157 35 13.004039       0
+## NAP         -0.5223798 0.06562824 35 -7.959681       0
+##  Correlation: 
+##     (Intr)
+## NAP -0.164
+## 
+## Standardized Within-Group Residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.73773234 -0.50167111 -0.02510498  0.44494919  2.23906106 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code>#                  Value  Std.Error DF   t-value p-value
+# (Intercept)  1.8131735 0.13943157 35 13.004039       0
+# NAP         -0.5223798 0.06562824 35 -7.959681       0
+
+# The model without Fbeach (rikz.lm) has the largest (negative) effect of NAP
+# and the largest uncertainty (SE) for it.
+
+# The models with fixed or random Fbeach effect (rikz.lm2 or rikz.lme) have the
+# most similar estimates of the slope and of the standard errors of the
+# population-level coefficients (general Intercept and slope)
+# Their SE for the Intercept is larger than that of the model without Fbeach, 
+# because they take the differences between beaches into account, therefore the
+# number of degrees of freedom (&quot;effective sample size&quot;) for the
+# calculation of the intercept is less than the total sample size
+# (residual df = 35 for rikz.lme instead of 43 for the rikz.lm model)
+
+# For the rikz.lm2 model, this is worse because the intercept is for 
+# the reference beach only (Beach 1), so the effective sample size is 
+# only about 5</code></pre>
+<p> </p>
+<p>10. (Optional) convert your RIKZ dataframe to a grouped data object using the command: <code>rikz&lt;- groupedData(logR~NAP|Fbeach, data= rikz)</code>. This will allow you to use some convenience functions that come with the nlme package. Investigate what the following lines of code do: <code>plot(augPred(rikz.lme), aspect="xy", grid=T)</code>, as well as <code>plot(rikz.lme, logR~ fitted(.), id=0.05, adj=-0.3)</code> and <code>qqnorm(rikz.lme, ~resid(.),abline= c(0,1))</code>. Do you think that fitting a random intercept model adequately explains the relationship between Richness and NAP for each Beach?</p>
+<p> </p>
+<pre class="r"><code>rikz &lt;- groupedData(logR ~ NAP|Fbeach, data = rikz)
+
+# plot predicted values for each beach
+plot(augPred(rikz.lme), aspect = &quot;xy&quot;, grid = TRUE)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q10-1.png" width="672" /></p>
+<pre class="r"><code># plot observed vs fitted values
+plot(rikz.lme, logR ~ fitted(.), id = 0.05, adj = -0.3)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q10-2.png" width="672" /></p>
+<pre class="r"><code># normally distributed residuals?
+qqnorm(rikz.lme, ~ resid(., type = &quot;normalized&quot;), abline = c(0, 1))</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q10-3.png" width="672" /></p>
+<pre class="r"><code># abline(0, 1) only makes sense if the values are normalized
+
+# normally distributed random effects?
+qqnorm(rikz.lme, ~ ranef(.))</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q10-4.png" width="672" /></p>
+<pre class="r"><code># values are not normalized, so no &#39;abline&#39;
+# instead we can get the correct reference line manually:
+qqnorm(unlist(ranef(rikz.lme)))
+qqline(unlist(ranef(rikz.lme)), col = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q10-5.png" width="672" /></p>
+<pre class="r"><code># with only 9 levels for Fbeach, a qqplot isn&#39;t that easy to interpret:
+# how bad is bad?
+
+# a histogram is no better with just 9 data points:
+hist(unlist(ranef(rikz.lme)))</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q10-6.png" width="672" /></p>
+<pre class="r"><code># Overall, not an unreasonable model. 
+# Unfortunately, sample size is just too small to tell if this
+# is a good model structure from the data alone.</code></pre>
+<p> </p>
+<p>11. Perhaps an improvement to the model would be to allow both the intercepts and the <code>NAP</code> slopes to vary randomly with each beach (as opposed to an intercepts only model). You can fit this model using the <code>lme</code> function and specify the random effects as <code>random= ~ NAP|Fbeach</code>. Fit the model and assign it to a new variable called <code>rikz.lme2</code>. The <code>random= ~ NAP|Fbeach</code> formula assumes that there is variation in the intercept as well as the effect of NAP between beaches. <strong>When a continuous predictor is in the random formula it also needs to be in the fixed formula</strong>: The effect in formula of the fixed part measures the mean coefficient at the population level (average across all beaches), and the effect in the random part formula measures variation around that mean coefficient value between beaches.</p>
+<p> </p>
+<pre class="r"><code># We can either use the update function or specify the model long hand
+rikz.lme2 &lt;- update(rikz.lme, random = ~ NAP|Fbeach)
+
+# or long hand version
+rikz.lme2&lt;- lme(fixed = logR ~ 1 + NAP, random = ~ 1 + NAP|Fbeach, data = rikz)
+
+# it would be incorrect to only have the population intercept in the fixed part
+# of the model but no NAP effect, like this:
+rikz.lme2bad &lt;- lme(fixed = logR ~ 1, random = ~ NAP|Fbeach, data = rikz)</code></pre>
+<p> </p>
+<p>12. Plot the fitted lines using<br />
+<code>plot(augPred(rikz.lme2), aspect = "xy", grid = T)</code><br />
+and the residuals versus fitted with<br />
+<code>plot(rikz.lme2, form = resid(., type = "p") ~ fitted(.)|Fbeach, abline = 0, lty = 2)</code>.<br />
+Normality of random intercepts:<br />
+<code>par(mfrow = c(1, 2))</code>,<br />
+<code>hist(unlist(ranef(rikz.lme2)$'(Intercept)'), xlab = "Random Intercept", main = "")</code><br />
+and normality of random slopes:<br />
+<code>hist(unlist(ranef(rikz.lme2)$'NAP'), xlab = "Random NAP effect", main = "")</code>.<br />
+Compare these to previous model. Is there an improvement?</p>
+<p> </p>
+<pre class="r"><code># (assumes rikz is in Grouped Data format as above)
+plot(augPred(rikz.lme2), aspect = &quot;xy&quot;, grid = TRUE)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q12-1.png" width="672" /></p>
+<pre class="r"><code>plot(rikz.lme2, 
+     form = resid(., type=&quot;p&quot;) ~ fitted(.)|Fbeach, abline = 0, lty = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q12-2.png" width="672" /></p>
+<pre class="r"><code># no more suggestion of trends in the residuals -&gt; that&#39;s better than rikz.lme
+
+# optional:
+res.lme2 &lt;- resid(rikz.lme2, type = &quot;normalized&quot;)
+fit.lme2 &lt;- fitted(rikz.lme2)
+plot(res.lme2 ~ fit.lme2, xlab = &quot;fitted&quot;, ylab = &quot;normalised residuals&quot;)
+abline(h= 0, lty= 2, col= 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q12-3.png" width="672" /></p>
+<pre class="r"><code># plot residuals for each beach.
+par(mfrow= c(1, 2))
+plot(res.lme ~ rikz$Fbeach, ylab= &quot;normalised residuals&quot;, xlab= &quot;Beach&quot;, 
+    main = &quot;random intercept&quot;)
+abline(h = 0, lty = 2, col = 2)
+
+plot(res.lme2 ~ rikz$Fbeach, ylab = &quot;normalised residuals&quot;, xlab = &quot;Beach&quot;,
+    main = &quot;random intercept and slope&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q12-4.png" width="672" /></p>
+<pre class="r"><code># not clear if one is better than the other. With just 5 samples per beach,
+# don&#39;t expect boxplot to look amazing!
+
+
+# plot fitted vs observed
+plot(rikz.lme2, logR ~ fitted(.), id = 0.05, adj = -0.3)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q12-5.png" width="672" /></p>
+<pre class="r"><code># intrigued by &#39;adj&#39; argument?
+# try without and see ?par
+
+#normally distributed random effects?
+qqnorm(rikz.lme2, ~ ranef(.))</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q12-6.png" width="672" /></p>
+<pre class="r"><code># or using a DIY approach to extracting and plotting the random effects:
+par(mfrow = c(1, 2))
+hist(unlist(ranef(rikz.lme2)$&#39;(Intercept)&#39;), xlab = &quot;Random Intercept&quot;, main = &quot;&quot;)
+hist(unlist(ranef(rikz.lme2)$&#39;NAP&#39;), xlab = &quot;Random NAP effect&quot;, main = &quot;&quot;)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q12-7.png" width="672" /></p>
+<pre class="r"><code># not great for the intercept
+# alright for the NAP slope
+# but in truth, with 9 beaches only, any pattern would be compatible with
+# a normal distribution!
+
+# This model seems to meet most of the assumptions, 
+# Or at least there are too few data to say that it doesn&#39;t.
+# But this is at the cost of a quite complex model (lots of parameters)
+# and there is a good chance that we are overfitting the data.</code></pre>
+<p> </p>
+<p>13. Produce a summary of the random effects and fixed effects using the <code>summary</code> function. Compare these to the random intercept only model.</p>
+<p> </p>
+<pre class="r"><code>summary(rikz.lme)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##        AIC      BIC    logLik
+##   73.17517 80.21997 -32.58758
+## 
+## Random effects:
+##  Formula: ~1 | Fbeach
+##         (Intercept)  Residual
+## StdDev:   0.3704644 0.4064515
+## 
+## Fixed effects:  logR ~ NAP 
+##                  Value  Std.Error DF   t-value p-value
+## (Intercept)  1.8131735 0.13943157 35 13.004039       0
+## NAP         -0.5223798 0.06562824 35 -7.959681       0
+##  Correlation: 
+##     (Intr)
+## NAP -0.164
+## 
+## Standardized Within-Group Residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.73773234 -0.50167111 -0.02510498  0.44494919  2.23906106 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code>summary(rikz.lme2)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##        AIC      BIC    logLik
+##   73.83009 84.39729 -30.91504
+## 
+## Random effects:
+##  Formula: ~1 + NAP | Fbeach
+##  Structure: General positive-definite, Log-Cholesky parametrization
+##             StdDev    Corr  
+## (Intercept) 0.4254584 (Intr)
+## NAP         0.2541920 -0.066
+## Residual    0.3308370       
+## 
+## Fixed effects:  logR ~ 1 + NAP 
+##                  Value Std.Error DF   t-value p-value
+## (Intercept)  1.8609544 0.1526225 35 12.193187       0
+## NAP         -0.5275355 0.1015965 35 -5.192457       0
+##  Correlation: 
+##     (Intr)
+## NAP -0.12 
+## 
+## Standardized Within-Group Residuals:
+##        Min         Q1        Med         Q3        Max 
+## -1.9853479 -0.4779993 -0.1235918  0.4321337  2.1590780 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code># population-level estimates are quite similar</code></pre>
+<p> </p>
+<p>14. Use the <code>anova</code> function to compare between the two mixed effects models. Which model is preferred by which method? What is the null hypothesis you are testing? Why might you need to treat this test with caution?</p>
+<p> </p>
+<pre class="r"><code># compare using anova() - treat with caution
+anova(rikz.lme, rikz.lme2)</code></pre>
+<pre><code>##           Model df      AIC      BIC    logLik   Test  L.Ratio p-value
+## rikz.lme      1  4 73.17517 80.21997 -32.58758                        
+## rikz.lme2     2  6 73.83009 84.39729 -30.91504 1 vs 2 3.345082  0.1878</code></pre>
+<pre class="r"><code>#           Model df      AIC      BIC    logLik   Test  L.Ratio p-value
+# rikz.lme      1  4 73.17517 80.21997 -32.58758                        
+# rikz.lme2     2  6 73.83009 84.39729 -30.91504 1 vs 2 3.345082  0.1878
+
+# LRT suggests the random slope is unnecessary
+# AIC suggests the models are about equally good (but random slope worse)
+
+# if we wanted to compare our fixed effects only model with both mixed models 
+#then we need to fit the fixed effects only model with gls function
+
+rikz.gls &lt;- gls(logR ~ NAP, data = rikz)
+
+anova(rikz.gls, rikz.lme, rikz.lme2)</code></pre>
+<pre><code>##           Model df      AIC      BIC    logLik   Test   L.Ratio p-value
+## rikz.gls      1  3 82.45981 87.74341 -38.22991                         
+## rikz.lme      2  4 73.17517 80.21997 -32.58758 1 vs 2 11.284645  0.0008
+## rikz.lme2     3  6 73.83009 84.39729 -30.91504 2 vs 3  3.345082  0.1878</code></pre>
+<pre class="r"><code># the random intercept is clearly supported by all methods
+# the random slope isn&#39;t</code></pre>
+<p> </p>
+<p>15. Using the model rikz.lme structure as a basis, use anova() to test if there is a significant effect of “temperature”, “grainsize” or “exposure”. Check the summary of the best model. What happened with the beach effect? What could that mean? Should we leave the model as it is?</p>
+<p> </p>
+<pre class="r"><code>rikz.lme.gs &lt;- lme(fixed= logR ~ NAP + grainsize, random= ~ 1|Fbeach, data= rikz)
+summary(rikz.lme.gs)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##        AIC      BIC    logLik
+##   85.34104 94.02939 -37.67052
+## 
+## Random effects:
+##  Formula: ~1 | Fbeach
+##         (Intercept)  Residual
+## StdDev:   0.3118976 0.4207497
+## 
+## Fixed effects:  logR ~ NAP + grainsize 
+##                  Value Std.Error DF   t-value p-value
+## (Intercept)  2.3051733 0.5279832 34  4.365997  0.0001
+## NAP         -0.5397701 0.0689071 34 -7.833306  0.0000
+## grainsize   -0.0017836 0.0018665 34 -0.955608  0.3460
+##  Correlation: 
+##           (Intr) NAP   
+## NAP       -0.237       
+## grainsize -0.972  0.199
+## 
+## Standardized Within-Group Residuals:
+##        Min         Q1        Med         Q3        Max 
+## -2.5983058 -0.5842972 -0.0845448  0.5122758  2.1573589 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code>rikz.lme.te &lt;- lme(fixed= logR ~ NAP + temperature, random= ~ 1|Fbeach, data= rikz)
+summary(rikz.lme.te)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##       AIC      BIC    logLik
+##   76.3963 85.08465 -33.19815
+## 
+## Random effects:
+##  Formula: ~1 | Fbeach
+##         (Intercept)  Residual
+## StdDev:   0.3417426 0.4069673
+## 
+## Fixed effects:  logR ~ NAP + temperature 
+##                  Value Std.Error DF   t-value p-value
+## (Intercept) -0.3752649 1.5559401 35 -0.241182  0.8108
+## NAP         -0.5331456 0.0658856 35 -8.091994  0.0000
+## temperature  0.1167607 0.0826987  7  1.411880  0.2009
+##  Correlation: 
+##             (Intr) NAP   
+## NAP          0.084       
+## temperature -0.996 -0.099
+## 
+## Standardized Within-Group Residuals:
+##        Min         Q1        Med         Q3        Max 
+## -2.7584248 -0.4828906 -0.0201458  0.4864118  2.1557143 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code>rikz.lme.ex &lt;- lme(fixed= logR ~ NAP + exposure, random= ~ 1|Fbeach, data= rikz)
+summary(rikz.lme.ex)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##        AIC     BIC    logLik
+##   65.07915 73.7675 -27.53957
+## 
+## Random effects:
+##  Formula: ~1 | Fbeach
+##         (Intercept)  Residual
+## StdDev:  0.02548355 0.4072808
+## 
+## Fixed effects:  logR ~ NAP + exposure 
+##                 Value Std.Error DF   t-value p-value
+## (Intercept)  5.728645 0.6868231 35  8.340787   0e+00
+## NAP         -0.546077 0.0619164 35 -8.819590   0e+00
+## exposure    -0.382229 0.0669938  7 -5.705437   7e-04
+##  Correlation: 
+##          (Intr) NAP   
+## NAP       0.019       
+## exposure -0.996 -0.050
+## 
+## Standardized Within-Group Residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.50424801 -0.37535225 -0.04363322  0.35212009  2.33847806 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code>anova(rikz.lme, rikz.lme.gs)</code></pre>
+<pre><code>##             Model df      AIC      BIC    logLik   Test  L.Ratio p-value
+## rikz.lme        1  4 73.17517 80.21997 -32.58758                        
+## rikz.lme.gs     2  5 85.34104 94.02939 -37.67052 1 vs 2 10.16587  0.0014</code></pre>
+<pre class="r"><code># warning that the wrong fitting method was used
+
+anova(update(rikz.lme, method= &quot;ML&quot;), update(rikz.lme.gs, method= &quot;ML&quot;))</code></pre>
+<pre><code>##                                    Model df      AIC      BIC   logLik   Test   L.Ratio p-value
+## update(rikz.lme, method = &quot;ML&quot;)        1  4 67.35820 74.58485 -29.6791                         
+## update(rikz.lme.gs, method = &quot;ML&quot;)     2  5 68.36981 77.40312 -29.1849 1 vs 2 0.9883905  0.3201</code></pre>
+<pre class="r"><code>anova(update(rikz.lme, method= &quot;ML&quot;), update(rikz.lme.te, method= &quot;ML&quot;))</code></pre>
+<pre><code>##                                    Model df      AIC      BIC    logLik   Test  L.Ratio p-value
+## update(rikz.lme, method = &quot;ML&quot;)        1  4 67.35820 74.58485 -29.67910                        
+## update(rikz.lme.te, method = &quot;ML&quot;)     2  5 67.08952 76.12283 -28.54476 1 vs 2 2.268676   0.132</code></pre>
+<pre class="r"><code>anova(update(rikz.lme, method= &quot;ML&quot;), update(rikz.lme.ex, method= &quot;ML&quot;))</code></pre>
+<pre><code>##                                    Model df      AIC      BIC    logLik   Test  L.Ratio p-value
+## update(rikz.lme, method = &quot;ML&quot;)        1  4 67.35820 74.58485 -29.67910                        
+## update(rikz.lme.ex, method = &quot;ML&quot;)     2  5 53.90057 62.93388 -21.95028 1 vs 2 15.45763   1e-04</code></pre>
+<pre class="r"><code># exposure effect is clearly supported
+
+# did you notice the change in the variance of the random beach effect?
+summary(rikz.lme)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##        AIC      BIC    logLik
+##   73.17517 80.21997 -32.58758
+## 
+## Random effects:
+##  Formula: ~1 | Fbeach
+##         (Intercept)  Residual
+## StdDev:   0.3704644 0.4064515
+## 
+## Fixed effects:  logR ~ NAP 
+##                  Value  Std.Error DF   t-value p-value
+## (Intercept)  1.8131735 0.13943157 35 13.004039       0
+## NAP         -0.5223798 0.06562824 35 -7.959681       0
+##  Correlation: 
+##     (Intr)
+## NAP -0.164
+## 
+## Standardized Within-Group Residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.73773234 -0.50167111 -0.02510498  0.44494919  2.23906106 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code>summary(rikz.lme.ex)</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: rikz 
+##        AIC     BIC    logLik
+##   65.07915 73.7675 -27.53957
+## 
+## Random effects:
+##  Formula: ~1 | Fbeach
+##         (Intercept)  Residual
+## StdDev:  0.02548355 0.4072808
+## 
+## Fixed effects:  logR ~ NAP + exposure 
+##                 Value Std.Error DF   t-value p-value
+## (Intercept)  5.728645 0.6868231 35  8.340787   0e+00
+## NAP         -0.546077 0.0619164 35 -8.819590   0e+00
+## exposure    -0.382229 0.0669938  7 -5.705437   7e-04
+##  Correlation: 
+##          (Intr) NAP   
+## NAP       0.019       
+## exposure -0.996 -0.050
+## 
+## Standardized Within-Group Residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.50424801 -0.37535225 -0.04363322  0.35212009  2.33847806 
+## 
+## Number of Observations: 45
+## Number of Groups: 9</code></pre>
+<pre class="r"><code># why could that be?
+plot(rikz$exposure ~ rikz$Fbeach)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q15-1.png" width="672" /></p>
+<pre class="r"><code># there is only one exposure value per beach, and exposure seems sufficient
+# to explain the most of the variation between beaches
+
+qqnorm(rikz.lme.ex, form= ~ ranef(.))</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q15-2.png" width="672" /></p>
+<pre class="r"><code># more normally distributed as a result of having
+# explained the outlier with exposure
+
+rikz.gls.ex &lt;- gls(logR ~ NAP + exposure, data= rikz)
+summary(rikz.gls.ex)</code></pre>
+<pre><code>## Generalized least squares fit by REML
+##   Model: logR ~ NAP + exposure 
+##   Data: rikz 
+##        AIC      BIC    logLik
+##   63.08016 70.03084 -27.54008
+## 
+## Coefficients:
+##                 Value Std.Error   t-value p-value
+## (Intercept)  5.728520 0.6812853  8.408401       0
+## NAP         -0.546674 0.0619291 -8.827421       0
+## exposure    -0.382197 0.0664549 -5.751220       0
+## 
+##  Correlation: 
+##          (Intr) NAP   
+## NAP       0.019       
+## exposure -0.996 -0.051
+## 
+## Standardized residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.49334971 -0.37864830 -0.05358503  0.35582336  2.33854412 
+## 
+## Residual standard error: 0.4079307 
+## Degrees of freedom: 45 total; 42 residual</code></pre>
+<pre class="r"><code>anova(rikz.gls.ex, rikz.lme.ex)</code></pre>
+<pre><code>##             Model df      AIC      BIC    logLik   Test     L.Ratio p-value
+## rikz.gls.ex     1  4 63.08016 70.03084 -27.54008                           
+## rikz.lme.ex     2  5 65.07915 73.76750 -27.53957 1 vs 2 0.001013005  0.9746</code></pre>
+<pre class="r"><code># despite the caveats of this testing approach, clearly the random effect for
+# beach makes no difference anymore
+# Should we discard or keep it anyway?
+
+# optional:
+# plot residuals for each beach.
+res.lme.ex&lt;- resid(rikz.lme.ex, type= &quot;normalized&quot;)
+plot(res.lme ~ rikz$Fbeach, ylab= &quot;normalised residuals&quot;, xlab= &quot;Beach&quot;,
+      main= &quot;random intercept&quot;)
+abline(h = 0, lty = 2, col = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q15-3.png" width="672" /></p>
+<pre class="r"><code># generally there is still heterogeneity between beaches
+# if we are feeling brave, we could introduce a variance covariate and model
+# the variance for each beach separately. 
+# Do we have enough observations for this though?</code></pre>
+<p> </p>
+<p>16. What model do you retain as your final model? What conclusions do you draw from it?</p>
+<p> </p>
+<pre class="r"><code># Model rikz.lme seems a reasonable compromise, but whichever model
+# we choose, the conclusions remain unchanged:
+# the log of Species richness (+1) appears to decrease with the height
+# above sea level within a beach (as length of time submerged by the sea decreases). 
+# For each unit increase of NAP, the log(Species richness + 1)
+# decreases by 0.52 +/- 0.07 (t_35= -7.95, p &lt; 0.001)
+
+# There is about as much variation in the observations within beach (SD= 0.37)
+# as there is between beach (SD= 0.41). 
+# Therefore there is some evidence that
+# species richness varies between beaches (for similar height above sea
+# level), but there is no evidence that the effect of height above sea
+# level changes between beach.
+
+# For your info, if you would like to illustrate the model graphically:
+
+# To illustrate variation between beaches, augPred is a good option:
+
+plot(augPred(rikz.lme, level = 0:1), aspect =&quot;xy&quot;, grid = TRUE)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q16-1.png" width="672" /></p>
+<pre class="r"><code># To illustrate uncertainty about the population-level (= fixed)
+# effects, `Effect` from the `effects` library is convenient:
+
+library(effects)
+plot(Effect(&quot;NAP&quot;, rikz.lme, xlevels = 40))</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q16-2.png" width="672" /></p>
+<pre class="r"><code># Note that the confidence interval above does not include the 
+# variation between beaches
+
+# To illustrate the relationship on the original, 
+# back-transformed count scale is a little more fiddly.
+# One way is to let `Effect` do the hard work of calculating the
+# fitted values and their confidence intervals, and store the result
+
+rikz.lme.pred &lt;- Effect(&quot;NAP&quot;, rikz.lme, xlevels = 40)
+
+# Then, we extract the values from the rikz.lme.pred object
+# and plot them after applying the back-transformation
+
+plot(R ~ NAP, data = rikz)
+lines(rikz.lme.pred$x$NAP, exp(rikz.lme.pred$fit)-1, lwd = 2)
+lines(rikz.lme.pred$x$NAP, exp(rikz.lme.pred$lower)-1, lty = 2)
+lines(rikz.lme.pred$x$NAP, exp(rikz.lme.pred$upper)-1, lty = 2)</code></pre>
+<p><img src="Mixed_Models_report_files/figure-html/Q16-3.png" width="672" /></p>
+<p> </p>
+<p>End of the Mixed Effects Models exercise.</p>
+<p> </p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

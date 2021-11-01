@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Thomas Cornulier" />
+
+
+<title>Spatial GLS Exercise Solutions</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BI5302</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    R Book
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://intro2r.com">
+        <span class="fa fa-firefox"></span>
+         
+        Web book
+      </a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="https://github.com/alexd106/Rbook/raw/master/docs/Rbook.pdf">
+        <span class="fa fa-file-pdf"></span>
+         
+        PDF book
+      </a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="exercises.html">
+    <span class="fa fa-book"></span>
+     
+    Exercises
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-download"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question-circle"></span>
+     
+    Info
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="resources.html">
+        <span class="fa fa-book"></span>
+         
+        Resources
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/alexd106/BI5302_repo">
+        <span class="fa fa-github fa-lg"></span>
+         
+        Source code
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/Scedacity">
+        <span class="fa fa-twitter fa-lg"></span>
+         
+        Twitter
+      </a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Spatial GLS Exercise Solutions</h1>
+<h4 class="author">Thomas Cornulier</h4>
+<h4 class="date">01 November, 2021</h4>
+
+</div>
+
+
+<p> </p>
+<p>Setup global options for knitr package. Normally I wouldn’t display these but I’ll leave them here for your information.</p>
+<p> </p>
+<pre class="r"><code>knitr::opts_chunk$set(echo=TRUE, message = FALSE, warning = FALSE, eval = FALSE, cache = FALSE)
+
+SOLUTIONS&lt;- TRUE</code></pre>
+<p> </p>
+<div id="spatial-gls---ungulate-species-distribution-models" class="section level1">
+<h1>Spatial GLS - Ungulate species distribution models</h1>
+<p> </p>
+<ol start="0" style="list-style-type: decimal">
+<li>This practical expands on the spatial data analysis lecture. It will allow you to revisit the analysis of environmental drivers of the wild boar distribution in Poland, using a larger set of environmental variables, and of the distribution of other species if you wish. The idea is to practice doing model selection while accounting for non-independence in the residuals by modelling their spatial covariance. More info on the data for this exercise in the published paper: <a href="http://bit.do/UngulatesDistributionPaper" class="uri">http://bit.do/UngulatesDistributionPaper</a>. Variables:</li>
+</ol>
+<ul>
+<li><code>Reddeer</code>: Red deer abundance index</li>
+<li><code>Roedeer</code>: Roe deer abundance index</li>
+<li><code>Wildboar</code>: Wild boar abundance index</li>
+<li><code>Moose</code>: Moose abundance index</li>
+<li><code>Total.arable</code>: proportion of arable land (all 3 categories above pooled)</li>
+<li><code>Pastures</code>: proportion of pasture land</li>
+<li><code>BroadLForest</code>: proportion of broad leaved forest</li>
+<li><code>ConForest</code>: proportion of coniferous forest</li>
+<li><code>MixForest</code>: proportion of mixed forest</li>
+<li><code>Shrub</code>: proportion of shrubland</li>
+<li><code>Total.forest</code>: proportion of forests (all 4 above pooled)</li>
+<li><code>DeciMixFor</code>: proportion of broad-leaved and mixed forests</li>
+<li><code>Marsh</code>: proportion of marsh land</li>
+<li><code>Waterbodies</code>: proportion of water bodies</li>
+<li><code>Open</code>: proportion of open habitat (non-forested)</li>
+<li><code>SnowDays</code>: mean number of snow days</li>
+<li><code>JanTemp</code>: mean January temperature</li>
+<li><code>LONG</code>: Longitude</li>
+<li><code>LAT</code>: Latitude</li>
+<li><code>Quadrant</code>: Poland divided in 4 blocks: NE / NW / SW / SE</li>
+</ul>
+<p> </p>
+<p> </p>
+<p>1. Create a new R markdown document in your BI5302 RStudio project and save it using a suitable file name. I suggest you specify the default output format as html but feel free to experiment with pdf (you can always change this later). Use this R markdown document to record your data exploration, statistical analysis (including graphs and tables) and commentary. For this exercise I would also suggest that you embed your R code as visible chunks within the document (use <code>echo = TRUE</code>) for later reference.</p>
+<p> </p>
+<p>Import the data file ‘ungulates.csv’ into R. Before doing any data exploration, take a look at the structure of this dataframe, and check the (rather large!) list of predictors available to you. Take a moment to think if all are plausible predictors of ungulate abundance, what they represent, and how they may differ (or perhaps some are partly redundant). Are there any that seem more relevant to you or some which you may wish to exclude a priori? If you refuse to make choices at this stage they might impose themselves to you and maybe complicate your life later on!</p>
+<p> </p>
+<p>Please run the code below to load the data, the R libraries and a couple of extra optional but useful functions.</p>
+<p> </p>
+<pre class="r"><code>library(lattice)
+library(nlme)
+library(effects)
+library(knitr)
+
+# load extra panel function for pair plots
+panel.cor &lt;- function(x, y, digits = 2, prefix = &quot;&quot;, cex.cor, ...)
+{
+    usr &lt;- par(&quot;usr&quot;); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r &lt;- abs(cor(x, y))
+    txt &lt;- format(c(r, 0.123456789), digits = digits)[1]
+    txt &lt;- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor &lt;- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+pairs2&lt;- function (x) pairs(x, lower.panel = panel.smooth, upper.panel = panel.cor)
+
+# load data set
+un&lt;- read.csv(&quot;data/ungulates.csv&quot;)
+
+str(un)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    462 obs. of  20 variables:
+##  $ Reddeer     : num  0.639 2.716 0.097 0.252 2.558 ...
+##  $ Roedeer     : num  1.27 1.79 1.24 1.16 2.85 ...
+##  $ Wildboar    : num  0.18 2.552 0.226 0.454 2.259 ...
+##  $ Moose       : num  0.18 0.045 0.016 0.033 0.074 0.017 0.067 0.023 0.105 0.062 ...
+##  $ Total.arable: num  24.61 5.57 50.24 56.67 21.73 ...
+##  $ Pastures    : num  8.24 5.95 22.09 3.58 19 ...
+##  $ BroadLForest: num  6.04 39.9 1 8.29 19.02 ...
+##  $ ConForest   : num  37.59 30.53 19.29 6.85 25.96 ...
+##  $ MixForest   : num  14.98 16.18 4.14 11.58 10.62 ...
+##  $ Shrub       : num  0 0.222 0.889 0 0.496 ...
+##  $ Total.forest: num  58.6 86.8 25.3 26.7 56.1 ...
+##  $ DeciMixFor  : num  35.9 64.6 20.3 74.4 52.8 ...
+##  $ Marsh       : num  2.3748 0.4496 0.0335 0.7401 0.5265 ...
+##  $ Waterbodies : num  3.32 0 0 11.68 1.05 ...
+##  $ Open        : num  35.2 12 72.4 61 41.3 ...
+##  $ SnowDays    : int  100 105 95 105 105 105 105 105 100 100 ...
+##  $ JanTemp     : num  -4.16 -4.1 -3.82 -3.5 -4.12 ...
+##  $ LONG        : num  14.5 14.8 14.4 13.6 14.7 ...
+##  $ LAT         : num  53.8 52.7 52.7 54.2 52.9 ...
+##  $ Quadrant    : chr  &quot;E N&quot; &quot;E N&quot; &quot;E N&quot; &quot;E N&quot; ...</code></pre>
+<pre class="r"><code># My choice of Potential Predictor Variables (a rather broad first selection)
+# I like to store the names of the variables of interest in a vector,
+# for convenience
+PPV&lt;- c(&quot;Total.arable&quot;, &quot;Pastures&quot;, &quot;BroadLForest&quot;, &quot;ConForest&quot;, &quot;MixForest&quot;,
+    &quot;Shrub&quot;, &quot;Total.forest&quot;, &quot;DeciMixFor&quot;, &quot;Marsh&quot;, &quot;Waterbodies&quot;, &quot;Open&quot;,
+    &quot;SnowDays&quot;, &quot;JanTemp&quot;)
+
+# I have excluded Longitude, Latitude and Quadrant because these
+# are not environmental predictors, so they would not tell us directly
+# about the environmental determinants of WB distribution.
+
+# I have not selected other species as predictors, although if there
+# were ecological inter-specific interactions between the wild boar
+# and another species, they could be relevant as predictors.</code></pre>
+<p> </p>
+<p>2. Start with an initial data exploration of the predictors you have chosen to try and explain the abundance of wild boars. If you have too many predictors, consider making smaller subsets to make the exploration easier. Look at any collinearity between them, and if needed, narrow down the set of candidate predictors you want to work with and make any transformation you feel would be necessary.</p>
+<p> </p>
+<pre class="r"><code>pairs2(un[, PPV])</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q2-1.png" width="672" /></p>
+<pre class="r"><code># a bit too many! Let&#39;s make subsets.
+
+# Could start with all variables associated with forest habitats
+PPV1&lt;- c(&quot;DeciMixFor&quot;, &quot;BroadLForest&quot;, &quot;ConForest&quot;, &quot;MixForest&quot;, &quot;Shrub&quot;,
+    &quot;Total.forest&quot;)
+pairs2(un[, PPV1])</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q2-2.png" width="672" /></p>
+<pre class="r"><code># Forest habitats are mostly coniferous (industrial plantations).
+# Therefore ConForest and Total.forest are highly correlated.
+# Non-coniferous forests are mostly broad-leaved or mixed.
+# wouldn&#39;t make much sense to include ConForest and Total.forest together
+# option 1: use Total.forest alone
+# option 2: if interested in forest type, use ConForest and DeciMixFor
+# shrublands not too correlated with other forests-&gt; can be used together
+
+# variables associated with other habitats (keeping Total.Forest
+# to see how forest cover is correlated with other land uses)
+PPV2&lt;- c(&quot;Total.arable&quot;, &quot;Pastures&quot;, &quot;Total.forest&quot;, &quot;Marsh&quot;, &quot;Waterbodies&quot;,
+    &quot;Open&quot;, &quot;SnowDays&quot;, &quot;JanTemp&quot;)
+pairs2(un[, PPV2])</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q2-3.png" width="672" /></p>
+<pre class="r"><code># Open habitats mostly Arable land (the two are therefore redundant)
+# Non-arable is mostly forest (not to be used together)
+# -&gt; instead of Open/Arable, use Total.forest or ConForest + DeciMixFor
+# SnowDays and JanTemp highly correlated -&gt; use only one
+# Pastures, Marsh and Waterbodies skewed -&gt; try log-transform
+
+un$LogPastures&lt;- log(un$Pastures + 1)
+un$LogMarsh&lt;- log(un$Marsh + 1)
+un$LogWaterbodies&lt;- log(un$Waterbodies + 1)
+
+PPV2&lt;- c(&quot;Total.arable&quot;, &quot;LogPastures&quot;, &quot;Total.forest&quot;, &quot;LogMarsh&quot;,
+    &quot;LogWaterbodies&quot;, &quot;Open&quot;, &quot;SnowDays&quot;, &quot;JanTemp&quot;)
+pairs2(un[, PPV2])</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q2-4.png" width="672" /></p>
+<pre class="r"><code># Log of Marsh and Waterbodies still skewed -&gt; use log for now and hope for the best.
+# stronger transformations are possible but the stronger the less it reflects
+# the original variable -&gt; risk of losing some interpretability!
+
+# My set of candidate predictors
+CP&lt;- c(&quot;DeciMixFor&quot;, &quot;ConForest&quot;, &quot;LogPastures&quot;, &quot;LogMarsh&quot;, &quot;LogWaterbodies&quot;,
+    &quot;JanTemp&quot;)</code></pre>
+<p> </p>
+<p>3. Using your set of candidate predictors, do an extra piece of data exploration to look relationships with wild boars abundance index. Do you need to transform the response? Any other transformation required?</p>
+<p>Hint: my set of candidate predictors includes <code>c("DeciMixFor", "ConForest", "LogPastures", "LogMarsh", "LogWaterbodies",    "JanTemp")</code>, but there is absolutely no requirement for you to use the same ones. The most important thing is that you have a rationale for whichever candidate predictors you decide to use.</p>
+<p> </p>
+<pre class="r"><code>hist(un[, &quot;Wildboar&quot;], nclass= 25)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q3-1.png" width="672" /></p>
+<pre class="r"><code># positively skewed and mean close to zero
+# -&gt; log transform to avoid risk of negative predictions
+
+un$logWB&lt;- log(un$Wildboar)
+# one obs with zero value (returning a -Inf)
+# One approach is to use log(un$Wildboar + 1) for example,
+# or we can replace the zero by something close to
+# the smallest non-zero value in the data
+min(un$Wildboar[un$Wildboar!=0])
+## [1] 0.033
+# smallest non-zero value is 0.033, so we could use 0.01 for example
+un$logWB[un$Wildboar==0]&lt;- log(0.01) 
+
+hist(un[, &quot;logWB&quot;], nclass= 25)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q3-2.png" width="672" /></p>
+<pre class="r"><code># Looking better
+
+# Relationship between wild boar and selected predictors (bottom row):
+pairs2(un[, c(&quot;DeciMixFor&quot;, &quot;ConForest&quot;, &quot;LogPastures&quot;, &quot;LogMarsh&quot;,
+    &quot;LogWaterbodies&quot;, &quot;JanTemp&quot;, &quot;logWB&quot;)])</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q3-3.png" width="672" /></p>
+<pre class="r"><code># suggestion of negative effect of deciduous forests
+# suggestion of positive effect of coniferous forests
+# suggestion of positive effect of water bodies
+# suggestion of positive effect of January temperature
+
+# no obvious transformation that would help</code></pre>
+<p> </p>
+<p>4. (Optional) Create maps of the candidate predictors. Hint: you could use the ‘symbols’ function (see lecture slides), remembering to set the maximum symbol size with ‘inches =’. Which of these variables vary at the broadest and smallest spatial scales?</p>
+<p> </p>
+<pre class="r"><code>
+par(mfrow= c(3, 2))
+# par(mfrow= c(2, 3))
+max.size&lt;- 0.05
+symbols(x= un$LONG, y= un$LAT, circles= un$DeciMixFor, 
+    bg= grey(0.3), inches= max.size, main= &quot;DeciMixFor&quot;)
+symbols(x= un$LONG, y= un$LAT, circles= un$ConForest, 
+    bg= grey(0.3), inches= max.size, main= &quot;ConForest&quot;)
+symbols(x= un$LONG, y= un$LAT, circles= un$LogPastures, 
+    bg= grey(0.3), inches= max.size, main= &quot;LogPastures&quot;)
+symbols(x= un$LONG, y= un$LAT, circles= un$LogMarsh, 
+    bg= grey(0.3), inches= max.size, main= &quot;LogMarsh&quot;)
+symbols(x= un$LONG, y= un$LAT, circles= un$LogWaterbodies, 
+    bg= grey(0.3), inches= max.size, main= &quot;LogWaterbodies&quot;)
+symbols(x= un$LONG, y= un$LAT, circles= abs(un$JanTemp), 
+    bg= grey(0.3), inches= max.size, main= &quot;JanTemp&quot;)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q4-1.png" width="768" /></p>
+<pre class="r"><code>
+# JanTemp varies at very broad scale (very smooth
+# change at national scale)
+
+# Forest and Pastures vary at medium scales (some 
+# clear regional patterns, not as smooth as JanTemp)
+
+# Water-related habitats vary very locally</code></pre>
+<p> </p>
+<p>5. Fit a GLS model with the predictors of interest (include only additive effects unless you have a theory for why a particular interaction would be relevant to include). Are all terms significant? Plot the empirical variogram of the residuals of the model. Based on lecture slide #18, what might be a sensible variogram model for fitting this empirical variogram? What might be sensible starting values for the range and the nugget?</p>
+<p> </p>
+<pre class="r"><code>
+M1&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, data= un)
+# DeciMixFor * ConForest asks if the (negative?) mixed forests effect
+# depends on the availability of coniferous forests
+
+summary(M1)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##       AIC      BIC   logLik
+##   971.262 1008.325 -476.631
+## 
+## Coefficients:
+##                           Value  Std.Error   t-value p-value
+## (Intercept)          -1.2702129 0.21883218 -5.804507  0.0000
+## DeciMixFor            0.0100077 0.00232590  4.302716  0.0000
+## ConForest             0.0162631 0.00350425  4.640977  0.0000
+## LogPastures           0.1982287 0.05274927  3.757943  0.0002
+## LogMarsh              0.2423792 0.08345252  2.904397  0.0039
+## LogWaterbodies        0.1477794 0.04558756  3.241661  0.0013
+## JanTemp               0.5331575 0.03753190 14.205450  0.0000
+## DeciMixFor:ConForest  0.0006243 0.00009687  6.445269  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.707                                          
+## ConForest            -0.693  0.820                                   
+## LogPastures          -0.665  0.309  0.248                            
+## LogMarsh              0.157 -0.082 -0.030 -0.246                     
+## LogWaterbodies       -0.178 -0.018 -0.087  0.106 -0.278              
+## JanTemp               0.247  0.151  0.003  0.147  0.107 -0.109       
+## DeciMixFor:ConForest  0.090 -0.393 -0.495  0.028  0.067  0.011  0.108
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -4.3569615 -0.5647938  0.1026692  0.6525179  4.1966797 
+## 
+## Residual standard error: 0.6419848 
+## Degrees of freedom: 462 total; 454 residual
+
+plot(Variogram(M1, nint= 25, form= ~ LONG + LAT, resType= &quot;pearson&quot;), 
+        smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q5-1.png" width="672" /></p>
+<pre class="r"><code>
+# Could use a range of 3 to 4 and a nugget of 0.4, as starting points</code></pre>
+<p> </p>
+<p>6. Re-fit the GLS model, including potential spatial correlation structure. Hint: Remember to use the correct fitting method for selecting covariance strucures, and to check that estimated range and nugget are a sensible fit to the data. What structure is best according to AIC? <strong>If model fitting is too slow on your computer, use ‘form= ~ LONG + LAT | Quadrant’ to speed things up.</strong> (Note that this will probably affect the range estimate, as the 4 regions over which the covariance is calculated will be smaller: this is an approximation in order to gain some speed)</p>
+<p> </p>
+<pre class="r"><code>
+# let&#39;s start with an initial value of the range lower than suggested 
+# by the empirical variogram.
+# If all is well, this should not make a difference to the model 
+# estimates of the range and nugget coefficients:
+M1.corSpher.1&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corSpher(value= c(1, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corSpher.1)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   710.0677 755.3668 -344.0339
+## 
+## Correlation Structure: Spherical spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 2.8509757 0.1920928 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4926926 0.4179548 -3.571422  0.0004
+## DeciMixFor            0.0077522 0.0020058  3.864851  0.0001
+## ConForest             0.0094650 0.0029277  3.232950  0.0013
+## LogPastures           0.1129229 0.0437201  2.582858  0.0101
+## LogMarsh              0.1923512 0.0628708  3.059468  0.0023
+## LogWaterbodies       -0.0093698 0.0387432 -0.241844  0.8090
+## JanTemp               0.2290546 0.1097072  2.087873  0.0374
+## DeciMixFor:ConForest  0.0006299 0.0000764  8.243814  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.339                                          
+## ConForest            -0.300  0.765                                   
+## LogPastures          -0.316  0.306  0.249                            
+## LogMarsh              0.020 -0.146 -0.091 -0.167                     
+## LogWaterbodies       -0.089  0.075  0.035  0.079 -0.225              
+## JanTemp               0.683  0.051  0.029  0.016 -0.033  0.003       
+## DeciMixFor:ConForest -0.045 -0.247 -0.407  0.135  0.091 -0.009  0.000
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.8097146 -0.4763658  0.2262476  0.6480894  2.4958701 
+## 
+## Residual standard error: 0.8135662 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corSpher.1, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-1.png" width="672" /></p>
+<pre class="r"><code>
+# then one which is close but slightly under, maybe:
+M1.corSpher.2&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corSpher(value= c(2, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corSpher.2)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   707.8751 753.1742 -342.9376
+## 
+## Correlation Structure: Spherical spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 6.6337589 0.1052731 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.5357767 0.6966628 -2.204476  0.0280
+## DeciMixFor            0.0077249 0.0020056  3.851751  0.0001
+## ConForest             0.0093060 0.0029177  3.189526  0.0015
+## LogPastures           0.1134291 0.0435564  2.604191  0.0095
+## LogMarsh              0.1843244 0.0630104  2.925300  0.0036
+## LogWaterbodies       -0.0140492 0.0387382 -0.362671  0.7170
+## JanTemp               0.1957790 0.1202063  1.628692  0.1041
+## DeciMixFor:ConForest  0.0006296 0.0000764  8.243563  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.229                                          
+## ConForest            -0.195  0.765                                   
+## LogPastures          -0.190  0.301  0.244                            
+## LogMarsh              0.004 -0.140 -0.087 -0.168                     
+## LogWaterbodies       -0.052  0.074  0.030  0.079 -0.222              
+## JanTemp               0.503  0.027  0.020  0.004 -0.032  0.017       
+## DeciMixFor:ConForest -0.039 -0.244 -0.403  0.137  0.091 -0.007 -0.005
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -2.8149802 -0.3949059  0.1543825  0.4657167  1.7262390 
+## 
+## Residual standard error: 1.121622 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corSpher.2, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-2.png" width="672" /></p>
+<pre class="r"><code>
+# then one which is close but slightly higher, maybe:
+M1.corSpher.4&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corSpher(value= c(4, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corSpher.4)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   707.4422 752.7413 -342.7211
+## 
+## Correlation Structure: Spherical spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 5.3090082 0.1292326 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.5177216 0.5943585 -2.553545  0.0110
+## DeciMixFor            0.0076682 0.0020060  3.822720  0.0002
+## ConForest             0.0092326 0.0029173  3.164800  0.0017
+## LogPastures           0.1122517 0.0435865  2.575376  0.0103
+## LogMarsh              0.1847893 0.0630025  2.933048  0.0035
+## LogWaterbodies       -0.0122897 0.0387373 -0.317259  0.7512
+## JanTemp               0.2005573 0.1182154  1.696542  0.0905
+## DeciMixFor:ConForest  0.0006318 0.0000763  8.280403  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.259                                          
+## ConForest            -0.221  0.766                                   
+## LogPastures          -0.223  0.301  0.244                            
+## LogMarsh              0.006 -0.141 -0.088 -0.168                     
+## LogWaterbodies       -0.061  0.072  0.029  0.079 -0.223              
+## JanTemp               0.555  0.028  0.019  0.004 -0.032  0.014       
+## DeciMixFor:ConForest -0.042 -0.244 -0.403  0.138  0.090 -0.007 -0.004
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.1135288 -0.4369214  0.1635985  0.5089215  1.9171256 
+## 
+## Residual standard error: 1.0135 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corSpher.4, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F, ylim= c(0, 1.2))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-3.png" width="672" /></p>
+<pre class="r"><code>
+# then end with an initial value of the range much larger than suggested
+# by the empirical variogram, to explore how sensitive the estimate is:
+M1.corSpher.10&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corSpher(value= c(10, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+# summary(M1.corSpher.10)
+plot(Variogram(M1.corSpher.10, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F, ylim= c(0, 1.2))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-4.png" width="672" /></p>
+<pre class="r"><code># starting values 4 or greater for the range lead to the same range
+# estimate (5.31), which is a good thing.
+# But lower starting values (1 or 2) lead to different estimates, 
+# so there is a high sensitivity to starting values overall, 
+# which is a bit annoying. 
+# This means that there is perhaps no unique way of fitting
+# this model to the data. Could be because the assumptions of the Spherical
+# model are not a very good match with the pattern in the data.
+
+# For lack of a better approach, we&#39;ll ask AIC what fits the
+# data best among the spherical variogram models:
+kable(AIC(M1.corSpher.1, M1.corSpher.2, M1.corSpher.4, M1.corSpher.10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M1.corSpher.1</td>
+<td align="right">11</td>
+<td align="right">710.0677</td>
+</tr>
+<tr class="even">
+<td align="left">M1.corSpher.2</td>
+<td align="right">11</td>
+<td align="right">707.8751</td>
+</tr>
+<tr class="odd">
+<td align="left">M1.corSpher.4</td>
+<td align="right">11</td>
+<td align="right">707.4422</td>
+</tr>
+<tr class="even">
+<td align="left">M1.corSpher.10</td>
+<td align="right">11</td>
+<td align="right">707.4422</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># let&#39;s choose starting values set &quot;M1.corSpher.4&quot;
+
+
+M1.corExp.2&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corExp(value= c(2, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corExp.2)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   706.7355 752.0345 -342.3677
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 1.8324076 0.1914377 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4705699 0.4993502 -2.944967  0.0034
+## DeciMixFor            0.0077358 0.0020057  3.856897  0.0001
+## ConForest             0.0093884 0.0029249  3.209813  0.0014
+## LogPastures           0.1140164 0.0436842  2.610013  0.0094
+## LogMarsh              0.1863401 0.0630464  2.955603  0.0033
+## LogWaterbodies       -0.0134298 0.0388197 -0.345953  0.7295
+## JanTemp               0.2269141 0.1121061  2.024101  0.0435
+## DeciMixFor:ConForest  0.0006274 0.0000765  8.200901  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.297                                          
+## ConForest            -0.259  0.763                                   
+## LogPastures          -0.269  0.302  0.246                            
+## LogMarsh              0.015 -0.143 -0.088 -0.168                     
+## LogWaterbodies       -0.074  0.073  0.031  0.077 -0.223              
+## JanTemp               0.606  0.041  0.026  0.008 -0.031  0.009       
+## DeciMixFor:ConForest -0.044 -0.247 -0.405  0.136  0.091 -0.007 -0.003
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.8417653 -0.5113092  0.2005644  0.6212763  2.4638447 
+## 
+## Residual standard error: 0.812718 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corExp.2, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-5.png" width="672" /></p>
+<pre class="r"><code>
+M1.corExp.10&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corExp(value= c(10, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corExp.10)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   706.7355 752.0345 -342.3677
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 1.8324101 0.1914382 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4705702 0.4993501 -2.944968  0.0034
+## DeciMixFor            0.0077358 0.0020057  3.856898  0.0001
+## ConForest             0.0093884 0.0029249  3.209812  0.0014
+## LogPastures           0.1140164 0.0436842  2.610014  0.0094
+## LogMarsh              0.1863400 0.0630464  2.955601  0.0033
+## LogWaterbodies       -0.0134298 0.0388197 -0.345952  0.7295
+## JanTemp               0.2269141 0.1121061  2.024100  0.0435
+## DeciMixFor:ConForest  0.0006274 0.0000765  8.200902  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.297                                          
+## ConForest            -0.259  0.763                                   
+## LogPastures          -0.269  0.302  0.246                            
+## LogMarsh              0.015 -0.143 -0.088 -0.168                     
+## LogWaterbodies       -0.074  0.073  0.031  0.077 -0.223              
+## JanTemp               0.606  0.041  0.026  0.008 -0.031  0.009       
+## DeciMixFor:ConForest -0.044 -0.247 -0.405  0.136  0.091 -0.007 -0.003
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.8417672 -0.5113096  0.2005646  0.6212767  2.4638459 
+## 
+## Residual standard error: 0.8127176 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corExp.10, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-6.png" width="672" /></p>
+<pre class="r"><code>
+# with the exponential variogram the best estimates of the range and nugget
+#  don&#39;t depend on the choice of initial values, whether small or 
+# (unrealistically) large: that&#39;s more reassuring that the estimate is robust
+
+kable(AIC(M1.corExp.2, M1.corExp.10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M1.corExp.2</td>
+<td align="right">11</td>
+<td align="right">706.7355</td>
+</tr>
+<tr class="even">
+<td align="left">M1.corExp.10</td>
+<td align="right">11</td>
+<td align="right">706.7355</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># no difference
+
+
+M1.corLin.4&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corLin(value= c(4, 0.3), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corLin.4)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   750.4282 795.7272 -364.2141
+## 
+## Correlation Structure: Linear spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 3.7703391 0.3897716 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.2992541 0.4421200 -2.938691  0.0035
+## DeciMixFor            0.0096642 0.0020304  4.759732  0.0000
+## ConForest             0.0088187 0.0029965  2.943006  0.0034
+## LogPastures           0.1316809 0.0435776  3.021758  0.0027
+## LogMarsh              0.1755594 0.0658691  2.665277  0.0080
+## LogWaterbodies        0.0324646 0.0389996  0.832433  0.4056
+## JanTemp               0.3374399 0.1024637  3.293263  0.0011
+## DeciMixFor:ConForest  0.0006420 0.0000789  8.137479  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.395                                          
+## ConForest            -0.309  0.800                                   
+## LogPastures          -0.345  0.252  0.242                            
+## LogMarsh              0.028 -0.141 -0.057 -0.200                     
+## LogWaterbodies       -0.112  0.061  0.023  0.137 -0.215              
+## JanTemp               0.656 -0.036  0.008 -0.034 -0.013 -0.030       
+## DeciMixFor:ConForest -0.061 -0.278 -0.417  0.107  0.069  0.034  0.020
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.9907832 -0.5380481  0.1179608  0.5872520  3.0231544 
+## 
+## Residual standard error: 0.7320456 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corLin.4, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-7.png" width="672" /></p>
+<pre class="r"><code>
+# the following does not converge:
+#M1.corLin.5&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+#       LogWaterbodies + JanTemp, correlation= corLin(value= c(5, 0.3), 
+#       form = ~ LONG + LAT, nugget= T), data= un)
+#summary(M1.corLin.5)
+#plot(Variogram(M1.corLin.5, nint= 25, form= ~ LONG + LAT,
+#       resType= &quot;pearson&quot;), smooth= F)
+
+#kable(AIC(M1.corLin.4, M1.corLin.5))
+# no difference -&gt; choose either
+
+M1.corRatio.4&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corRatio(value= c(4, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corRatio.4)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   710.2425 755.5416 -344.1213
+## 
+## Correlation Structure: Rational quadratic spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 0.7673066 0.3383204 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4552552 0.3799627 -3.829995  0.0001
+## DeciMixFor            0.0073509 0.0020042  3.667709  0.0003
+## ConForest             0.0090847 0.0029106  3.121225  0.0019
+## LogPastures           0.1167072 0.0433279  2.693582  0.0073
+## LogMarsh              0.1970247 0.0637018  3.092922  0.0021
+## LogWaterbodies       -0.0139720 0.0388043 -0.360062  0.7190
+## JanTemp               0.2318571 0.1017497  2.278700  0.0231
+## DeciMixFor:ConForest  0.0006325 0.0000766  8.258162  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.367                                          
+## ConForest            -0.333  0.760                                   
+## LogPastures          -0.346  0.293  0.236                            
+## LogMarsh              0.027 -0.141 -0.088 -0.165                     
+## LogWaterbodies       -0.099  0.070  0.027  0.078 -0.223              
+## JanTemp               0.687  0.054  0.022  0.015 -0.029 -0.001       
+## DeciMixFor:ConForest -0.051 -0.241 -0.396  0.141  0.085 -0.008  0.000
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -4.4546635 -0.5699148  0.2446595  0.7493908  2.8925466 
+## 
+## Residual standard error: 0.6966094 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corRatio.4, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-8.png" width="672" /></p>
+<pre class="r"><code>
+M1.corRatio.10&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corRatio(value= c(10, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un)
+summary(M1.corRatio.10)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   710.2425 755.5416 -344.1213
+## 
+## Correlation Structure: Rational quadratic spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 0.7673065 0.3383204 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4552552 0.3799627 -3.829995  0.0001
+## DeciMixFor            0.0073509 0.0020042  3.667709  0.0003
+## ConForest             0.0090847 0.0029106  3.121225  0.0019
+## LogPastures           0.1167072 0.0433279  2.693582  0.0073
+## LogMarsh              0.1970247 0.0637018  3.092922  0.0021
+## LogWaterbodies       -0.0139720 0.0388043 -0.360062  0.7190
+## JanTemp               0.2318571 0.1017497  2.278700  0.0231
+## DeciMixFor:ConForest  0.0006325 0.0000766  8.258162  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.367                                          
+## ConForest            -0.333  0.760                                   
+## LogPastures          -0.346  0.293  0.236                            
+## LogMarsh              0.027 -0.141 -0.088 -0.165                     
+## LogWaterbodies       -0.099  0.070  0.027  0.078 -0.223              
+## JanTemp               0.687  0.054  0.022  0.015 -0.029 -0.001       
+## DeciMixFor:ConForest -0.051 -0.241 -0.396  0.141  0.085 -0.008  0.000
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -4.4546635 -0.5699148  0.2446595  0.7493908  2.8925466 
+## 
+## Residual standard error: 0.6966094 
+## Degrees of freedom: 462 total; 454 residual
+plot(Variogram(M1.corRatio.10, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q6-9.png" width="672" /></p>
+<pre class="r"><code>
+kable(AIC(M1.corRatio.4, M1.corRatio.10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M1.corRatio.4</td>
+<td align="right">11</td>
+<td align="right">710.2425</td>
+</tr>
+<tr class="even">
+<td align="left">M1.corRatio.10</td>
+<td align="right">11</td>
+<td align="right">710.2425</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># no difference -&gt; choose either
+
+# now compare the different structures, using the best estimates for each one:
+kable(AIC(M1.corSpher.4, M1.corExp.2, M1.corLin.4, M1.corRatio.4))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M1.corSpher.4</td>
+<td align="right">11</td>
+<td align="right">707.4422</td>
+</tr>
+<tr class="even">
+<td align="left">M1.corExp.2</td>
+<td align="right">11</td>
+<td align="right">706.7355</td>
+</tr>
+<tr class="odd">
+<td align="left">M1.corLin.4</td>
+<td align="right">11</td>
+<td align="right">750.4282</td>
+</tr>
+<tr class="even">
+<td align="left">M1.corRatio.4</td>
+<td align="right">11</td>
+<td align="right">710.2425</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># corExp wins</code></pre>
+<p> </p>
+<p>7. Apply model selection (using AIC?) to the best GLS model above. Remember to select the appropriate model fitting method for the fixed part of the model.</p>
+<p> </p>
+<pre class="r"><code>
+M1.corExp.2.ML&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + 
+        LogWaterbodies + JanTemp, correlation= corExp(value= c(2, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un, method= &quot;ML&quot;)
+summary(M1.corExp.2.ML)
+## Generalized least squares fit by maximum likelihood
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   651.7791 697.2703 -314.8896
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 1.2944245 0.2341336 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4268889 0.4215759 -3.384654  0.0008
+## DeciMixFor            0.0077722 0.0020068  3.872960  0.0001
+## ConForest             0.0094522 0.0029307  3.225252  0.0013
+## LogPastures           0.1145128 0.0437705  2.616212  0.0092
+## LogMarsh              0.1871456 0.0631187  2.964980  0.0032
+## LogWaterbodies       -0.0123964 0.0388777 -0.318857  0.7500
+## JanTemp               0.2473986 0.1066861  2.318939  0.0208
+## DeciMixFor:ConForest  0.0006266 0.0000766  8.177563  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh LgWtrb JanTmp
+## DeciMixFor           -0.342                                          
+## ConForest            -0.301  0.762                                   
+## LogPastures          -0.319  0.303  0.247                            
+## LogMarsh              0.022 -0.144 -0.088 -0.169                     
+## LogWaterbodies       -0.091  0.073  0.032  0.076 -0.224              
+## JanTemp               0.664  0.050  0.030  0.011 -0.030  0.002       
+## DeciMixFor:ConForest -0.047 -0.249 -0.407  0.135  0.090 -0.007 -0.002
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -4.3039111 -0.5589606  0.2116604  0.7086296  2.8360513 
+## 
+## Residual standard error: 0.7205321 
+## Degrees of freedom: 462 total; 454 residual
+
+drop1(M1.corExp.2.ML, test= &quot;Chisq&quot;)
+## Single term deletions
+## 
+## Model:
+## logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + LogWaterbodies + 
+##     JanTemp
+##                      Df    AIC    LRT  Pr(&gt;Chi)    
+## &lt;none&gt;                  651.78                     
+## LogPastures           1 656.69  6.910  0.008570 ** 
+## LogMarsh              1 658.50  8.723  0.003142 ** 
+## LogWaterbodies        1 649.88  0.103  0.748294    
+## JanTemp               1 654.32  4.543  0.033062 *  
+## DeciMixFor:ConForest  1 712.90 63.122 1.943e-15 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+# remove LogWaterbodies
+
+M2.corExp.2.ML&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh +
+        JanTemp, correlation= corExp(value= c(2, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un, method= &quot;ML&quot;)
+summary(M2.corExp.2.ML)
+## Generalized least squares fit by maximum likelihood
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + JanTemp 
+##   Data: un 
+##        AIC      BIC   logLik
+##   649.8821 691.2377 -314.941
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 1.2866580 0.2357287 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4381574 0.4179880 -3.440667  0.0006
+## DeciMixFor            0.0078202 0.0019996  3.910852  0.0001
+## ConForest             0.0094815 0.0029267  3.239700  0.0013
+## LogPastures           0.1155984 0.0436046  2.651063  0.0083
+## LogMarsh              0.1825845 0.0614641  2.970588  0.0031
+## JanTemp               0.2479360 0.1064259  2.329660  0.0203
+## DeciMixFor:ConForest  0.0006265 0.0000766  8.183979  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh JanTmp
+## DeciMixFor           -0.338                                   
+## ConForest            -0.300  0.762                            
+## LogPastures          -0.315  0.299  0.246                     
+## LogMarsh              0.002 -0.132 -0.083 -0.156              
+## JanTemp               0.668  0.050  0.030  0.011 -0.031       
+## DeciMixFor:ConForest -0.048 -0.249 -0.407  0.136  0.091 -0.002
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -4.3072491 -0.5579686  0.2171669  0.6995624  2.8576838 
+## 
+## Residual standard error: 0.7186555 
+## Degrees of freedom: 462 total; 455 residual
+
+drop1(M2.corExp.2.ML, test= &quot;Chisq&quot;)
+## Single term deletions
+## 
+## Model:
+## logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + JanTemp
+##                      Df    AIC    LRT  Pr(&gt;Chi)    
+## &lt;none&gt;                  649.88                     
+## LogPastures           1 654.96  7.079  0.007798 ** 
+## LogMarsh              1 656.63  8.749  0.003097 ** 
+## JanTemp               1 652.46  4.576  0.032431 *  
+## DeciMixFor:ConForest  1 710.97 63.086 1.979e-15 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+# no more terms to delete</code></pre>
+<p> </p>
+<p>8. (Optional, if you have plenty of time left) Re-fit your minimum adequate model with REML and test alternative covariance structures, to be sure that the change in the fixed part of the model hasn’t changed the residuals structure. Make any required adjustment to the random or fixed parts.</p>
+<p> </p>
+<pre class="r"><code>
+# no blocking performed, to check that the covariance structure is appropriate:
+M2.corExp.2.REML&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh +
+        JanTemp, correlation= corExp(value= c(2, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un, method= &quot;REML&quot;)
+summary(M2.corExp.2.REML)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   700.1942 741.3972 -340.0971
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##    range   nugget 
+## 1.818716 0.193035 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4827813 0.4951736 -2.994468  0.0029
+## DeciMixFor            0.0077878 0.0019985  3.896803  0.0001
+## ConForest             0.0094192 0.0029209  3.224721  0.0014
+## LogPastures           0.1152019 0.0435150  2.647408  0.0084
+## LogMarsh              0.1814143 0.0614022  2.954527  0.0033
+## JanTemp               0.2275971 0.1118667  2.034539  0.0425
+## DeciMixFor:ConForest  0.0006273 0.0000764  8.207169  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh JanTmp
+## DeciMixFor           -0.294                                   
+## ConForest            -0.258  0.763                            
+## LogPastures          -0.266  0.298  0.245                     
+## LogMarsh             -0.002 -0.130 -0.083 -0.155              
+## JanTemp               0.610  0.041  0.026  0.007 -0.030       
+## DeciMixFor:ConForest -0.045 -0.247 -0.405  0.137  0.091 -0.003
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.8511006 -0.5063345  0.2078739  0.6282341  2.4892678 
+## 
+## Residual standard error: 0.8090463 
+## Degrees of freedom: 462 total; 455 residual
+plot(Variogram(M2.corExp.2.REML, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F, ylim= c(0, 1.5))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q8-1.png" width="672" /></p>
+<pre class="r"><code>
+M2.corSpher.4.REML&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh +
+        JanTemp, correlation= corSpher(value= c(4, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un, method= &quot;REML&quot;)
+summary(M2.corSpher.4.REML)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   700.8775 742.0805 -340.4388
+## 
+## Correlation Structure: Spherical spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 5.3024471 0.1299472 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.5290073 0.5915630 -2.584690  0.0101
+## DeciMixFor            0.0077147 0.0019989  3.859516  0.0001
+## ConForest             0.0092577 0.0029134  3.177670  0.0016
+## LogPastures           0.1133785 0.0434081  2.611922  0.0093
+## LogMarsh              0.1802516 0.0613684  2.937203  0.0035
+## JanTemp               0.2011586 0.1180511  1.703997  0.0891
+## DeciMixFor:ConForest  0.0006318 0.0000762  8.288925  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh JanTmp
+## DeciMixFor           -0.256                                   
+## ConForest            -0.220  0.766                            
+## LogPastures          -0.220  0.297  0.243                     
+## LogMarsh             -0.007 -0.129 -0.084 -0.155              
+## JanTemp               0.557  0.027  0.019  0.002 -0.029       
+## DeciMixFor:ConForest -0.042 -0.244 -0.403  0.139  0.091 -0.003
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.1164894 -0.4333656  0.1516349  0.5101114  1.9330953 
+## 
+## Residual standard error: 1.010555 
+## Degrees of freedom: 462 total; 455 residual
+plot(Variogram(M2.corSpher.4.REML, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F, ylim= c(0, 1.5))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q8-2.png" width="672" /></p>
+<pre class="r"><code># seems a lot better for the estimated sill, worse for the fit at low distances
+
+AIC(M2.corExp.2.REML, M2.corSpher.4.REML)
+##                    df      AIC
+## M2.corExp.2.REML   10 700.1942
+## M2.corSpher.4.REML 10 700.8775
+# AIC still slightly favours exponential
+# (not a very meaningful difference, we could pick either covariance model)
+
+summary(M2.corExp.2.REML)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarsh + JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   700.1942 741.3972 -340.0971
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##    range   nugget 
+## 1.818716 0.193035 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4827813 0.4951736 -2.994468  0.0029
+## DeciMixFor            0.0077878 0.0019985  3.896803  0.0001
+## ConForest             0.0094192 0.0029209  3.224721  0.0014
+## LogPastures           0.1152019 0.0435150  2.647408  0.0084
+## LogMarsh              0.1814143 0.0614022  2.954527  0.0033
+## JanTemp               0.2275971 0.1118667  2.034539  0.0425
+## DeciMixFor:ConForest  0.0006273 0.0000764  8.207169  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsh JanTmp
+## DeciMixFor           -0.294                                   
+## ConForest            -0.258  0.763                            
+## LogPastures          -0.266  0.298  0.245                     
+## LogMarsh             -0.002 -0.130 -0.083 -0.155              
+## JanTemp               0.610  0.041  0.026  0.007 -0.030       
+## DeciMixFor:ConForest -0.045 -0.247 -0.405  0.137  0.091 -0.003
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.8511006 -0.5063345  0.2078739  0.6282341  2.4892678 
+## 
+## Residual standard error: 0.8090463 
+## Degrees of freedom: 462 total; 455 residual
+
+M2.corExp.2.ML&lt;- update(M2.corExp.2.REML, method= &quot;ML&quot;)
+kable(drop1(M2.corExp.2.ML))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><none></td>
+<td align="right">NA</td>
+<td align="right">649.8821</td>
+</tr>
+<tr class="even">
+<td align="left">LogPastures</td>
+<td align="right">1</td>
+<td align="right">654.9614</td>
+</tr>
+<tr class="odd">
+<td align="left">LogMarsh</td>
+<td align="right">1</td>
+<td align="right">656.6314</td>
+</tr>
+<tr class="even">
+<td align="left">JanTemp</td>
+<td align="right">1</td>
+<td align="right">652.4576</td>
+</tr>
+<tr class="odd">
+<td align="left">DeciMixFor:ConForest</td>
+<td align="right">1</td>
+<td align="right">710.9683</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>
+# minimum adequate model unchanged</code></pre>
+<p> </p>
+<p>9. Validate your minimum adequate model, using the usual graphs and maps of the residuals as in the lecture. For which plot should you use which type of residuals? Is everything looking good?</p>
+<p> </p>
+<pre class="r"><code>
+# We want the normalized residuals primarily, to see 
+# if the model was successful at capturing all the
+# residual spatial autocorrelation (little should remain)
+
+# We may want to look at Pearson residuals as well, to see
+# the spatial autocorrelation not accounted for by
+# the predictors in the model
+
+plot(Variogram(M2.corExp.2.REML, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;pearson&quot;), smooth= F, ylim= c(0, 1.5))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q9a-1.png" width="768" /></p>
+<pre class="r"><code>plot(Variogram(M2.corExp.2.REML, nint= 25, form= ~ LONG + LAT,
+        resType= &quot;normalized&quot;), smooth= F, ylim= c(0, 1.5))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q9a-2.png" width="768" /></p>
+<pre class="r"><code>
+par(mfrow= c(1, 2))
+M2.corExp.2.REML.res.p&lt;-resid(M2.corExp.2.REML, type= &quot;pearson&quot;)
+
+symbols(x= un$LON, y= un$LAT, circles= abs(M2.corExp.2.REML.res.p), 
+    inches= 0.17, bg= c(&quot;blue3&quot;, &quot;red3&quot;)[(M2.corExp.2.REML.res.p &gt; 0) + 1])
+
+M2.corExp.2.REML.res.n&lt;-resid(M2.corExp.2.REML, type= &quot;normalized&quot;)
+
+symbols(x= un$LON, y= un$LAT, circles= abs(M2.corExp.2.REML.res.n), 
+    inches= 0.17, bg= c(&quot;blue3&quot;, &quot;red3&quot;)[(M2.corExp.2.REML.res.n &gt; 0) + 1])</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q9a-3.png" width="768" /></p>
+<pre class="r"><code>
+# residuals vs fitted and QQplot
+plot(resid(M2.corExp.2.REML, type= &quot;normalized&quot;) ~ fitted(M2.corExp.2.REML))
+abline(h= 0, col= 2)
+
+qqnorm(resid(M2.corExp.2.REML, type= &quot;normalized&quot;))
+qqline(resid(M2.corExp.2.REML, type= &quot;normalized&quot;))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q9a-4.png" width="768" /></p>
+<p> </p>
+<pre class="r"><code>
+par(mfrow= c(3, 2))
+plot(resid(M2.corExp.2.REML, type= &quot;pearson&quot;) ~ un$DeciMixFor); abline(h= 0, col= 2)
+# slight non-linearity maybe
+
+plot(resid(M2.corExp.2.REML, type= &quot;pearson&quot;) ~ un$ConForest); abline(h= 0, col= 2)
+# probable non-linearity (slight)
+
+plot(resid(M2.corExp.2.REML, type= &quot;pearson&quot;) ~ un$LogPastures); abline(h= 0, col= 2)
+# looks fine
+
+plot(resid(M2.corExp.2.REML, type= &quot;pearson&quot;) ~ un$LogMarsh); abline(h= 0, col= 2)
+# Likely over-influential values due to larger Marshes
+
+plot(resid(M2.corExp.2.REML, type= &quot;pearson&quot;) ~ un$JanTemp); abline(h= 0, col= 2)
+# probable non-linearity (slight)
+
+# One possible way of addressing this (being creative today!)
+# censor (cap) LogMarshes values to a max of 1 
+# (i.e., turn every value greater than 1 into 1)
+# Not the most statistically elegant transformations (avoid if
+# better available) but hopefully better than misleading
+# conclusions due to overly influential observations
+un$LogMarshCensored&lt;- ifelse(un$LogMarsh &lt; 1, un$LogMarsh, 1)
+
+# if you are unsure about what the above command does, try this:
+example&lt;- 1:10
+example
+##  [1]  1  2  3  4  5  6  7  8  9 10
+example &lt; 6
+##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE
+ifelse(example &lt; 6, example, 99)
+##  [1]  1  2  3  4  5 99 99 99 99 99
+# when test is true, takes value of example at the same position
+# when test is false, takes 99
+
+M3.corExp.2.REML&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures + LogMarshCensored +
+        JanTemp, correlation= corExp(value= c(2, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un, method= &quot;REML&quot;)
+summary(M3.corExp.2.REML)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + LogMarshCensored +      JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   707.0709 748.2739 -343.5354
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 1.9653641 0.1996528 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.5017022 0.5109528 -2.939024  0.0035
+## DeciMixFor            0.0085202 0.0020018  4.256230  0.0000
+## ConForest             0.0100066 0.0029407  3.402773  0.0007
+## LogPastures           0.1282411 0.0441742  2.903076  0.0039
+## LogMarshCensored      0.0829257 0.0999147  0.829964  0.4070
+## JanTemp               0.2322551 0.1130058  2.055250  0.0404
+## DeciMixFor:ConForest  0.0006133 0.0000770  7.966461  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr LgMrsC JanTmp
+## DeciMixFor           -0.293                                   
+## ConForest            -0.254  0.764                            
+## LogPastures          -0.254  0.282  0.235                     
+## LogMarshCensored     -0.028 -0.021 -0.028 -0.190              
+## JanTemp               0.602  0.035  0.025  0.004 -0.016       
+## DeciMixFor:ConForest -0.046 -0.238 -0.401  0.140  0.054  0.000
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.8110499 -0.5297199  0.1916963  0.6066329  2.4710622 
+## 
+## Residual standard error: 0.8185524 
+## Degrees of freedom: 462 total; 455 residual
+# no longer an effect of logMarsh
+
+M3.corExp.2.ML&lt;- update(M3.corExp.2.REML, method= &quot;ML&quot;)
+drop1(M3.corExp.2.ML)
+## Single term deletions
+## 
+## Model:
+## logWB ~ DeciMixFor * ConForest + LogPastures + LogMarshCensored + 
+##     JanTemp
+##                      Df    AIC
+## &lt;none&gt;                  657.89
+## LogPastures           1 664.40
+## LogMarshCensored      1 656.63
+## JanTemp               1 660.59
+## DeciMixFor:ConForest  1 715.38
+
+M3.corExp.2.REML.res.p&lt;-resid(M3.corExp.2.REML, type= &quot;pearson&quot;)
+
+plot(resid(M3.corExp.2.REML, type= &quot;pearson&quot;) ~ un$LogMarshCensored); abline(h= 0, col= 2)</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q9b-1.png" width="768" /></p>
+<pre class="r"><code>
+M4.corExp.2.REML&lt;- gls(logWB ~ DeciMixFor * ConForest + LogPastures +
+        JanTemp, correlation= corExp(value= c(2, 0.4), 
+        form = ~ LONG + LAT, nugget= T), data= un, method= &quot;REML&quot;)
+summary(M4.corExp.2.REML)
+## Generalized least squares fit by REML
+##   Model: logWB ~ DeciMixFor * ConForest + LogPastures + JanTemp 
+##   Data: un 
+##        AIC      BIC    logLik
+##   702.9887 740.0911 -342.4943
+## 
+## Correlation Structure: Exponential spatial correlation
+##  Formula: ~LONG + LAT 
+##  Parameter estimate(s):
+##     range    nugget 
+## 2.0280699 0.1969337 
+## 
+## Coefficients:
+##                           Value Std.Error   t-value p-value
+## (Intercept)          -1.4927121 0.5183270 -2.879866  0.0042
+## DeciMixFor            0.0085525 0.0020009  4.274284  0.0000
+## ConForest             0.0100660 0.0029386  3.425463  0.0007
+## LogPastures           0.1351544 0.0433542  3.117445  0.0019
+## JanTemp               0.2324048 0.1132656  2.051856  0.0408
+## DeciMixFor:ConForest  0.0006101 0.0000768  7.939448  0.0000
+## 
+##  Correlation: 
+##                      (Intr) DcMxFr CnFrst LgPstr JanTmp
+## DeciMixFor           -0.290                            
+## ConForest            -0.251  0.764                     
+## LogPastures          -0.260  0.283  0.234              
+## JanTemp               0.596  0.034  0.024  0.001       
+## DeciMixFor:ConForest -0.044 -0.238 -0.400  0.153  0.001
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -3.7948774 -0.5405067  0.1858587  0.5841732  2.4464805 
+## 
+## Residual standard error: 0.8256082 
+## Degrees of freedom: 462 total; 456 residual
+
+M4.corExp.2.ML&lt;- update(M4.corExp.2.REML, method= &quot;ML&quot;)
+kable(AIC(M2.corExp.2.ML, M3.corExp.2.ML, M4.corExp.2.ML))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">df</th>
+<th align="right">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M2.corExp.2.ML</td>
+<td align="right">10</td>
+<td align="right">649.8821</td>
+</tr>
+<tr class="even">
+<td align="left">M3.corExp.2.ML</td>
+<td align="right">10</td>
+<td align="right">657.8920</td>
+</tr>
+<tr class="odd">
+<td align="left">M4.corExp.2.ML</td>
+<td align="right">9</td>
+<td align="right">656.6314</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>
+# M2 favoured by AIC but flawed by influential values; Choose M4
+
+# Note: there are much better alternatives to torturing the predictors 
+# by transformation.
+# The best one in my opinion is what we did in the Polish ungulates paper
+# these data come from: treating the relationship as a smooth non-linear one
+# using what is called a Generalized Additive Model (an extension of the LM/GLM).
+# Not covered in this course, but a good introduction here:
+# https://www.frontiersin.org/articles/10.3389/fevo.2018.00149/full </code></pre>
+<p> </p>
+<p>10. Interpret your minimum adequate model using graphs of the fitted effects.</p>
+<p> </p>
+<pre class="r"><code>
+plot(Effect(&quot;LogPastures&quot;, M4.corExp.2.REML))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q10a-1.png" width="432" /></p>
+<pre class="r"><code>plot(Effect(&quot;JanTemp&quot;, M4.corExp.2.REML))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q10a-2.png" width="432" /></p>
+<p> </p>
+<pre class="r"><code>
+plot(predictorEffect(&quot;DeciMixFor&quot;, M4.corExp.2.REML, xlevels= 4))</code></pre>
+<p><img src="GLS_spatial_nonindependence_report_files/figure-html/Q10b-1.png" width="768" /></p>
+<pre class="r"><code>
+# positive effect of pastures
+# positive effect of January temperature (Wild boars don&#39;t like it cold?)
+# positive effect of coniferous forests
+# positive effect of deciduous forests once taken other predictors
+#   into account(contrary to suggested by data exploration)
+# interaction between coniferous and deciduous forests:
+# the more coniferous forest around (hence the more total forest?),
+#   the more positive is the effect of deciduous forests
+# Hypothesis: 
+# the wild boar uses the two types of forests in a complementary way
+# (more research required to test that one!)</code></pre>
+<p> </p>
+<ol start="11" style="list-style-type: decimal">
+<li>(Optional) compare the minimum adequate model obtained using GLS with spatial autocorrelation to a MAM obtained by model selection without accounting for spatial non-independence. What difference does it make?</li>
+</ol>
+<p> </p>
+<ol start="12" style="list-style-type: decimal">
+<li>(Optional) There are a few more species which you could use as response variables, if you fancy some practice…</li>
+</ol>
+<p>End of the spatial autocorrelation practical</p>
+<p> </p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

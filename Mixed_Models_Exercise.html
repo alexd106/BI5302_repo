@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>BI5302 - Mixed Effects Models Exercise</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BI5302</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    R Book
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://intro2r.com">
+        <span class="fa fa-firefox"></span>
+         
+        Web book
+      </a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="https://github.com/alexd106/Rbook/raw/master/docs/Rbook.pdf">
+        <span class="fa fa-file-pdf"></span>
+         
+        PDF book
+      </a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="exercises.html">
+    <span class="fa fa-book"></span>
+     
+    Exercises
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-download"></span>
+     
+    Data
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question-circle"></span>
+     
+    Info
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="resources.html">
+        <span class="fa fa-book"></span>
+         
+        Resources
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/alexd106/BI5302_repo">
+        <span class="fa fa-github fa-lg"></span>
+         
+        Source code
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/Scedacity">
+        <span class="fa fa-twitter fa-lg"></span>
+         
+        Twitter
+      </a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">BI5302 - Mixed Effects Models Exercise</h1>
+<h4 class="author"></h4>
+
+</div>
+
+
+<p> </p>
+<p> </p>
+<div id="exercise-lmm---rikz-data" class="section level1">
+<h1>Exercise: LMM - RIKZ data</h1>
+<p> </p>
+<p>0. In this exercise we will use the RIKZ data set (in the RIKZRichness.txt file). The aim of the research was to explain the variation in species richness (R) using the variable Normal Amsterdam Peil (NAP) using data collected from various beaches in the Netherlands. All measurements were taken in June 2002.Please note that the full analysis of these data is much more involved than the one suggested here. The less self-explanatory variables are: + <code>R</code>: Species richness (number of species). This is the response variable + <code>angle1</code>: angle of individual stations on a beach + <code>angle2</code>: angle of the beach + <code>exposure</code>: index summarizing multiple variables: wave action, length of the surf zone, slope, grain size and depth of anaerobic layer + <code>sorting1</code>: index of particle structure at individual sampling station + <code>NAP</code>: height of the sampling station relative to the average sea level</p>
+<p> </p>
+<p>1. Load the nlme package to make the <code>lme()</code> function available. Also load the lattice package. Import the data file <code>RIKZRichness.txt</code> into R. How many observations are in the dataset? How many variables are in the dataset which could be relevant as predictors of species richness?</p>
+<p> </p>
+<p>2. Convert the variable <code>Beach</code> to a factor and store it as a new variable called <code>Fbeach</code> in the same dataframe. Log-transform the species richness (<code>R</code>) variable and store as <code>logR</code>. Why do you think you are advised to do this?</p>
+<p> </p>
+<p>3. How many beaches are there? How many observations for each beach?</p>
+<p> </p>
+<p>4. Plot the relationship between log-richness (<code>logR</code>) and <code>NAP</code> conditional on each <code>Beach</code> (Hint: use the <code>coplot</code> or <code>xyplot</code> functions). Describe this relationship. Is the relationship the same for each beach?</p>
+<p> </p>
+<p>5. Fit a simple linear model (using the <code>lm</code> function) with log transformed <code>R</code> as the response variable and <code>NAP</code> as the predictor. Produce the usual model validation plots of the residuals using the <code>par(mfrow= c(2, 2))</code> and the <code>plot</code> functions. Identify any issues highlighted by these plots. What inference does this model suggest? In addition, extract the residuals (use the <code>resid</code> function) and plot the residuals against beach. Can you see a problem?</p>
+<p> </p>
+<p>6. Fit a new linear model as above but with <code>NAP</code> and <code>FBeach</code> as predictors. Extract the residuals and re-plot the residuals for each beach. Does this look better? How many more parameters have you estimated in this model?</p>
+<p> </p>
+<p>7. Fit a linear mixed effects model using the <code>lme</code> function and assign it to an object called <code>rikz.lme</code>. As before use log-richness (<code>logR</code>) as the response variable and <code>NAP</code> as the predictor, but including <code>FBeach</code> as a random effect this time.</p>
+<p> </p>
+<p>8. Extract the normalized residuals using the <code>residuals</code> function and the argument <code>type= "normalized"</code>. Extract the fitted values using the <code>fitted</code> function. Plot the residuals vs the fitted values and include a horizontal line at residual value= 0. In addition, plot the normalized residuals for each Beach. How does this plot compare with the equivalent plots from the linear models? Is the model an improvement?</p>
+<p> </p>
+<p>9. Produce a summary of the model output using the <code>summary</code> function. What is the within beach (residual) variation? What is the between beach variation? Remember, the output from the <code>lme</code> function gives these values in standard deviation units, not as variances, so you will need to calculate the variances manually. Compare the parameter estimate for <code>NAP</code> and the standard error of the parameter estimate to those obtained from the linear models.</p>
+<p> </p>
+<p>10. (Optional) convert your RIKZ dataframe to a grouped data object using the command: <code>rikz&lt;- groupedData(logR~NAP|Fbeach, data= rikz)</code>. This will allow you to use some convenience functions that come with the nlme package. Investigate what the following lines of code do: <code>plot(augPred(rikz.lme), aspect="xy", grid=T)</code>, as well as <code>plot(rikz.lme, logR~ fitted(.), id=0.05, adj=-0.3)</code> and <code>qqnorm(rikz.lme, ~resid(.),abline= c(0,1))</code>. Do you think that fitting a random intercept model adequately explains the relationship between Richness and NAP for each Beach?</p>
+<p> </p>
+<p>11. Perhaps an improvement to the model would be to allow both the intercepts and the <code>NAP</code> slopes to vary randomly with each beach (as opposed to an intercepts only model). You can fit this model using the <code>lme</code> function and specify the random effects as <code>random= ~ NAP|Fbeach</code>. Fit the model and assign it to a new variable called <code>rikz.lme2</code>. The <code>random= ~ NAP|Fbeach</code> formula assumes that there is variation in the intercept as well as the effect of NAP between beaches. <strong>When a continuous predictor is in the random formula it also needs to be in the fixed formula</strong>: The effect in formula of the fixed part measures the mean coefficient at the population level (average across all beaches), and the effect in the random part formula measures variation around that mean coefficient value between beaches.</p>
+<p> </p>
+<p>12. Plot the fitted lines using<br />
+<code>plot(augPred(rikz.lme2), aspect="xy", grid=T)</code><br />
+and the residuals versus fitted with<br />
+<code>plot(rikz.lme2, form=resid(., type="p")~ fitted(.)|Fbeach, abline=0, lty= 2)</code>.<br />
+Normality of random intercepts:<br />
+<code>par(mfrow= c(1, 2))</code>,<br />
+<code>hist(unlist(ranef(rikz.lme2)$'(Intercept)'), xlab= "Random Intercept", main= "")</code><br />
+and normality of random slopes:<br />
+<code>hist(unlist(ranef(rikz.lme2)$'NAP'), xlab= "Random NAP effect", main= "")</code>.<br />
+Compare these to previous model. Is there an improvement?</p>
+<p> </p>
+<p>13. Produce a summary of the random effects and fixed effects using the <code>summary</code> function. Compare these to the random intercept only model.</p>
+<p> </p>
+<p>14. Use the <code>anova</code> function to compare between the two mixed effects models. Which model is preferred by which method? What is the null hypothesis you are testing? Why might you need to treat this test with caution?</p>
+<p> </p>
+<p>15. Using the model rikz.lme structure as a basis, use anova() to test if there is a significant effect of “temperature”, “grainsize” or “exposure”. Check the summary of the best model. What happened with the beach effect? What could that mean? Should we leave the model as it is?</p>
+<p> </p>
+<p>16. What model do you retain as your final model? What conclusions do you draw from it?</p>
+<p> </p>
+<p>End of the Mixed Effects Models exercise.</p>
+<p> </p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
