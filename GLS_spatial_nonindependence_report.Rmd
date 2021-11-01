@@ -1,5 +1,5 @@
 ---
-title: "Spatial GLS Exercise Solutions"
+title: "BI5302 Dealing with spatial non-independence exercise report"
 author: "Thomas Cornulier"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:

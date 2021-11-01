@@ -1,5 +1,5 @@
 ---
-title: "BI5302 Mixed Effects Models Exercise"
+title: "BI5302 Mixed effects models exercise report"
 author: "Thomas Cornulier"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:

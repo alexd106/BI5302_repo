@@ -1,5 +1,5 @@
 ---
-title: "BI5302 - Mixed Effects Models Exercise"
+title: "BI5302 Mixed effects models exercise"
 author: ''
 date: ''
 output:

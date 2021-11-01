@@ -1,5 +1,5 @@
 ---
-title: "BI5302 Dealing with temporal non-independence practical report"
+title: "BI5302 Dealing with temporal non-independence exrecise report"
 author: "Alex Douglas"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:

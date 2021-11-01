@@ -1,5 +1,5 @@
 ---
-title: "BI5302 Variance Heterogeneity Practical"
+title: "BI5302 Dealing with variance heterogeneity exercise report"
 author: "Alex Douglas"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
