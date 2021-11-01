@@ -91,7 +91,7 @@ If you want to work alongside my solutions you can find the relevant files below
 
 \  
 
-- [Dealing with spatial non-independence exercise](GLS_spatial_nonindependence_exercise.html)
+- [Dealing with spatial non-independence exercise](GLS_spatial_nonindependence.html)
 
 \  
 
@@ -122,3 +122,4 @@ If you want to work alongside my solutions you can find the relevant files below
 - [Mixed effects model final rendered pdf file](Mixed_Models_report.pdf)
 
 \  
+  
