@@ -337,7 +337,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">BI5302 Dealing with variance heterogeneity exercise report</h1>
 <h4 class="author">Alex Douglas</h4>
-<h4 class="date">01 November, 2021</h4>
+<h4 class="date">02 November, 2021</h4>
 
 </div>
 
@@ -643,21 +643,36 @@ plot(nereis.gls.final, fbiomass ~ resid(., type = &quot;normalized&quot;))</code
 ## fbiomass2:fnutrientPO3   -1.906533 0.8539516 -2.232601  0.0332
 ## 
 ##  Correlation: 
-##                          (Intr) fbm0.5 fbmss1 fbm1.5 fbmss2 fntNO3 fntPO3 f0.5:N f1:NO3 f1.5:N f2:NO3 f0.5:P f1:PO3 f1.5:P
-## fbiomass0.5              -0.033                                                                                           
-## fbiomass1                -0.095  0.003                                                                                    
-## fbiomass1.5              -0.105  0.003  0.010                                                                             
-## fbiomass2                -0.023  0.001  0.002  0.002                                                                      
-## fnutrientNO3             -0.024  0.001  0.002  0.003  0.001                                                               
-## fnutrientPO3             -0.641  0.021  0.061  0.067  0.015  0.015                                                        
-## fbiomass0.5:fnutrientNO3  0.018 -0.543 -0.002 -0.002  0.000 -0.740 -0.011                                                 
-## fbiomass1:fnutrientNO3    0.022 -0.001 -0.228 -0.002  0.000 -0.905 -0.014  0.669                                          
-## fbiomass1.5:fnutrientNO3  0.022 -0.001 -0.002 -0.207  0.000 -0.898 -0.014  0.664  0.812                                   
-## fbiomass2:fnutrientNO3    0.016 -0.001 -0.002 -0.002 -0.703 -0.667 -0.010  0.494  0.604  0.599                            
-## fbiomass0.5:fnutrientPO3  0.029 -0.886 -0.003 -0.003 -0.001 -0.001 -0.045  0.481  0.001  0.001  0.000                     
-## fbiomass1:fnutrientPO3    0.080 -0.003 -0.839 -0.008 -0.002 -0.002 -0.125  0.001  0.191  0.002  0.001  0.006              
-## fbiomass1.5:fnutrientPO3  0.089 -0.003 -0.009 -0.855 -0.002 -0.002 -0.139  0.002  0.002  0.176  0.001  0.006  0.017       
-## fbiomass2:fnutrientPO3    0.021 -0.001 -0.002 -0.002 -0.941 -0.001 -0.033  0.000  0.000  0.000  0.662  0.002  0.004  0.005
+##                          (Intr) fbm0.5 fbmss1 fbm1.5 fbmss2 fntNO3 fntPO3 f0.5:N f1:NO3 f1.5:N f2:NO3 f0.5:P f1:PO3
+## fbiomass0.5              -0.033                                                                                    
+## fbiomass1                -0.095  0.003                                                                             
+## fbiomass1.5              -0.105  0.003  0.010                                                                      
+## fbiomass2                -0.023  0.001  0.002  0.002                                                               
+## fnutrientNO3             -0.024  0.001  0.002  0.003  0.001                                                        
+## fnutrientPO3             -0.641  0.021  0.061  0.067  0.015  0.015                                                 
+## fbiomass0.5:fnutrientNO3  0.018 -0.543 -0.002 -0.002  0.000 -0.740 -0.011                                          
+## fbiomass1:fnutrientNO3    0.022 -0.001 -0.228 -0.002  0.000 -0.905 -0.014  0.669                                   
+## fbiomass1.5:fnutrientNO3  0.022 -0.001 -0.002 -0.207  0.000 -0.898 -0.014  0.664  0.812                            
+## fbiomass2:fnutrientNO3    0.016 -0.001 -0.002 -0.002 -0.703 -0.667 -0.010  0.494  0.604  0.599                     
+## fbiomass0.5:fnutrientPO3  0.029 -0.886 -0.003 -0.003 -0.001 -0.001 -0.045  0.481  0.001  0.001  0.000              
+## fbiomass1:fnutrientPO3    0.080 -0.003 -0.839 -0.008 -0.002 -0.002 -0.125  0.001  0.191  0.002  0.001  0.006       
+## fbiomass1.5:fnutrientPO3  0.089 -0.003 -0.009 -0.855 -0.002 -0.002 -0.139  0.002  0.002  0.176  0.001  0.006  0.017
+## fbiomass2:fnutrientPO3    0.021 -0.001 -0.002 -0.002 -0.941 -0.001 -0.033  0.000  0.000  0.000  0.662  0.002  0.004
+##                          f1.5:P
+## fbiomass0.5                    
+## fbiomass1                      
+## fbiomass1.5                    
+## fbiomass2                      
+## fnutrientNO3                   
+## fnutrientPO3                   
+## fbiomass0.5:fnutrientNO3       
+## fbiomass1:fnutrientNO3         
+## fbiomass1.5:fnutrientNO3       
+## fbiomass2:fnutrientNO3         
+## fbiomass0.5:fnutrientPO3       
+## fbiomass1:fnutrientPO3         
+## fbiomass1.5:fnutrientPO3       
+## fbiomass2:fnutrientPO3    0.005
 ## 
 ## Standardized residuals:
 ##         Min          Q1         Med          Q3         Max 
@@ -769,32 +784,31 @@ ggplot(w, aes(x = fbiomass, y = yhat, group = fnutrient,
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] kableExtra_1.3.4  pander_0.6.4      htmltools_0.5.1.1 rms_6.2-0         SparseM_1.81      Hmisc_4.5-0      
-##  [7] Formula_1.2-4     survival_3.2-12   AICcmodavg_2.3-1  stringr_1.4.0     dplyr_1.0.7       ggplot2_3.3.5    
-## [13] knitr_1.33        effects_4.2-0     nlme_3.1-152      car_3.0-11        carData_3.0-4     lattice_0.20-44  
+##  [1] rms_6.2-0        SparseM_1.81     Hmisc_4.5-0      Formula_1.2-4    survival_3.2-12  AICcmodavg_2.3-1
+##  [7] stringr_1.4.0    dplyr_1.0.7      ggplot2_3.3.5    knitr_1.33       effects_4.2-0    nlme_3.1-152    
+## [13] car_3.0-11       carData_3.0-4    lattice_0.20-44 
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] TH.data_1.0-10      VGAM_1.1-5          minqa_1.2.4         colorspace_2.0-2    ellipsis_0.3.2     
-##   [6] rio_0.5.27          estimability_1.3    htmlTable_2.2.1     base64enc_0.1-3     rstudioapi_0.13    
-##  [11] farver_2.1.0        MatrixModels_0.5-0  fansi_0.5.0         mvtnorm_1.1-2       xml2_1.3.2         
-##  [16] codetools_0.2-18    splines_4.1.1       jsonlite_1.7.2      nloptr_1.2.2.2      cluster_2.1.2      
-##  [21] png_0.1-7           compiler_4.1.1      httr_1.4.2          backports_1.2.1     Matrix_1.3-4       
-##  [26] survey_4.1-1        formatR_1.11        quantreg_5.86       tools_4.1.1         gtable_0.3.0       
-##  [31] glue_1.4.2          tinytex_0.33        Rcpp_1.0.7          cellranger_1.1.0    jquerylib_0.1.4    
-##  [36] raster_3.4-13       vctrs_0.3.8         svglite_2.0.0       conquer_1.0.2       insight_0.14.3     
-##  [41] xfun_0.25           openxlsx_4.2.4      lme4_1.1-27.1       rvest_1.0.1         lifecycle_1.0.0    
-##  [46] polspline_1.1.19    MASS_7.3-54         zoo_1.8-9           scales_1.1.1        hms_1.1.0          
-##  [51] parallel_4.1.1      sandwich_3.0-1      RColorBrewer_1.1-2  yaml_2.2.1          curl_4.3.2         
-##  [56] gridExtra_2.3       sass_0.4.0          rpart_4.1-15        latticeExtra_0.6-29 stringi_1.7.4      
-##  [61] highr_0.9           checkmate_2.0.0     boot_1.3-28         zip_2.2.0           systemfonts_1.0.2  
-##  [66] rlang_0.4.11        pkgconfig_2.0.3     matrixStats_0.60.1  evaluate_0.14       purrr_0.3.4        
-##  [71] htmlwidgets_1.5.3   labeling_0.4.2      tidyselect_1.1.1    plyr_1.8.6          magrittr_2.0.1     
-##  [76] R6_2.5.1            generics_0.1.0      multcomp_1.4-17     DBI_1.1.1           pillar_1.6.2       
-##  [81] haven_2.4.3         foreign_0.8-81      withr_2.4.2         abind_1.4-5         sp_1.4-5           
-##  [86] nnet_7.3-16         tibble_3.1.3        crayon_1.4.1        utf8_1.2.2          rmarkdown_2.10     
-##  [91] jpeg_0.1-9          grid_4.1.1          readxl_1.3.1        data.table_1.14.0   forcats_0.5.1      
-##  [96] webshot_0.5.2       digest_0.6.27       xtable_1.8-4        stats4_4.1.1        munsell_0.5.0      
-## [101] unmarked_1.1.1      viridisLite_0.4.0   bslib_0.2.5.1       mitools_2.4</code></pre>
+##  [1] matrixStats_0.60.1  insight_0.14.3      RColorBrewer_1.1-2  tools_4.1.1         backports_1.2.1    
+##  [6] bslib_0.2.5.1       utf8_1.2.2          R6_2.5.1            rpart_4.1-15        DBI_1.1.1          
+## [11] colorspace_2.0-2    raster_3.4-13       nnet_7.3-16         sp_1.4-5            withr_2.4.2        
+## [16] tidyselect_1.1.1    gridExtra_2.3       curl_4.3.2          compiler_4.1.1      quantreg_5.86      
+## [21] formatR_1.11        htmlTable_2.2.1     sandwich_3.0-1      unmarked_1.1.1      labeling_0.4.2     
+## [26] sass_0.4.0          scales_1.1.1        checkmate_2.0.0     polspline_1.1.19    mvtnorm_1.1-2      
+## [31] digest_0.6.27       foreign_0.8-81      minqa_1.2.4         rmarkdown_2.10      rio_0.5.27         
+## [36] base64enc_0.1-3     jpeg_0.1-9          pkgconfig_2.0.3     htmltools_0.5.1.1   lme4_1.1-27.1      
+## [41] highr_0.9           htmlwidgets_1.5.3   rlang_0.4.11        readxl_1.3.1        VGAM_1.1-5         
+## [46] rstudioapi_0.13     farver_2.1.0        jquerylib_0.1.4     generics_0.1.0      zoo_1.8-9          
+## [51] jsonlite_1.7.2      zip_2.2.0           magrittr_2.0.1      Matrix_1.3-4        Rcpp_1.0.7         
+## [56] munsell_0.5.0       fansi_0.5.0         abind_1.4-5         lifecycle_1.0.0     stringi_1.7.4      
+## [61] multcomp_1.4-17     yaml_2.2.1          MASS_7.3-54         plyr_1.8.6          grid_4.1.1         
+## [66] parallel_4.1.1      forcats_0.5.1       crayon_1.4.1        haven_2.4.3         splines_4.1.1      
+## [71] hms_1.1.0           pillar_1.6.2        boot_1.3-28         estimability_1.3    stats4_4.1.1       
+## [76] codetools_0.2-18    glue_1.4.2          evaluate_0.14       mitools_2.4         latticeExtra_0.6-29
+## [81] data.table_1.14.0   png_0.1-7           vctrs_0.3.8         nloptr_1.2.2.2      MatrixModels_0.5-0 
+## [86] cellranger_1.1.0    gtable_0.3.0        purrr_0.3.4         xfun_0.25           openxlsx_4.2.4     
+## [91] xtable_1.8-4        survey_4.1-1        tibble_3.1.3        conquer_1.0.2       tinytex_0.33       
+## [96] cluster_2.1.2       TH.data_1.0-10      ellipsis_0.3.2</code></pre>
 </div>
 
 

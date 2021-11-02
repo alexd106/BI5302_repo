@@ -334,7 +334,15 @@ $(document).ready(function () {
 <div id="exercise-lmm---rikz-data" class="section level1">
 <h1>Exercise: LMM - RIKZ data</h1>
 <p> </p>
-<p>0. In this exercise we will use the RIKZ data set (in the RIKZRichness.txt file). The aim of the research was to explain the variation in species richness (R) using the variable Normal Amsterdam Peil (NAP) using data collected from various beaches in the Netherlands. All measurements were taken in June 2002.Please note that the full analysis of these data is much more involved than the one suggested here. The less self-explanatory variables are: + <code>R</code>: Species richness (number of species). This is the response variable + <code>angle1</code>: angle of individual stations on a beach + <code>angle2</code>: angle of the beach + <code>exposure</code>: index summarizing multiple variables: wave action, length of the surf zone, slope, grain size and depth of anaerobic layer + <code>sorting1</code>: index of particle structure at individual sampling station + <code>NAP</code>: height of the sampling station relative to the average sea level</p>
+<p>0. In this exercise we will use the RIKZ data set (in the RIKZRichness.txt file). The aim of the research was to explain the variation in species richness (R) using the variable Normal Amsterdam Peil (NAP) using data collected from various beaches in the Netherlands. All measurements were taken in June 2002.Please note that the full analysis of these data is much more involved than the one suggested here. The less self-explanatory variables are:</p>
+<ul>
+<li><code>R</code>: Species richness (number of species). This is the response variable</li>
+<li><code>angle1</code>: angle of individual stations on a beach</li>
+<li><code>angle2</code>: angle of the beach</li>
+<li><code>exposure</code>: index summarizing multiple variables: wave action, length of the surf zone, slope, grain size and depth of anaerobic layer</li>
+<li><code>sorting1</code>: index of particle structure at individual sampling station</li>
+<li><code>NAP</code>: height of the sampling station relative to the average sea level</li>
+</ul>
 <p> </p>
 <p>1. Load the nlme package to make the <code>lme()</code> function available. Also load the lattice package. Import the data file <code>RIKZRichness.txt</code> into R. How many observations are in the dataset? How many variables are in the dataset which could be relevant as predictors of species richness?</p>
 <p> </p>

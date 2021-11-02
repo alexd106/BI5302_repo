@@ -24,6 +24,7 @@ knitr::opts_chunk$set(echo= TRUE, message= FALSE, warning= FALSE, eval= FALSE, c
 
 0\. In this exercise we will use the RIKZ data set (in the RIKZRichness.txt file). The aim of the research was to explain the variation in species richness (R) using the variable Normal Amsterdam Peil (NAP) using data collected from various beaches in the Netherlands. All measurements were taken in June 2002.Please note that the full analysis of these data is much more involved than the one suggested here.
 The less self-explanatory variables are:
+
   + `R`: Species richness (number of species). This is the response variable
   + `angle1`: angle of individual stations on a beach
   + `angle2`: angle of the beach
