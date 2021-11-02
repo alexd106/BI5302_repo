@@ -73,17 +73,17 @@ If you want to work alongside my solutions you can find the relevant files below
 
 \  
 
-- [Dealing with non-independence exercise](GLS_temporal_nonindependence_exercise.html)
+- [Dealing with temporal non-independence exercise](GLS_temporal_nonindependence_exercise.html)
 
 \  
 
 If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
 
-- [Dealing with non-independence R markdown file](GLS_temporal_nonindependence_report.Rmd)
+- [Dealing with temporal non-independence R markdown file](GLS_temporal_nonindependence_report.Rmd)
 
-- [Dealing with non-independence final rendered html file](GLS_temporal_nonindependence_report.html)
+- [Dealing with temporal non-independence final rendered html file](GLS_temporal_nonindependence_report.html)
 
-- [Dealing with non-independence final rendered pdf file](GLS_temporal_nonindependence_report.pdf)
+- [Dealing with temporal non-independence final rendered pdf file](GLS_temporal_nonindependence_report.pdf)
 
 \  
 
@@ -97,11 +97,11 @@ If you want to work alongside my solutions you can find the relevant files below
 
 If you want to work alongside my solutions you can find the relevant files below. Download the R markdown file and open it in your RStudio project.
 
-- [Dealing with non-independence R markdown file](GLS_spatial_nonindependence_report.Rmd)
+- [Dealing with spatial non-independence R markdown file](GLS_spatial_nonindependence_report.Rmd)
 
-- [Dealing with non-independence final rendered html file](GLS_spatial_nonindependence_report.html)
+- [Dealing with spatial non-independence final rendered html file](GLS_spatial_nonindependence_report.html)
 
-- [Dealing with non-independence final rendered pdf file](GLS_spatial_nonindependence_report.pdf)
+- [Dealing with spatial non-independence final rendered pdf file](GLS_spatial_nonindependence_report.pdf)
 
 \  
 
