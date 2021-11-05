@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-
 # knitr caches and files.
 *_cache/
 # OSX Stuff
@@ -12,3 +11,4 @@
 .DS_Store
 # R markdown stuff
 *.log
+welcome_message
