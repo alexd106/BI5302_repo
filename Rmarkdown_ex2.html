@@ -432,7 +432,7 @@ $(document).ready(function () {
 Solution
 </button>
 <div class="sourceCode" id="cb1"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, data-import}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="in">squid &lt;- read.table(&#39;./data/squid1.txt&#39;, header = TRUE)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="in">squid &lt;- read.table(&#39;./data/squid1.txt&#39;, header = TRUE, stringsAsFactors = TRUE)</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="in">str(squid)</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -557,12 +557,12 @@ Solution
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>DML was lowest for maturity stage 1 with a mean length of  </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="in">`r round(mean(squid$DM[squid$Fmaturity == 1]), digits = 2)`</span> mm. DML  </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="in">`r round(mean(squid$DML[squid$Fmaturity == 1]), digits = 2)`</span> mm. DML  </span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>increased until maturity stage 3  </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>(mean <span class="in">`r round(mean(squid$DM[squid$Fmaturity == 3]), digits = 2)`</span> mm)  </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>(mean <span class="in">`r round(mean(squid$DML[squid$Fmaturity == 3]), digits = 2)`</span> mm)  </span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>after which it remained reasonably consistent for maturity stages 4  </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>(mean <span class="in">`r  round(mean(squid$DM[squid$Fmaturity == 4]), digits = 2)`</span> mm)  </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>and 5 (mean <span class="in">`r round(mean(squid$DM[squid$Fmaturity == 5]), digits = 2)`</span> mm).  </span></code></pre></div>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>(mean <span class="in">`r  round(mean(squid$DML[squid$Fmaturity == 4]), digits = 2)`</span> mm)  </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>and 5 (mean <span class="in">`r round(mean(squid$DML[squid$Fmaturity == 5]), digits = 2)`</span> mm).  </span></code></pre></div>
 </div>
 <p> </p>
 <p>It’s always good practice to include a summary of the version of R you have been using as well as a list of packages loaded. An easy way to do this is include <code>sessionInfo()</code> in a code chunk at the end of your document.</p>

@@ -21,7 +21,7 @@ Create a code chunk named `data-import` and include some R code to import the `s
 <div class="toggle"><button>Solution</button>
 ````markdown
 `r ''````{r, data-import}
-squid <- read.table('./data/squid1.txt', header = TRUE)
+squid <- read.table('./data/squid1.txt', header = TRUE, stringsAsFactors = TRUE)
 str(squid)
 ```
   
@@ -165,12 +165,12 @@ boxplot(DML ~ Fmaturity, data = squid, xlab = "maturity stage", ylab = "DML")
 
 ```
 DML was lowest for maturity stage 1 with a mean length of  
-`r knitr::inline_expr("round(mean(squid$DM[squid$Fmaturity == 1]), digits = 2)")` mm. DML  
+`r knitr::inline_expr("round(mean(squid$DML[squid$Fmaturity == 1]), digits = 2)")` mm. DML  
 increased until maturity stage 3  
-(mean `r knitr::inline_expr("round(mean(squid$DM[squid$Fmaturity == 3]), digits = 2)")` mm)  
+(mean `r knitr::inline_expr("round(mean(squid$DML[squid$Fmaturity == 3]), digits = 2)")` mm)  
 after which it remained reasonably consistent for maturity stages 4  
-(mean `r knitr::inline_expr(" round(mean(squid$DM[squid$Fmaturity == 4]), digits = 2)")` mm)  
-and 5 (mean `r knitr::inline_expr("round(mean(squid$DM[squid$Fmaturity == 5]), digits = 2)")` mm).  
+(mean `r knitr::inline_expr(" round(mean(squid$DML[squid$Fmaturity == 4]), digits = 2)")` mm)  
+and 5 (mean `r knitr::inline_expr("round(mean(squid$DML[squid$Fmaturity == 5]), digits = 2)")` mm).  
 
 ````
 </div>
